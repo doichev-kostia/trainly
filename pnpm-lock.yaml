@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -30,11 +26,11 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       prettier-plugin-svelte:
-        specifier: ^2.10.1
-        version: 2.10.1(prettier@3.0.3)(svelte@4.2.1)
+        specifier: ^3.0.0
+        version: 3.0.3(prettier@3.0.3)(svelte@4.2.1)
       prettier-plugin-tailwindcss:
         specifier: ^0.5.4
-        version: 0.5.4(prettier-plugin-svelte@2.10.1)(prettier@3.0.3)
+        version: 0.5.4(prettier-plugin-svelte@3.0.3)(prettier@3.0.3)
       turbo:
         specifier: latest
         version: 1.10.14
@@ -4037,17 +4033,17 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-svelte@2.10.1(prettier@3.0.3)(svelte@4.2.1):
-    resolution: {integrity: sha512-Wlq7Z5v2ueCubWo0TZzKc9XHcm7TDxqcuzRuGd0gcENfzfT4JZ9yDlCbEgxWgiPmLHkBjfOtpAWkcT28MCDpUQ==}
+  /prettier-plugin-svelte@3.0.3(prettier@3.0.3)(svelte@4.2.1):
+    resolution: {integrity: sha512-dLhieh4obJEK1hnZ6koxF+tMUrZbV5YGvRpf2+OADyanjya5j0z1Llo8iGwiHmFWZVG/hLEw/AJD5chXd9r3XA==}
     peerDependencies:
-      prettier: ^1.16.4 || ^2.0.0
+      prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0
     dependencies:
       prettier: 3.0.3
       svelte: 4.2.1
     dev: true
 
-  /prettier-plugin-tailwindcss@0.5.4(prettier-plugin-svelte@2.10.1)(prettier@3.0.3):
+  /prettier-plugin-tailwindcss@0.5.4(prettier-plugin-svelte@3.0.3)(prettier@3.0.3):
     resolution: {integrity: sha512-QZzzB1bID6qPsKHTeA9qPo1APmmxfFrA5DD3LQ+vbTmAnY40eJI7t9Q1ocqel2EKMWNPLJqdTDWZj1hKYgqSgg==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
@@ -4100,7 +4096,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.0.3
-      prettier-plugin-svelte: 2.10.1(prettier@3.0.3)(svelte@4.2.1)
+      prettier-plugin-svelte: 3.0.3(prettier@3.0.3)(svelte@4.2.1)
     dev: true
 
   /prettier@3.0.3:
@@ -5565,3 +5561,7 @@ packages:
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
