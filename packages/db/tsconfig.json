@@ -1,0 +1,11 @@
+{
+	"extends": "@trainly/config/tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"declarationMap": true,
+		"outDir": "./build",
+		"rootDir": "./src",
+		"tsBuildInfoFile": "./build/.tsbuildinfo"
+	},
+	"include": ["./src/**/*"]
+}
