@@ -1,5 +1,10 @@
-module.exports = {
+/**
+ *
+ * @type {import("eslint").Linter.Config}
+ */
+const config = {
 	root: true,
+
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
@@ -12,6 +17,12 @@ module.exports = {
 		sourceType: 'module',
 		ecmaVersion: 2020,
 		extraFileExtensions: ['.svelte']
+	},
+	rules: {
+		"@typescript-eslint/consistent-type-imports": ["error", {
+			"prefer": "type-imports",
+			"fixStyle": "inline-type-imports"
+		}],
 	},
 	env: {
 		browser: true,
@@ -28,3 +39,5 @@ module.exports = {
 		}
 	]
 };
+
+module.exports = config;
