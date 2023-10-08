@@ -148,22 +148,25 @@ model seat {
     tickets ticket[]
 }
 
-model user {
+model customer {
     id         String   @id @default(uuid()) @db.Uuid
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
+    first_name String
+    last_name  String
+    email      String
 
     bookings booking[]
 }
 
 model booking {
-    id         String         @id @default(uuid()) @db.Uuid
-    created_at DateTime       @default(now())
-    updated_at DateTime       @updatedAt
-    status     booking_status
-    user_id    String?        @db.Uuid
+    id          String         @id @default(uuid()) @db.Uuid
+    created_at  DateTime       @default(now())
+    updated_at  DateTime       @updatedAt
+    status      booking_status
+    customer_id String?        @db.Uuid
 
-    user user? @relation(fields: [user_id], references: [id])
+    customer customer? @relation(fields: [customer_id], references: [id])
 
     tickets ticket[]
 }

@@ -14,6 +14,17 @@ Enum "booking_status" {
   "cancelled"
 }
 
+Enum "seat_status" {
+  "available"
+  "booked"
+  "reserved"
+}
+
+Enum "role_type" {
+  "admin"
+  "user"
+}
+
 Table "train" {
   "id" uuid [pk]
   "name" varchar [not null]
@@ -94,12 +105,6 @@ Ref: "journey_stop"."journey_id" > "journey"."id" [delete: cascade]
 Ref: "journey_stop"."stop_id" - "stop"."id" [delete: cascade]
 Ref: "journey_stop"."platform_id" - "platform"."id" [delete: set null]
 
-Enum "seat_status" {
-  "available"
-  "booked"
-  "reserved"
-}
-
 Table "seat" {
   "id" uuid [pk]
   "number" int [not null]
@@ -110,20 +115,21 @@ Table "seat" {
 
 Ref: "seat"."journey_id" > "journey"."id" [delete: cascade]
 
-Table "user" {
+Table "customer" {
   "id" uuid [pk]
+  "first_name" varchar [not null]
+  "last_name" varchar [not null]
+  "email" varchar [not null]
 }
-
-
 
 Table "booking" {
   "id" uuid [pk]
-  "user_id" uuid
+  "customer_id" uuid
   "created_at" timestamp
   "status" "booking_status" [not null]
 }
 
-Ref: "booking"."user_id" > "user"."id" [delete: set null]
+Ref: "booking"."customer_id" > "customer"."id" [delete: set null]
 
 Table "passenger" {
   "id" uuid [pk]
