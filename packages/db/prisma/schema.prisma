@@ -80,9 +80,7 @@ model route {
 	end_stop_id   String @db.Uuid
 	pricing       Json   @db.JsonB // Key: seat_class, Value: Stripe price id
 
-	train      train @relation(fields: [train_id], references: [id])
-	start_stop stop  @relation("route-start-stop", fields: [start_stop_id], references: [id])
-	end_stop   stop  @relation("route-end-stop", fields: [end_stop_id], references: [id])
+	train train @relation(fields: [train_id], references: [id])
 
 	journeys journey[]
 	stops    stop[]
@@ -95,13 +93,10 @@ model stop {
 	platform_id            String  @db.Uuid
 	next_stop_id           String? @db.Uuid
 
-	route     route    @relation(fields: [route_id], references: [id])
-	platform  platform @relation(fields: [platform_id], references: [id])
-	next_stop stop?    @relation("StopToStop", fields: [next_stop_id], references: [id])
+	route    route    @relation(fields: [route_id], references: [id])
+	platform platform @relation(fields: [platform_id], references: [id])
 
 	journey_stops journey_stop[]
-	route         route[]
-	stop          stop[]
 }
 
 model journey {
