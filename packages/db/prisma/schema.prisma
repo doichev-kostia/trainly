@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator kysely {
 	provider = "prisma-kysely"
 	output   = "../src"
@@ -31,8 +28,8 @@ enum booking_status {
 
 model train {
 	id                String   @id @default(uuid()) @db.Uuid
-	createad_at       DateTime @default(now())
-	updatead_at       DateTime @default(now()) @updatedAt
+	created_at        DateTime @default(now())
+	updated_at        DateTime @updatedAt
 	name              String
 	total_seats       Int
 	carriage_capacity Int
@@ -42,56 +39,68 @@ model train {
 }
 
 model station {
-	id   String @id @default(uuid()) @db.Uuid
-	name String
+	id         String   @id @default(uuid()) @db.Uuid
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
+	name       String
 
 	addresses address[]
 	platforms platform[]
 }
 
 model address {
-	id            String @id @default(uuid()) @db.Uuid
+	id            String   @id @default(uuid()) @db.Uuid
+	created_at    DateTime @default(now())
+	updated_at    DateTime @updatedAt
 	country       String
 	city          String
 	street        String
 	street_number String
 	index         String
-	station_id    String @db.Uuid
+	station_id    String   @db.Uuid
 
 	station station @relation(fields: [station_id], references: [id])
 }
 
 model platform {
-	id         String @id @default(uuid()) @db.Uuid
+	id         String   @id @default(uuid()) @db.Uuid
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
 	name       String
-	station_id String @db.Uuid
+	station_id String   @db.Uuid
 
 	station station @relation(fields: [station_id], references: [id])
 
-	stops        stop[]
-	journey_stop journey_stop[]
+	stops         stop[]
+	journey_stops journey_stop[]
 }
 
 model route {
-	id            String @id @default(uuid()) @db.Uuid
+	id            String   @id @default(uuid()) @db.Uuid
+	created_at    DateTime @default(now())
+	updated_at    DateTime @updatedAt
 	name          String
-	train_id      String @db.Uuid
-	start_stop_id String @db.Uuid
-	end_stop_id   String @db.Uuid
-	pricing       Json   @db.JsonB // Key: seat_class, Value: Stripe price id
+	train_id      String   @db.Uuid
+	start_stop_id String   @db.Uuid
+	end_stop_id   String   @db.Uuid
+	pricing       Json     @db.JsonB
 
-	train train @relation(fields: [train_id], references: [id])
+	train      train @relation(fields: [train_id], references: [id])
+	start_stop stop  @relation("route-start-stop", fields: [start_stop_id], references: [id])
+	end_stop   stop  @relation("route-end-stop", fields: [end_stop_id], references: [id])
 
 	journeys journey[]
 	stops    stop[]
 }
 
 model stop {
-	id                     String  @id @default(uuid()) @db.Uuid
+	id                     String   @id @default(uuid()) @db.Uuid
+	created_at             DateTime @default(now())
+	updated_at             DateTime @updatedAt
 	duration_from_previous Int
-	route_id               String  @db.Uuid
-	platform_id            String  @db.Uuid
-	next_stop_id           String? @db.Uuid
+	route_id               String   @db.Uuid
+	platform_id            String   @db.Uuid
+	next_stop_id           String?  @db.Uuid
 
 	route    route    @relation(fields: [route_id], references: [id])
 	platform platform @relation(fields: [platform_id], references: [id])
@@ -101,18 +110,21 @@ model stop {
 
 model journey {
 	id             String   @id @default(uuid()) @db.Uuid
+	created_at     DateTime @default(now())
+	updated_at     DateTime @updatedAt
 	route_id       String   @db.Uuid
 	departure_time DateTime
 	delay          Int      @default(0)
 
-	route route @relation(fields: [route_id], references: [id])
-
+	route         route          @relation(fields: [route_id], references: [id])
 	seats         seat[]
 	journey_stops journey_stop[]
 }
 
 model journey_stop {
 	id               String    @id @default(uuid()) @db.Uuid
+	created_at       DateTime  @default(now())
+	updated_at       DateTime  @updatedAt
 	journey_id       String    @db.Uuid
 	stop_id          String    @db.Uuid
 	expected_arrival DateTime
@@ -126,6 +138,8 @@ model journey_stop {
 
 model seat {
 	id         String      @id @default(uuid()) @db.Uuid
+	created_at DateTime    @default(now())
+	updated_at DateTime    @updatedAt
 	number     Int
 	class      seat_class
 	journey_id String      @db.Uuid
@@ -137,7 +151,9 @@ model seat {
 }
 
 model user {
-	id String @id @default(uuid()) @db.Uuid
+	id         String   @id @default(uuid()) @db.Uuid
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
 
 	bookings booking[]
 }
@@ -145,6 +161,7 @@ model user {
 model booking {
 	id         String         @id @default(uuid()) @db.Uuid
 	created_at DateTime       @default(now())
+	updated_at DateTime       @updatedAt
 	status     booking_status
 	user_id    String?        @db.Uuid
 
@@ -154,7 +171,9 @@ model booking {
 }
 
 model passenger {
-	id         String @id @default(uuid()) @db.Uuid
+	id         String   @id @default(uuid()) @db.Uuid
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
 	first_name String
 	last_name  String
 
@@ -162,10 +181,12 @@ model passenger {
 }
 
 model ticket {
-	id           String @id @default(uuid()) @db.Uuid
-	passenger_id String @db.Uuid
-	seat_id      String @db.Uuid
-	booking_id   String @db.Uuid
+	id           String   @id @default(uuid()) @db.Uuid
+	created_at   DateTime @default(now())
+	updated_at   DateTime @updatedAt
+	passenger_id String   @db.Uuid
+	seat_id      String   @db.Uuid
+	booking_id   String   @db.Uuid
 
 	passenger passenger @relation(fields: [passenger_id], references: [id])
 	seat      seat      @relation(fields: [seat_id], references: [id])
