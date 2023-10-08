@@ -1,0 +1,143 @@
+Project "trainly" {
+  database_type: 'PostgreSQL'
+  Note: 'Description of the project'
+}
+
+Enum "seat_class" {
+  "standard"
+  "premium"
+}
+
+Enum "booking_status" {
+  "reserved"
+  "paid"
+  "cancelled"
+}
+
+Table "train" {
+  "id" uuid [pk]
+  "name" varchar [not null]
+  "total_seats" int [not null]
+  "carriage_capacity" int [not null]
+  "premium_carriages" int [not null]
+}
+
+Table "station" {
+  "id" uuid [pk]
+  "name" varchar [not null]
+}
+
+Table "address" {
+  "id" uuid [pk]
+  "country" varchar [not null]
+  "city"    varchar [not null]
+  "street"  varchar [not null]
+  "street_number"   varchar [not null]
+  "index"   varchar [not null]
+  "station_id" uuid [not null]
+}
+
+Ref: "address"."station_id" - "station"."id" [delete: cascade]
+
+Table "platform" {
+  "id" uuid [pk]
+  "name" varchar [not null]
+  "station_id" uuid [not null]
+}
+
+Ref: "platform"."station_id" > "station"."id" [delete: cascade]
+
+Table "route" {
+  "id" uuid [pk]
+  "name" varchar [not null]
+  "train_id" uuid [not null]
+  "start_stop_id" uuid [not null, note:"head of the linked list"]
+  "end_stop_id" uuid [not null, note: "tail of the linked list"]
+  "pricing" jsonb [not null, note: "Key value pair of [seat_class]: Stripe Price id"]
+}
+
+Ref: "route"."train_id" > "train"."id" [delete: restrict]
+Ref: "route"."start_stop_id" - "stop"."id" [delete: restrict]
+Ref: "route"."end_stop_id" - "stop"."id" [delete: restrict]
+
+Table "stop" {
+  "id" uuid [pk]
+  "duration_from_previous" int [not null, note:"seconds"]
+  "route_id" uuid [not null]
+  "platform_id" uuid [not null, note:"based on the station we can show the name of the stop"]
+  "next_stop_id" uuid [note: "pointer to the next node like in the linked list to avoid the order management"]
+}
+
+Ref: "stop"."route_id" > "route"."id" [delete: cascade]
+Ref: "stop"."platform_id" > "platform"."id" [delete: restrict]
+Ref: "stop"."next_stop_id" - "stop"."id" [delete: restrict]
+
+Table "journey" {
+  "id" uuid [pk]
+  "route_id" uuid [not null]
+  "departure_time" timestamp [not null]
+  "delay" int [not null, default:0, note: "seconds. positive - later, negative - earlier"]
+}
+
+Ref: "journey"."route_id" > "route"."id" [delete: cascade]
+
+Table "journey_stop" {
+  "id" uuid [pk]
+  "journey_id" uuid [not null]
+  "stop_id" uuid [not null]
+  "expected_arrival" timestamp [not null]
+  "actual_arrival" timestamp
+  "platform_id" uuid [note:"optional, can be changed by the administrator"]
+}
+
+Ref: "journey_stop"."journey_id" > "journey"."id" [delete: cascade]
+Ref: "journey_stop"."stop_id" - "stop"."id" [delete: cascade]
+Ref: "journey_stop"."platform_id" - "platform"."id" [delete: set null]
+
+Enum "seat_status" {
+  "available"
+  "booked"
+  "reserved"
+}
+
+Table "seat" {
+  "id" uuid [pk]
+  "number" int [not null]
+  "class" "seat_class" [not null]
+  "journey_id" uuid [not null]
+  "status" "seat_status" [not null, default:"available"]
+}
+
+Ref: "seat"."journey_id" > "journey"."id" [delete: cascade]
+
+Table "user" {
+  "id" uuid [pk]
+}
+
+
+
+Table "booking" {
+  "id" uuid [pk]
+  "user_id" uuid
+  "created_at" timestamp
+  "status" "booking_status" [not null]
+}
+
+Ref: "booking"."user_id" > "user"."id" [delete: set null]
+
+Table "passenger" {
+  "id" uuid [pk]
+  "first_name" varchar [not null]
+  "last_name" varchar [not null]
+}
+
+Table "ticket" {
+  "id" uuid [pk]
+  "passenger_id" uuid [not null]
+  "seat_id" uuid [not null]
+  "booking_id" uuid [not null]
+}
+
+Ref: "ticket"."passenger_id" - "passenger"."id" [delete: restrict]
+Ref: "ticket"."seat_id" - "seat"."id" [delete: restrict]
+Ref: "ticket"."booking_id" > "booking"."id" [delete: restrict]

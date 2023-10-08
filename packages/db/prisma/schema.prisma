@@ -2,18 +2,177 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator kysely {
-    provider = "prisma-kysely"
-    output   = "../src"
+	provider = "prisma-kysely"
+	output   = "../src"
 	fileName = "types.ts"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
 }
 
-model User {
-    id    String @id @default(uuid())
-    email String @unique
-    name  String
+enum seat_class {
+	standard
+	premium
+}
+
+enum seat_status {
+	available
+	booked
+	reserved
+}
+
+enum booking_status {
+	reserved
+	paid
+	cancelled
+}
+
+model train {
+	id                String   @id @default(uuid()) @db.Uuid
+	createad_at       DateTime @default(now())
+	updatead_at       DateTime @default(now()) @updatedAt
+	name              String
+	total_seats       Int
+	carriage_capacity Int
+	premium_carriages Int
+
+	routes route[]
+}
+
+model station {
+	id   String @id @default(uuid()) @db.Uuid
+	name String
+
+	addresses address[]
+	platforms platform[]
+}
+
+model address {
+	id            String @id @default(uuid()) @db.Uuid
+	country       String
+	city          String
+	street        String
+	street_number String
+	index         String
+	station_id    String @db.Uuid
+
+	station station @relation(fields: [station_id], references: [id])
+}
+
+model platform {
+	id         String @id @default(uuid()) @db.Uuid
+	name       String
+	station_id String @db.Uuid
+
+	station station @relation(fields: [station_id], references: [id])
+
+	stops        stop[]
+	journey_stop journey_stop[]
+}
+
+model route {
+	id            String @id @default(uuid()) @db.Uuid
+	name          String
+	train_id      String @db.Uuid
+	start_stop_id String @db.Uuid
+	end_stop_id   String @db.Uuid
+	pricing       Json   @db.JsonB // Key: seat_class, Value: Stripe price id
+
+	train      train @relation(fields: [train_id], references: [id])
+	start_stop stop  @relation("route-start-stop", fields: [start_stop_id], references: [id])
+	end_stop   stop  @relation("route-end-stop", fields: [end_stop_id], references: [id])
+
+	journeys journey[]
+	stops    stop[]
+}
+
+model stop {
+	id                     String  @id @default(uuid()) @db.Uuid
+	duration_from_previous Int
+	route_id               String  @db.Uuid
+	platform_id            String  @db.Uuid
+	next_stop_id           String? @db.Uuid
+
+	route     route    @relation(fields: [route_id], references: [id])
+	platform  platform @relation(fields: [platform_id], references: [id])
+	next_stop stop?    @relation("StopToStop", fields: [next_stop_id], references: [id])
+
+	journey_stops journey_stop[]
+	route         route[]
+	stop          stop[]
+}
+
+model journey {
+	id             String   @id @default(uuid()) @db.Uuid
+	route_id       String   @db.Uuid
+	departure_time DateTime
+	delay          Int      @default(0)
+
+	route route @relation(fields: [route_id], references: [id])
+
+	seats         seat[]
+	journey_stops journey_stop[]
+}
+
+model journey_stop {
+	id               String    @id @default(uuid()) @db.Uuid
+	journey_id       String    @db.Uuid
+	stop_id          String    @db.Uuid
+	expected_arrival DateTime
+	actual_arrival   DateTime?
+	platform_id      String?   @db.Uuid
+
+	journey  journey   @relation(fields: [journey_id], references: [id])
+	stop     stop      @relation(fields: [stop_id], references: [id])
+	platform platform? @relation(fields: [platform_id], references: [id])
+}
+
+model seat {
+	id         String      @id @default(uuid()) @db.Uuid
+	number     Int
+	class      seat_class
+	journey_id String      @db.Uuid
+	status     seat_status @default(available)
+
+	journey journey @relation(fields: [journey_id], references: [id])
+
+	tickets ticket[]
+}
+
+model user {
+	id String @id @default(uuid()) @db.Uuid
+
+	bookings booking[]
+}
+
+model booking {
+	id         String         @id @default(uuid()) @db.Uuid
+	created_at DateTime       @default(now())
+	status     booking_status
+	user_id    String?        @db.Uuid
+
+	user user? @relation(fields: [user_id], references: [id])
+
+	tickets ticket[]
+}
+
+model passenger {
+	id         String @id @default(uuid()) @db.Uuid
+	first_name String
+	last_name  String
+
+	tickets ticket[]
+}
+
+model ticket {
+	id           String @id @default(uuid()) @db.Uuid
+	passenger_id String @db.Uuid
+	seat_id      String @db.Uuid
+	booking_id   String @db.Uuid
+
+	passenger passenger @relation(fields: [passenger_id], references: [id])
+	seat      seat      @relation(fields: [seat_id], references: [id])
+	booking   booking   @relation(fields: [booking_id], references: [id])
 }
