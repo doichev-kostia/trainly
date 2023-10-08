@@ -3,9 +3,10 @@
   "compilerOptions": {
     "incremental": true,
     "composite": true,
+		"lib": ["es2023"],
     "target": "esnext",
     "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node16",
     "baseUrl": "./",
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
