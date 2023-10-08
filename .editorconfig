@@ -8,10 +8,10 @@ indent_style = tab
 indent_size = 4
 max_line_length =80
 
-[*.prisma]
-indent_style = tab
-indent_size = 4
-max_line_length =120
+[*.prisma] # prisma provides its own formatting
+indent_size = unset
+indent_style = unset
+max_line_length = unset
 
 [*.md]
 trim_trailing_whitespace = false
