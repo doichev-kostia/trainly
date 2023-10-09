@@ -1,11 +1,11 @@
 import fp from "fastify-plugin";
-import { type FastifyPluginAsyncZod } from "../../utils/types.js";
 import { CreateCustomerBodySchema, CustomerResponseSchema } from "@trainly/contracts/customers";
 import { ListResponseSchema } from "@trainly/contracts";
 import { db } from "@trainly/db";
 import { type FastifyBaseLogger, type FastifyInstance, type RawServerDefault } from "fastify";
 import { type IncomingMessage, type ServerResponse } from "node:http";
 import { type ZodTypeProvider } from "fastify-type-provider-zod";
+import { type FastifyPluginAsyncZod } from "~/utils/types.js";
 
 const customerRoutes: FastifyPluginAsyncZod = fp(
 	async function customerRoutes(
