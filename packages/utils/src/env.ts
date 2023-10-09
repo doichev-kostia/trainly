@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import * as process from "node:process";
 import * as path from "node:path";
-import { z, ZodObject, ZodRawShape } from "zod";
+import { z, ZodObject, type ZodRawShape } from "zod";
 import { parse } from "dotenv";
 
 /**
@@ -16,21 +16,16 @@ import { parse } from "dotenv";
  * @throws Error if environment variables are invalid
  * @param schema - key value pairs of environment variables and their zod schema
  */
-export function parseEnv<S extends ZodRawShape>(
-	schema: S | ZodObject<S>
-): z.infer<z.ZodObject<S>> {
+export function parseEnv<S extends ZodRawShape>(schema: S | ZodObject<S>): z.infer<z.ZodObject<S>> {
 	let parsed;
-	if (schema instanceof ZodObject) {
-		parsed = schema.safeParse(process.env);
+	if (schema instanceof ZodObject || schema.constructor.name === "ZodObject") {
+		parsed = (schema as ZodObject<S>).safeParse(process.env);
 	} else {
-	 	parsed = z.object(schema).safeParse(process.env);
+		parsed = z.object(schema).safeParse(process.env);
 	}
 
 	if (parsed.success === false) {
-		console.error(
-			"❌ Invalid environment variables:",
-			parsed.error.flatten().fieldErrors
-		);
+		console.error("❌ Invalid environment variables:", parsed.error.flatten().fieldErrors);
 		throw new Error("Invalid environment variables", {
 			cause: parsed.error,
 		});
@@ -55,7 +50,7 @@ export function loadEnv() {
 			const path = lookupFile(envDir, file);
 			if (!path) return [];
 			return Object.entries(parse(fs.readFileSync(path)));
-		})
+		}),
 	);
 
 	Object.keys(parsed).forEach((key) => {
