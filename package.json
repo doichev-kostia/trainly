@@ -3,6 +3,8 @@
 	"name": "trainly",
 	"scripts": {
 		"build": "turbo run build",
+		"build:packages": "turbo run build --filter='./packages/*'",
+		"watch": "turbo run watch",
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md,svelte,js}\""

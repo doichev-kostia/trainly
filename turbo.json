@@ -5,6 +5,9 @@
     "build": {
       "dependsOn": ["^build"]
     },
+    "watch": {
+      "dependsOn": ["^watch"]
+    },
     "lint": {},
     "dev": {
       "cache": false,

@@ -1,0 +1,23 @@
+{
+	"references": [
+		{
+			"path": "./apps/api"
+		},
+		{
+			"path": "./apps/web"
+		},
+		{
+			"path": "./packages/config"
+		},
+		{
+			"path": "./packages/db"
+		},
+		{
+			"path": "./packages/utils"
+		},
+		{
+			"path": "./packages/contracts"
+		}
+	],
+	"files": []
+}

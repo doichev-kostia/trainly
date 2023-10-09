@@ -6,7 +6,8 @@ insert_final_newline = true
 charset = utf-8
 indent_style = tab
 indent_size = 4
-max_line_length =80
+tab_width = 4
+max_line_length = 80
 
 [*.prisma] # prisma provides its own formatting
 indent_size = unset

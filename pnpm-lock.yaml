@@ -41,18 +41,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@fastify/auth':
+        specifier: ^4.3.0
+        version: 4.3.0
       '@fastify/autoload':
         specifier: ^5.7.1
         version: 5.7.1
+      '@fastify/bearer-auth':
+        specifier: ^9.0.0
+        version: 9.0.0
       '@fastify/cors':
         specifier: ^8.3.0
         version: 8.4.0
-      '@fastify/env':
-        specifier: ^4.2.0
-        version: 4.2.0
-      '@fastify/jwt':
-        specifier: ^7.2.0
-        version: 7.2.1
       '@fastify/sensible':
         specifier: ^5.2.0
         version: 5.3.0
@@ -68,6 +68,12 @@ importers:
       '@trainly/config':
         specifier: workspace:^
         version: link:../../packages/config
+      '@trainly/contracts':
+        specifier: workspace:^
+        version: link:../../packages/contracts
+      '@trainly/db':
+        specifier: workspace:^
+        version: link:../../packages/db
       '@trainly/utils':
         specifier: workspace:^
         version: link:../../packages/utils
@@ -87,7 +93,7 @@ importers:
         specifier: ^10.2.3
         version: 10.2.3
       zod:
-        specifier: ^3.22.4
+        specifier: ^3.21.4
         version: 3.22.4
     devDependencies:
       '@swc-node/register':
@@ -162,6 +168,34 @@ importers:
         version: 0.34.5
 
   packages/config: {}
+
+  packages/contracts:
+    dependencies:
+      '@trainly/config':
+        specifier: workspace:^
+        version: link:../config
+      zod:
+        specifier: ^3.21.4
+        version: 3.22.4
+    devDependencies:
+      '@swc/cli':
+        specifier: ^0.1.62
+        version: 0.1.62(@swc/core@1.3.90)(chokidar@3.5.3)
+      '@swc/core':
+        specifier: ^1.3.61
+        version: 1.3.90(@swc/helpers@0.5.2)
+      '@swc/helpers':
+        specifier: ^0.5.1
+        version: 0.5.2
+      '@types/node':
+        specifier: 18.11.9
+        version: 18.11.9
+      chokidar:
+        specifier: ^3.5.3
+        version: 3.5.3
+      typescript:
+        specifier: ^5.1.3
+        version: 5.2.2
 
   packages/db:
     dependencies:
@@ -572,10 +606,23 @@ packages:
       fast-uri: 2.2.0
     dev: false
 
+  /@fastify/auth@4.3.0:
+    resolution: {integrity: sha512-LYAQteyywfbjvp1edSNID0WEfe9wSXovp2JGSraV7NnZIwz4QZjQuIdo+vtopin7ZQZLxb1Ms/Gv/FXXkuiuJA==}
+    dependencies:
+      fastify-plugin: 4.5.1
+      reusify: 1.0.4
+    dev: false
+
   /@fastify/autoload@5.7.1:
     resolution: {integrity: sha512-F5c94MYAF0tacVu6X4/1ojO7fzmgrJXsqitDtpqknXgiHZpeFNhYSnNCUHPz6UDRKsfkDohmh0fiPTtOd8clzQ==}
     dependencies:
       pkg-up: 3.1.0
+    dev: false
+
+  /@fastify/bearer-auth@9.0.0:
+    resolution: {integrity: sha512-I1egwg1LRdIvhjL/P+3UEfyK7A3YTnN3goTyf8MJ+v7vVkwyyd8ieccFKI0SzEuxMmfQh/p4yNyLZWcMVwpInA==}
+    dependencies:
+      fastify-plugin: 4.5.1
     dev: false
 
   /@fastify/cors@8.4.0:
@@ -589,13 +636,6 @@ packages:
     resolution: {integrity: sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==}
     dev: false
 
-  /@fastify/env@4.2.0:
-    resolution: {integrity: sha512-sj1ehQZPD6tty+6bhzZw1uS2K2s6eOB46maJ2fE+AuTYxdHKVVW/AHXqCYGu3nH9kgzdXsheu3/148ZoBeoQOw==}
-    dependencies:
-      env-schema: 5.2.0
-      fastify-plugin: 4.5.1
-    dev: false
-
   /@fastify/error@3.4.0:
     resolution: {integrity: sha512-e/mafFwbK3MNqxUcFBLgHhgxsF8UT1m8aj0dAlqEa2nJEgPsRtpHTZ3ObgrgkZ2M1eJHPTwgyUl/tXkvabsZdQ==}
     dev: false
@@ -604,16 +644,6 @@ packages:
     resolution: {integrity: sha512-aZAXGYo6m22Fk1zZzEUKBvut/CIIQe/BapEORnxiD5Qr0kPHqqI69NtEMCme74h+at72sPhbkb4ZrLd1W3KRLA==}
     dependencies:
       fast-json-stringify: 5.8.0
-    dev: false
-
-  /@fastify/jwt@7.2.1:
-    resolution: {integrity: sha512-CAEL8UxIIn1Baxm6GIjH7j5VNUqAijeBWF3dvxLQd+RNDYCBnVt0RtK3JV4WbfOaMsKQ0IhrxrekroWwhXYOpw==}
-    dependencies:
-      '@fastify/error': 3.4.0
-      '@lukeed/ms': 2.0.1
-      fast-jwt: 3.3.1
-      fastify-plugin: 4.5.1
-      steed: 1.1.3
     dev: false
 
   /@fastify/send@2.1.0:
@@ -1785,15 +1815,6 @@ packages:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
     engines: {node: '>=8'}
 
-  /asn1.js@5.4.1:
-    resolution: {integrity: sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==}
-    dependencies:
-      bn.js: 4.12.0
-      inherits: 2.0.4
-      minimalistic-assert: 1.0.1
-      safer-buffer: 2.1.2
-    dev: false
-
   /assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
     dev: true
@@ -1897,10 +1918,6 @@ packages:
       buffer: 5.7.1
       inherits: 2.0.4
       readable-stream: 3.6.2
-
-  /bn.js@4.12.0:
-    resolution: {integrity: sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==}
-    dev: false
 
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -2488,11 +2505,6 @@ packages:
       no-case: 2.3.2
     dev: true
 
-  /dotenv-expand@9.0.0:
-    resolution: {integrity: sha512-uW8Hrhp5ammm9x7kBLR6jDfujgaDarNA02tprvZdyrJ7MpdzD1KyrIHG4l+YoC2fJ2UcdFdNWNWIjt+sexBHJw==}
-    engines: {node: '>=12'}
-    dev: false
-
   /dotenv@16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
@@ -2501,12 +2513,6 @@ packages:
   /dotenv@16.3.1:
     resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
-    dev: false
-
-  /ecdsa-sig-formatter@1.0.11:
-    resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
-    dependencies:
-      safe-buffer: 5.2.1
     dev: false
 
   /electron-to-chromium@1.4.528:
@@ -2524,14 +2530,6 @@ packages:
   /env-paths@2.2.1:
     resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
     engines: {node: '>=6'}
-    dev: false
-
-  /env-schema@5.2.0:
-    resolution: {integrity: sha512-36/6cZ+zIbcPA2ANrzp7vTz2bS8/zdZaq2RPFqJVtCGJ4P55EakgJ1BeKP8RMvEmM7ndrnHdJXzL3J1dHrEm1w==}
-    dependencies:
-      ajv: 8.12.0
-      dotenv: 16.3.1
-      dotenv-expand: 9.0.0
     dev: false
 
   /error-ex@1.3.2:
@@ -2892,16 +2890,6 @@ packages:
       rfdc: 1.3.0
     dev: false
 
-  /fast-jwt@3.3.1:
-    resolution: {integrity: sha512-1YuuIJeh1hEvfcYDe89P2oGACWI5hd2GadRDKHalSxkc1Z0z8I6yzuVK6SF15sW09QZngTV6d7g4+TFL9bvs5A==}
-    engines: {node: '>=16 <22'}
-    dependencies:
-      '@lukeed/ms': 2.0.1
-      asn1.js: 5.4.1
-      ecdsa-sig-formatter: 1.0.11
-      mnemonist: 0.39.5
-    dev: false
-
   /fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
     dev: true
@@ -2923,13 +2911,6 @@ packages:
 
   /fast-uri@2.2.0:
     resolution: {integrity: sha512-cIusKBIt/R/oI6z/1nyfe2FvGKVTohVRfvkOhvx0nCEW+xf5NoCXjAHcWp93uOUBchzYcsvPlrapAdX1uW+YGg==}
-    dev: false
-
-  /fastfall@1.5.1:
-    resolution: {integrity: sha512-KH6p+Z8AKPXnmA7+Iz2Lh8ARCMr+8WNPVludm1LGkZoD2MjY6LVnRMtTKhkdzI+jr0RzQWXKzKyBJm1zoHEL4Q==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      reusify: 1.0.4
     dev: false
 
   /fastify-plugin@4.5.1:
@@ -2970,24 +2951,10 @@ packages:
       - supports-color
     dev: false
 
-  /fastparallel@2.4.1:
-    resolution: {integrity: sha512-qUmhxPgNHmvRjZKBFUNI0oZuuH9OlSIOXmJ98lhKPxMZZ7zS/Fi0wRHOihDSz0R1YiIOjxzOY4bq65YTcdBi2Q==}
-    dependencies:
-      reusify: 1.0.4
-      xtend: 4.0.2
-    dev: false
-
   /fastq@1.15.0:
     resolution: {integrity: sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==}
     dependencies:
       reusify: 1.0.4
-
-  /fastseries@1.7.2:
-    resolution: {integrity: sha512-dTPFrPGS8SNSzAt7u/CbMKCJ3s01N04s4JFbORHcmyvVfVKmbhMD1VtRbh5enGHxkaQDqWyLefiKOGGmohGDDQ==}
-    dependencies:
-      reusify: 1.0.4
-      xtend: 4.0.2
-    dev: false
 
   /figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
@@ -3974,10 +3941,6 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
-  /minimalistic-assert@1.0.1:
-    resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
-    dev: false
-
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
     dependencies:
@@ -4902,7 +4865,7 @@ packages:
       '@prisma/generator-helper': 5.3.1
       '@prisma/internals': 5.3.1
       typescript: 5.2.2
-      zod: 3.22.2
+      zod: 3.22.4
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -5251,6 +5214,7 @@ packages:
 
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+    dev: true
 
   /sander@0.5.1:
     resolution: {integrity: sha512-3lVqBir7WuKDHGrKRDn/1Ye3kwpXaDOMsiRP1wd6wpZW56gJhsbp5RqQpA6JG/P+pkXizygnr1dKR8vzWaVsfA==}
@@ -5488,16 +5452,6 @@ packages:
   /std-env@3.4.3:
     resolution: {integrity: sha512-f9aPhy8fYBuMN+sNfakZV18U39PbalgjXG3lLB9WkaYTxijru61wb57V9wxxNthXM5Sd88ETBWi29qLAsHO52Q==}
     dev: true
-
-  /steed@1.1.3:
-    resolution: {integrity: sha512-EUkci0FAUiE4IvGTSKcDJIQ/eRUP2JJb56+fvZ4sdnguLTqIdKjSxUe138poW8mkvKWXW2sFPrgTsxqoISnmoA==}
-    dependencies:
-      fastfall: 1.5.1
-      fastparallel: 2.4.1
-      fastq: 1.15.0
-      fastseries: 1.7.2
-      reusify: 1.0.4
-    dev: false
 
   /streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
