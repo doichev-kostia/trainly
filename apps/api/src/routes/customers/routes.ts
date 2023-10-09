@@ -1,0 +1,82 @@
+import fp from "fastify-plugin";
+import { type FastifyPluginAsyncZod } from "../../utils/types.js";
+import { CreateCustomerBodySchema, CustomerResponseSchema } from "@trainly/contracts/customers";
+import { IdResponseSchema, ListResponseSchema } from "@trainly/contracts";
+import { db } from "@trainly/db";
+import { type FastifyBaseLogger, type FastifyInstance, type RawServerDefault } from "fastify";
+import { type IncomingMessage, type ServerResponse } from "node:http";
+import { type ZodTypeProvider } from "fastify-type-provider-zod";
+
+const customerRoutes: FastifyPluginAsyncZod = fp(
+	async function customerRoutes(
+		fastify: FastifyInstance<
+			RawServerDefault,
+			IncomingMessage,
+			ServerResponse<IncomingMessage>,
+			FastifyBaseLogger,
+			ZodTypeProvider
+		>,
+	): Promise<void> {
+		fastify.addHook("onRequest", fastify.verifyAuthToken);
+
+		fastify.post(
+			"/",
+			{
+				schema: {
+					body: CreateCustomerBodySchema,
+					response: {
+						200: IdResponseSchema,
+					},
+				},
+			},
+			async function createCustomer(request, reply) {
+				const customer = await db
+					.insertInto("customer")
+					.values({
+						firstName: request.body.firstName,
+						lastName: request.body.lastName,
+						email: request.body.email,
+						updatedAt: new Date(),
+					})
+					.returning("id")
+					.executeTakeFirst();
+
+				if (!customer) {
+					request.log.error("Failed to create customer", { email: request.body.email });
+					throw fastify.httpErrors.internalServerError();
+				}
+
+				reply.code(fastify.httpStatus.CREATED);
+
+				return {
+					id: customer.id,
+				};
+			},
+		);
+
+		fastify.get(
+			"/",
+			{
+				schema: {
+					response: {
+						200: ListResponseSchema(CustomerResponseSchema),
+					},
+				},
+			},
+			async function listCustomers(request, reply) {
+				const rows = await db.selectFrom("customer").selectAll().execute();
+
+				return {
+					items: rows,
+					count: rows.length,
+				};
+			},
+		);
+	},
+	{
+		encapsulate: true,
+		dependencies: ["authentication-plugin"],
+	},
+);
+
+export default customerRoutes;

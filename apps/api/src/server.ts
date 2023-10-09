@@ -1,6 +1,8 @@
 import fastify from "fastify";
 import process from "node:process";
 import { milliseconds } from "./constants.js";
+import application from "./app.js";
+import { setTimeout } from "node:timers";
 
 const app = fastify({
 	logger: {
@@ -10,6 +12,14 @@ const app = fastify({
 		},
 	},
 	ignoreTrailingSlash: true,
+});
+
+process.on("uncaughtException", function handleUncaughtException(error) {
+	app.log.error(error, "Uncaught exception");
+});
+
+process.on("unhandledRejection", function handleUnhandledRejection(error) {
+	app.log.error(error, "Unhandled rejection");
 });
 
 process.once("SIGINT", async function closeApp() {
@@ -28,9 +38,7 @@ process.once("SIGINT", async function closeApp() {
 	}
 });
 
-app.get("/", async (request, reply) => {
-	return { hello: "world" };
-});
+app.register(application);
 
 app.ready().then(() => {
 	app.log.info("All plugins are registered");

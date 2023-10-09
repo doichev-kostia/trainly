@@ -1,9 +1,36 @@
 {
 	"extends": "@trainly/config/tsconfig.json",
 	"compilerOptions": {
+		"lib": ["ES2023"],
 		"outDir": "./build",
 		"rootDir": "./src",
-		"tsBuildInfoFile": "./build/.tsbuildinfo"
+		"tsBuildInfoFile": "./build/.tsbuildinfo",
+		"paths": {
+			"@trainly/utils": ["../../packages/src/index.ts"],
+			"@trainly/db": ["../../packages/db"],
+			"@trainly/config": ["../../packages/config"],
+			"@trainly/contracts": ["../../packages/contracts/build/index.d.ts"],
+			"@trainly/contracts/*": ["../../packages/contracts/build/*/index.d.ts"],
+			"#constants": ["./src/constants.ts"],
+			"~/configs/*": ["./src/configs/*"],
+			"~/plugins/*": ["./src/plugins/*"],
+			"~/routes/*": ["./src/routes/*"],
+			"~/utils/*": ["./src/utils/*"]
+		}
 	},
-	"include": ["./src/**/*"]
+	"include": ["./src/**/*"],
+	"references": [
+		{
+			"path": "../../packages/config"
+		},
+		{
+			"path": "../../packages/utils"
+		},
+		{
+			"path": "../../packages/db"
+		},
+		{
+			"path": "../../packages/contracts"
+		}
+	]
 }

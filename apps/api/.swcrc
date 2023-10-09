@@ -9,6 +9,13 @@
     "minify": {
       "compress": false,
       "mangle": false
+    },
+    "baseUrl": ".",
+    "paths": {
+      "~/configs/*": ["./src/configs/*"],
+      "~/plugins/*": ["./src/plugins/*"],
+      "~/routes/*": ["./src/routes/*"],
+      "~/utils/*": ["./src/utils/*"]
     }
   },
   "module": {

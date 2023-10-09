@@ -11,6 +11,9 @@
 		"start": "node ./build/server.js",
 		"dev": "node --watch ./build/server.js"
 	},
+	"imports": {
+		"#constants": "./build/constants.js"
+	},
 	"devDependencies": {
 		"@swc-node/register": "^1.6.6",
 		"@swc/cli": "^0.1.62",
@@ -21,22 +24,24 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"@fastify/auth": "^4.3.0",
 		"@fastify/autoload": "^5.7.1",
+		"@fastify/bearer-auth": "^9.0.0",
 		"@fastify/cors": "^8.3.0",
-		"@fastify/env": "^4.2.0",
-		"@fastify/jwt": "^7.2.0",
 		"@fastify/sensible": "^5.2.0",
 		"@fastify/swagger": "^8.8.0",
 		"@fastify/swagger-ui": "^1.9.3",
 		"@supabase/supabase-js": "^2.38.0",
 		"@trainly/config": "workspace:^",
+		"@trainly/contracts": "workspace:^",
+		"@trainly/db": "workspace:^",
 		"@trainly/utils": "workspace:^",
 		"fastify": "^4.23.2",
 		"fastify-plugin": "^4.5.1",
 		"fastify-type-provider-zod": "^1.1.9",
 		"globby": "^13.2.2",
 		"pino-pretty": "^10.2.3",
-		"zod": "^3.22.4"
+		"zod": "^3.21.4"
 	},
 	"keywords": [],
 	"author": "",
