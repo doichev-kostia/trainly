@@ -3,7 +3,9 @@
   "compilerOptions": {
     "incremental": true,
     "composite": true,
-		"lib": ["es2023"],
+    "lib": [
+      "es2023"
+    ],
     "target": "esnext",
     "module": "nodenext",
     "moduleResolution": "node16",
@@ -15,6 +17,6 @@
     "strict": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
-		"noUncheckedIndexedAccess": true
-	}
+    "noUncheckedIndexedAccess": true
+  }
 }
