@@ -1,7 +1,7 @@
 import fp from "fastify-plugin";
 import { type FastifyPluginAsyncZod } from "../../utils/types.js";
 import { CreateCustomerBodySchema, CustomerResponseSchema } from "@trainly/contracts/customers";
-import { IdResponseSchema, ListResponseSchema } from "@trainly/contracts";
+import { ListResponseSchema } from "@trainly/contracts";
 import { db } from "@trainly/db";
 import { type FastifyBaseLogger, type FastifyInstance, type RawServerDefault } from "fastify";
 import { type IncomingMessage, type ServerResponse } from "node:http";
@@ -25,7 +25,7 @@ const customerRoutes: FastifyPluginAsyncZod = fp(
 				schema: {
 					body: CreateCustomerBodySchema,
 					response: {
-						200: IdResponseSchema,
+						200: CustomerResponseSchema,
 					},
 				},
 			},
@@ -38,7 +38,7 @@ const customerRoutes: FastifyPluginAsyncZod = fp(
 						email: request.body.email,
 						updatedAt: new Date(),
 					})
-					.returning("id")
+					.returningAll()
 					.executeTakeFirst();
 
 				if (!customer) {
@@ -48,9 +48,7 @@ const customerRoutes: FastifyPluginAsyncZod = fp(
 
 				reply.code(fastify.httpStatus.CREATED);
 
-				return {
-					id: customer.id,
-				};
+				return customer;
 			},
 		);
 
