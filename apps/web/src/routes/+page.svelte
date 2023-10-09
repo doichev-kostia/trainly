@@ -13,13 +13,13 @@
 </script>
 
 <section class="pt-8">
-	<Typography component="h2" class="text-2xl font-semibold text-foreground pl-2">
+	<Typography component="h2" class="text-foreground pl-2 text-2xl font-semibold">
 		My journey
 	</Typography>
 	<div>
 		<form method="GET" action="/book" class="p-4">
 			<div class="mb-3 flex flex-col">
-				<div class="flex flex-col gap-y-3 mb-4">
+				<div class="mb-4 flex flex-col gap-y-3">
 					<input value={from} placeholder="From" class="w-full" name="from" />
 					<input value={to} placeholder="To" class="w-full" name="to" />
 				</div>
