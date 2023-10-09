@@ -5,6 +5,7 @@
 		"outDir": "./build",
 		"rootDir": "./src",
 		"tsBuildInfoFile": "./build/.tsbuildinfo",
+		"baseUrl": "./",
 		"paths": {
 			"@trainly/utils": ["../../packages/src/index.ts"],
 			"@trainly/db": ["../../packages/db"],

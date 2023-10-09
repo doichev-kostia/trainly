@@ -9,7 +9,7 @@
 		"build:clean": "rm -rf build && pnpm run build",
 		"watch": "swc src -d build --watch",
 		"start": "node ./build/server.js",
-		"dev": "node --watch ./build/server.js"
+		"dev": "pnpm exec fastify start --options -w -l debug -P ./build/app.js"
 	},
 	"imports": {
 		"#constants": "./build/constants.js"
@@ -37,6 +37,7 @@
 		"@trainly/db": "workspace:^",
 		"@trainly/utils": "workspace:^",
 		"fastify": "^4.23.2",
+		"fastify-cli": "^5.8.0",
 		"fastify-plugin": "^4.5.1",
 		"fastify-type-provider-zod": "^1.1.9",
 		"globby": "^13.2.2",
