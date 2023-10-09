@@ -5,7 +5,15 @@
 		"declarationMap": true,
 		"outDir": "./build",
 		"rootDir": "./src",
-		"tsBuildInfoFile": "./build/.tsbuildinfo"
+		"tsBuildInfoFile": "./build/.tsbuildinfo",
+		"paths": {
+			"@trainly/utils": ["../utils"]
+		}
 	},
-	"include": ["./src/**/*"]
+	"include": ["./src/**/*"],
+	"references": [
+		{
+			"path": "../utils"
+		}
+	]
 }

@@ -1,7 +1,8 @@
 generator kysely {
-    provider = "prisma-kysely"
-    output   = "../src"
-    fileName = "types.ts"
+    provider  = "prisma-kysely"
+    output    = "../src"
+    fileName  = "types.ts"
+    camelCase = true
 }
 
 datasource db {
@@ -9,25 +10,25 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum seat_class {
+enum SeatClass {
     standard
     premium
 }
 
-enum seat_status {
+enum SeatStatus {
     available
     booked
     reserved
 }
 
-enum booking_status {
+enum BookingStatus {
     reserved
     paid
     cancelled
 }
 
 model train {
-    id                String   @id @default(uuid()) @db.Uuid
+    id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at        DateTime @default(now())
     updated_at        DateTime @updatedAt
     name              String
@@ -39,7 +40,7 @@ model train {
 }
 
 model station {
-    id         String   @id @default(uuid()) @db.Uuid
+    id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
     name       String
@@ -49,7 +50,7 @@ model station {
 }
 
 model address {
-    id            String   @id @default(uuid()) @db.Uuid
+    id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at    DateTime @default(now())
     updated_at    DateTime @updatedAt
     country       String
@@ -63,7 +64,7 @@ model address {
 }
 
 model platform {
-    id         String   @id @default(uuid()) @db.Uuid
+    id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
     name       String
@@ -76,7 +77,7 @@ model platform {
 }
 
 model route {
-    id            String   @id @default(uuid()) @db.Uuid
+    id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at    DateTime @default(now())
     updated_at    DateTime @updatedAt
     name          String
@@ -92,7 +93,7 @@ model route {
 }
 
 model stop {
-    id                     String   @id @default(uuid()) @db.Uuid
+    id                     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at             DateTime @default(now())
     updated_at             DateTime @updatedAt
     duration_from_previous Int
@@ -107,7 +108,7 @@ model stop {
 }
 
 model journey {
-    id             String   @id @default(uuid()) @db.Uuid
+    id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at     DateTime @default(now())
     updated_at     DateTime @updatedAt
     route_id       String   @db.Uuid
@@ -120,7 +121,7 @@ model journey {
 }
 
 model journey_stop {
-    id               String    @id @default(uuid()) @db.Uuid
+    id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at       DateTime  @default(now())
     updated_at       DateTime  @updatedAt
     journey_id       String    @db.Uuid
@@ -135,13 +136,13 @@ model journey_stop {
 }
 
 model seat {
-    id         String      @id @default(uuid()) @db.Uuid
-    created_at DateTime    @default(now())
-    updated_at DateTime    @updatedAt
+    id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    created_at DateTime   @default(now())
+    updated_at DateTime   @updatedAt
     number     Int
-    class      seat_class
-    journey_id String      @db.Uuid
-    status     seat_status @default(available)
+    class      SeatClass
+    journey_id String     @db.Uuid
+    status     SeatStatus @default(available)
 
     journey journey @relation(fields: [journey_id], references: [id])
 
@@ -149,7 +150,7 @@ model seat {
 }
 
 model customer {
-    id         String   @id @default(uuid()) @db.Uuid
+    id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
     first_name String
@@ -160,11 +161,11 @@ model customer {
 }
 
 model booking {
-    id          String         @id @default(uuid()) @db.Uuid
-    created_at  DateTime       @default(now())
-    updated_at  DateTime       @updatedAt
-    status      booking_status
-    customer_id String?        @db.Uuid
+    id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    created_at  DateTime      @default(now())
+    updated_at  DateTime      @updatedAt
+    status      BookingStatus
+    customer_id String?       @db.Uuid
 
     customer customer? @relation(fields: [customer_id], references: [id])
 
@@ -172,7 +173,7 @@ model booking {
 }
 
 model passenger {
-    id         String   @id @default(uuid()) @db.Uuid
+    id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
     first_name String
@@ -182,7 +183,7 @@ model passenger {
 }
 
 model ticket {
-    id           String   @id @default(uuid()) @db.Uuid
+    id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     created_at   DateTime @default(now())
     updated_at   DateTime @updatedAt
     passenger_id String   @db.Uuid

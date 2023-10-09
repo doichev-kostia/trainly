@@ -1,17 +1,28 @@
 {
-  "name": "@tranly/db",
+  "name": "@trainly/db",
+  "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/db.ts",
+  "module": "./src/db.ts",
+  "types": "./src/db.ts",
   "type": "module",
   "scripts": {
-    "generate": "prisma generate",
+    "generate": "prisma generate && pnpm run build",
     "migrate": "prisma migrate dev --name $1",
-    "build": "pnpm run typecheck && pnpm run compile && tsc",
+    "build": "tsc && pnpm run compile",
     "build:clean": "rm -rf build && pnpm run build",
     "compile": "pnpm exec swc src --out-dir build",
     "typecheck": "pnpm exec tsc --noEmit --emitDeclarationOnly false",
     "watch": "pnpm exec swc src -d build --watch"
+  },
+  "exports": {
+    ".": {
+      "import": "./build/db.js",
+      "default": "./build/db.js",
+      "types": "./build/db.d.ts"
+    },
+    "./package.json": "./package.json"
   },
   "keywords": [],
   "author": "",
