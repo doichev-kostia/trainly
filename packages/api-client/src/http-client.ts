@@ -1,21 +1,20 @@
-import { z } from "zod";
 import ky, { type KyResponse, type Options } from "ky";
 
 type Input = string | URL | Request;
 const requestMethods = ["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE"] as const;
-const requestMethodSchema = z.enum(requestMethods);
 type RequestMethod = (typeof requestMethods)[number];
 
 export class HttpClient {
 	private readonly apiKey: string;
 	private readonly api: typeof ky;
 
-	constructor(apiKey: string) {
+	constructor(apiKey: string, options?: Options) {
 		this.apiKey = apiKey;
 		this.api = ky.create({
 			headers: {
 				Authorization: `Bearer ${this.apiKey}`,
 			},
+			...options,
 		});
 	}
 

@@ -10,7 +10,7 @@ export class Customers {
 	constructor(private client: HttpClient) {}
 
 	async list(): Promise<ListResponse<CustomerResponse>> {
-		const response = await this.client.get("/customers");
+		const response = await this.client.get("customers");
 
 		const data = await response.json<ListResponse<CustomerResponse>>();
 
@@ -18,7 +18,7 @@ export class Customers {
 	}
 
 	async retrieve(id: string): Promise<CustomerResponse> {
-		const response = await this.client.get(`/customers/${id}`);
+		const response = await this.client.get(`customers/${id}`);
 
 		const data = await response.json<CustomerResponse>();
 
@@ -26,7 +26,7 @@ export class Customers {
 	}
 
 	async create(customer: CreateCustomerBody): Promise<CustomerResponse> {
-		const response = await this.client.post("/customers", {
+		const response = await this.client.post("customers", {
 			json: customer,
 		});
 
@@ -36,7 +36,7 @@ export class Customers {
 	}
 
 	async update(id: string, customer: UpdateCustomerBody): Promise<CustomerResponse> {
-		const response = await this.client.patch(`/customers/${id}`, {
+		const response = await this.client.patch(`customers/${id}`, {
 			json: customer,
 		});
 
@@ -46,7 +46,7 @@ export class Customers {
 	}
 
 	async del(id: string): Promise<IdResponse> {
-		const response = await this.client.delete(`/customers/${id}`);
+		const response = await this.client.delete(`customers/${id}`);
 
 		const data = await response.json<IdResponse>();
 
