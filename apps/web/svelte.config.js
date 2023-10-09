@@ -15,6 +15,10 @@ const config = {
 		alias: {
 			"~": "./src",
 		},
+		env: {
+			publicPrefix: "PUBLIC_",
+			privatePrefix: "PRIVATE_",
+		},
 	},
 };
 
