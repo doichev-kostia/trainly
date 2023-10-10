@@ -6,7 +6,6 @@
       "dependsOn": ["^build"]
     },
     "watch": {
-      "dependsOn": ["^watch"]
     },
     "lint": {},
     "dev": {
