@@ -35,6 +35,7 @@
     "@trainly/config": "workspace:^",
     "@trainly/contracts": "workspace:^",
     "ky": "^1.0.1",
+    "query-string": "^8.1.0",
     "zod": "^3.22.4"
   }
 }
