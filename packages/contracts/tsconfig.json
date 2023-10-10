@@ -4,6 +4,7 @@
 		"composite": true,
 		"declaration": true,
 		"declarationMap": true,
+		"emitDeclarationOnly": true,
 		"outDir": "./build",
 		"rootDir": "./src",
 		"tsBuildInfoFile": "./build/.tsbuildinfo"
@@ -13,5 +14,6 @@
 		{
 			"path": "../config/tsconfig.json"
 		}
-	]
+	],
+	"exclude": ["./build"]
 }

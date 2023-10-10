@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export function ListResponseSchema<S extends z.ZodRawShape>(item: S | z.ZodObject<S>) {
-	let schema = item;
-	if (!(schema instanceof z.ZodSchema)) {
-		schema = z.object(schema);
-	}
-
+export function ListResponseSchema<T extends z.ZodType>(schema: T) {
 	return z.object({
 		items: z.array(schema),
 		count: z.number(),
