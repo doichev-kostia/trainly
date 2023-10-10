@@ -1,4 +1,5 @@
-import ky, { type KyResponse, type Options } from "ky";
+import ky, { type KyResponse, type Options as KyOptions } from "ky";
+import { processOptions, type RequestOptions, type Options } from "./options.js";
 
 type Input = string | URL | Request;
 const requestMethods = ["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE"] as const;
@@ -8,7 +9,7 @@ export class HttpClient {
 	private readonly apiKey: string;
 	private readonly api: typeof ky;
 
-	constructor(apiKey: string, options?: Options) {
+	constructor(apiKey: string, options?: KyOptions) {
 		this.apiKey = apiKey;
 		this.api = ky.create({
 			headers: {
@@ -18,32 +19,52 @@ export class HttpClient {
 		});
 	}
 
-	public async get(input: Input, options?: Options): Promise<KyResponse> {
-		const response = await this.api.get(input, options);
+	public async get(
+		input: Input,
+		options?: Options,
+		requestOptions?: RequestOptions,
+	): Promise<KyResponse> {
+		const response = await this.api.get(input, processOptions(options, requestOptions));
 
 		return response;
 	}
 
-	public async post(input: Input, options?: Options): Promise<KyResponse> {
-		const response = await this.api.post(input, options);
+	public async post(
+		input: Input,
+		options?: Options,
+		requestOptions?: RequestOptions,
+	): Promise<KyResponse> {
+		const response = await this.api.post(input, processOptions(options, requestOptions));
 
 		return response;
 	}
 
-	public async put(input: Input, options?: Options): Promise<KyResponse> {
-		const response = await this.api.put(input, options);
+	public async put(
+		input: Input,
+		options?: Options,
+		requestOptions?: RequestOptions,
+	): Promise<KyResponse> {
+		const response = await this.api.put(input, processOptions(options, requestOptions));
 
 		return response;
 	}
 
-	public async patch(input: Input, options?: Options): Promise<KyResponse> {
-		const response = await this.api.patch(input, options);
+	public async patch(
+		input: Input,
+		options?: Options,
+		requestOptions?: RequestOptions,
+	): Promise<KyResponse> {
+		const response = await this.api.patch(input, processOptions(options, requestOptions));
 
 		return response;
 	}
 
-	public async delete(input: Input, options?: Options): Promise<KyResponse> {
-		const response = await this.api.delete(input, options);
+	public async delete(
+		input: Input,
+		options?: Options,
+		requestOptions?: RequestOptions,
+	): Promise<KyResponse> {
+		const response = await this.api.delete(input, processOptions(options, requestOptions));
 
 		return response;
 	}
@@ -52,10 +73,11 @@ export class HttpClient {
 		method: RequestMethod,
 		input: Input,
 		options?: Options,
+		requestOptions?: RequestOptions,
 	): Promise<KyResponse> {
-		const requestOptions = options ?? {};
-		requestOptions.method = method;
-		const response = await this.api(input, requestOptions);
+		const opts = options ?? {};
+		opts.method = method;
+		const response = await this.api(input, processOptions(opts, requestOptions));
 
 		return response;
 	}
