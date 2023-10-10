@@ -2,10 +2,7 @@ import { type FastifyInstance } from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import { configLoader } from "./configs/config.js";
 import AutoLoad from "@fastify/autoload";
-import * as url from "node:url";
-import * as path from "node:path";
-
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+import { join } from "desm";
 
 export default async function application(
 	fastify: FastifyInstance,
@@ -18,7 +15,7 @@ export default async function application(
 	fastify.log.info("Config loaded successfully.");
 
 	fastify.register(AutoLoad, {
-		dir: path.join(__dirname, "plugins"),
+		dir: join(import.meta.url, "plugins"),
 		dirNameRoutePrefix: false,
 		ignorePattern: /.*.no-load\.(js|ts)$/,
 		indexPattern: /^no$/i,
@@ -26,7 +23,7 @@ export default async function application(
 	});
 
 	fastify.register(AutoLoad, {
-		dir: path.join(__dirname, "routes"),
+		dir: join(import.meta.url, "routes"),
 		indexPattern: /.*routes(\.js|\.ts)$/i,
 		ignorePattern: /.*(\.js|\.ts)$/i,
 		autoHooksPattern: /.*hooks(\.js|\.ts)$/i,
