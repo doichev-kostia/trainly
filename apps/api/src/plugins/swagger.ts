@@ -2,31 +2,51 @@ import fp from "fastify-plugin";
 import swagger from "@fastify/swagger";
 import * as path from "node:path";
 import swaggerUI from "@fastify/swagger-ui";
+import { type FastifyInstance } from "fastify";
 
-export default fp(async function swaggerConfig(fastify, options) {
-	const packageJSON =  await import(path.resolve('package.json'), {
-		assert: {
-			type: 'json'
+export default fp(
+	async function swaggerConfig(fastify: FastifyInstance, options) {
+		if (fastify.secrets.NODE_ENV === "production") {
+			fastify.log.info("Swagger UI is disabled in production.");
+			return;
 		}
-	});
 
-	const version = packageJSON.version;
+		const packageJSON = await import(path.resolve("package.json"), {
+			assert: {
+				type: "json",
+			},
+		});
 
-	fastify.register(swagger, {
-		routePrefix: "/docs/openapi.json",
-		swagger: {
-			info: {
-				title: "Fastify API",
-				description: "Fastify guide",
-				version
-			}
-		}
-	} as swagger.SwaggerOptions)
+		const version = packageJSON.version;
 
-	fastify.register(swaggerUI, {
-		routePrefix: "/docs",
-	})
-}, {
-	name: "swagger-config",
-	dependencies: ["application-configuration"]
-})
+		fastify.register(swagger, {
+			routePrefix: "/docs/openapi.json",
+			swagger: {
+				info: {
+					title: "Trainly API",
+					description: "Trainly API Documentation",
+					version,
+				},
+				host: "localhost",
+				schemes: ["http", "https"],
+				consumes: ["application/json"],
+				produces: ["application/json", "text/html"],
+				securityDefinitions: {
+					Bearer: {
+						type: "apiKey",
+						name: "Bearer",
+						in: "header",
+					},
+				},
+			},
+		} as swagger.SwaggerOptions);
+
+		fastify.register(swaggerUI, {
+			routePrefix: "/docs",
+		});
+	},
+	{
+		name: "swagger-config",
+		dependencies: ["application-configuration"],
+	},
+);
