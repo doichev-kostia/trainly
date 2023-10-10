@@ -1,80 +1,80 @@
-import fp from "fastify-plugin";
-import { CreateCustomerBodySchema, CustomerResponseSchema } from "@trainly/contracts/customers";
-import { ListResponseSchema } from "@trainly/contracts";
-import { db } from "@trainly/db";
-import { type FastifyBaseLogger, type FastifyInstance, type RawServerDefault } from "fastify";
-import { type IncomingMessage, type ServerResponse } from "node:http";
-import { type ZodTypeProvider } from "fastify-type-provider-zod";
-import { type FastifyPluginAsyncZod } from "~/utils/types.js";
+import {
+	CreateCustomerBodySchema,
+	CustomerResponseSchema,
+	ListCustomerQuerySchema,
+	RetrieveCustomerQuerySchema,
+	UpdateCustomerBodySchema,
+} from "@trainly/contracts/customers";
+import { IdParamsSchema, ListResponseSchema } from "@trainly/contracts";
+import { type Instance } from "~/utils/types.js";
 
-const customerRoutes: FastifyPluginAsyncZod = fp(
-	async function customerRoutes(
-		fastify: FastifyInstance<
-			RawServerDefault,
-			IncomingMessage,
-			ServerResponse<IncomingMessage>,
-			FastifyBaseLogger,
-			ZodTypeProvider
-		>,
-	): Promise<void> {
-		fastify.addHook("onRequest", fastify.verifyAuthToken);
+import { createCustomer } from "./handlers/createCustomer.js";
+import { listCustomers } from "./handlers/listCustomers.js";
+import { retrieveCustomer } from "./handlers/retrieveCustomer.js";
+import { updateCustomer } from "./handlers/updateCustomer.js";
+import { deleteCustomer } from "./handlers/deleteCustomer.js";
 
-		fastify.post(
-			"/",
-			{
-				schema: {
-					body: CreateCustomerBodySchema,
-					response: {
-						200: CustomerResponseSchema,
-					},
-				},
+async function customerRoutes(fastify: Instance): Promise<void> {
+	fastify.addHook("onRequest", fastify.verifyAuthToken);
+
+	fastify.route({
+		method: "POST",
+		url: "/",
+		schema: {
+			body: CreateCustomerBodySchema,
+			response: {
+				200: CustomerResponseSchema,
 			},
-			async function createCustomer(request, reply) {
-				const customer = await db
-					.insertInto("customer")
-					.values({
-						firstName: request.body.firstName,
-						lastName: request.body.lastName,
-						email: request.body.email,
-						updatedAt: new Date(),
-					})
-					.returningAll()
-					.executeTakeFirst();
+		},
+		handler: createCustomer,
+	});
 
-				if (!customer) {
-					request.log.error("Failed to create customer", { email: request.body.email });
-					throw fastify.httpErrors.internalServerError();
-				}
-
-				reply.code(fastify.httpStatus.CREATED);
-
-				return customer;
+	fastify.route({
+		method: "GET",
+		url: "/",
+		schema: {
+			querystring: ListCustomerQuerySchema,
+			response: {
+				200: ListResponseSchema(CustomerResponseSchema),
 			},
-		);
+		},
+		handler: listCustomers,
+	});
 
-		fastify.get(
-			"/",
-			{
-				schema: {
-					response: {
-						200: ListResponseSchema(CustomerResponseSchema),
-					},
-				},
+	fastify.route({
+		method: "GET",
+		url: "/:id",
+		schema: {
+			params: IdParamsSchema,
+			querystring: RetrieveCustomerQuerySchema,
+			response: {
+				200: CustomerResponseSchema,
 			},
-			async function listCustomers(request, reply) {
-				const rows = await db.selectFrom("customer").selectAll().execute();
+		},
+		handler: retrieveCustomer,
+	});
 
-				return {
-					items: rows,
-					count: rows.length,
-				};
+	fastify.route({
+		method: "PATCH",
+		url: "/:id",
+		schema: {
+			params: IdParamsSchema,
+			body: UpdateCustomerBodySchema,
+			response: {
+				200: CustomerResponseSchema,
 			},
-		);
-	},
-	{
-		encapsulate: true,
-		dependencies: ["authentication-plugin"],
-	},
-);
+		},
+		handler: updateCustomer,
+	});
+
+	fastify.route({
+		method: "DELETE",
+		url: "/:id",
+		schema: {
+			params: IdParamsSchema,
+		},
+		handler: deleteCustomer,
+	});
+}
 
 export default customerRoutes;
