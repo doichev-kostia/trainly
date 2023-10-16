@@ -23,7 +23,8 @@ const config = {
 			"prefer": "type-imports",
 			"fixStyle": "inline-type-imports"
 		}],
-		"@typescript-eslint/no-unused-vars": ["warn"]
+		"@typescript-eslint/no-unused-vars": ["warn"],
+		"@typescript-eslint/no-explicit-any": ["off"],
 	},
 	env: {
 		browser: true,
