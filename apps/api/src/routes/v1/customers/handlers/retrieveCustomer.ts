@@ -4,21 +4,25 @@ import {
 	type CustomerResponseSchema,
 	type RetrieveCustomerQuerySchema,
 } from "@trainly/contracts/customers";
+import { CustomerRepository } from "~/routes/v1/customers/customer.repository.js";
 
 type Schema = {
 	params: typeof IdParamsSchema;
 	querystring: typeof RetrieveCustomerQuerySchema;
 	response: {
-		200: typeof CustomerResponseSchema;
+		"2xx": typeof CustomerResponseSchema;
 	};
 };
 
 export const retrieveCustomer: Handler<Schema> = async function retrieveFunction(request) {
-	const customer = await this.db
-		.selectFrom("customer")
-		.selectAll()
-		.where("id", "=", request.params.id)
-		.executeTakeFirst();
+	const customer = await CustomerRepository.getInstance().retrieveCustomer(
+		request.params.id,
+		request.query.expand,
+	);
+
+	const r = await CustomerRepository.getInstance().retrieveCustomer(request.params.id, [
+		"bookings",
+	]);
 
 	if (!customer) {
 		throw this.httpErrors.notFound("Customer not found");

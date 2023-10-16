@@ -1,38 +1,29 @@
-import { db } from "@trainly/db";
 import {
 	type CreateCustomerBodySchema,
 	type CustomerResponseSchema,
 } from "@trainly/contracts/customers";
 import { type Handler } from "~/utils/types.js";
+import { CustomerRepository } from "../customer.repository.js";
 
 type Schema = {
 	body: typeof CreateCustomerBodySchema;
 	response: {
-		200: typeof CustomerResponseSchema;
+		"2xx": typeof CustomerResponseSchema;
 	};
 };
 
 export const createCustomer: Handler<Schema> = async function createCustomer(request, reply) {
-	const existingCustomer = await db
-		.selectFrom("customer")
-		.select("id")
-		.where("email", "=", request.body.email)
-		.executeTakeFirst();
+	const alreadyExists = await CustomerRepository.getInstance().checkExists(request.body.email);
 
-	if (existingCustomer) {
+	if (alreadyExists) {
 		throw this.httpErrors.conflict("Customer already exists");
 	}
 
-	const customer = await db
-		.insertInto("customer")
-		.values({
-			firstName: request.body.firstName,
-			lastName: request.body.lastName,
-			email: request.body.email,
-			updatedAt: new Date(),
-		})
-		.returningAll()
-		.executeTakeFirst();
+	const customer = await CustomerRepository.getInstance().createCustomer({
+		email: request.body.email,
+		firstName: request.body.firstName,
+		lastName: request.body.lastName,
+	});
 
 	if (!customer) {
 		request.log.error("Failed to create customer", { email: request.body.email });

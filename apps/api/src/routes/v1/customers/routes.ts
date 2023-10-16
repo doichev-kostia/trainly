@@ -23,7 +23,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 		schema: {
 			body: CreateCustomerBodySchema,
 			response: {
-				200: CustomerResponseSchema,
+				"2xx": CustomerResponseSchema,
 			},
 		},
 		handler: createCustomer,
@@ -35,7 +35,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 		schema: {
 			querystring: ListCustomerQuerySchema,
 			response: {
-				200: ListResponseSchema(CustomerResponseSchema),
+				"2xx": ListResponseSchema(CustomerResponseSchema),
 			},
 		},
 		handler: listCustomers,
@@ -48,7 +48,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 			params: IdParamsSchema,
 			querystring: RetrieveCustomerQuerySchema,
 			response: {
-				200: CustomerResponseSchema,
+				"2xx": CustomerResponseSchema,
 			},
 		},
 		handler: retrieveCustomer,
@@ -61,7 +61,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 			params: IdParamsSchema,
 			body: UpdateCustomerBodySchema,
 			response: {
-				200: CustomerResponseSchema,
+				"2xx": CustomerResponseSchema,
 			},
 		},
 		handler: updateCustomer,

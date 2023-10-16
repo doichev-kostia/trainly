@@ -1,17 +1,15 @@
 import { type Handler } from "~/utils/types.js";
 import { type IdParamsSchema } from "@trainly/contracts";
+import { CustomerRepository } from "~/routes/v1/customers/customer.repository.js";
 
 type Schema = {
 	params: typeof IdParamsSchema;
 };
 
 export const deleteCustomer: Handler<Schema> = async function deleteCustomer(request) {
-	const customer = await this.db
-		.deleteFrom("customer")
-		.where("id", "=", request.params.id)
-		.executeTakeFirst();
+	const result = await CustomerRepository.getInstance().deleteCustomer(request.params.id);
 
-	if (!customer.numDeletedRows) {
+	if (!result.affectedRows) {
 		throw this.httpErrors.notFound("Customer not found");
 	}
 
