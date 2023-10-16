@@ -10,7 +10,7 @@
 			"@trainly/utils": ["../utils"]
 		}
 	},
-	"include": ["./src/**/*"],
+	"include": ["./src/**/*", "types/**/*"],
 	"references": [
 		{
 			"path": "../utils"

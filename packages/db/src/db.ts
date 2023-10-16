@@ -1,26 +1,20 @@
-import { type DB } from "./types.js";
+import postgres, { type Options, type PostgresType } from "postgres";
+import { connectionOptions } from "./config.js";
+import * as schema from "./schema/index.js";
+import { drizzle } from "drizzle-orm/postgres-js";
 
-import pg from "pg";
-import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely";
-import { parseEnv } from "@trainly/utils";
-import { z } from "zod";
+const options: Options<Record<string, PostgresType>> = {};
 
-const schema = z.object({
-	DATABASE_URL: z.string().url(),
+let client;
+if (connectionOptions.connectionString) {
+	client = postgres(connectionOptions.connectionString, options);
+} else {
+	client = postgres(Object.assign(options, connectionOptions));
+}
+
+export const db = drizzle(client, {
+	logger: true,
+	schema,
 });
-
-parseEnv(schema);
-
-const dialect = new PostgresDialect({
-	pool: new pg.Pool({
-		connectionString: process.env.DATABASE_URL,
-		max: 10,
-	}),
-});
-
-export const db = new Kysely<DB>({
-	dialect,
-	plugins: [new CamelCasePlugin()],
-});
-
-export * from "./types.js";
+export type Schema = typeof schema;
+export * from "drizzle-orm";

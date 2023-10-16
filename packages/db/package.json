@@ -8,13 +8,13 @@
   "types": "./src/db.ts",
   "type": "module",
   "scripts": {
-    "generate": "prisma generate && pnpm run build",
-    "migrate": "prisma migrate dev --name $1",
     "build": "tsc && pnpm run compile",
     "build:clean": "rm -rf build && pnpm run build",
     "compile": "pnpm exec swc src --out-dir build",
     "typecheck": "pnpm exec tsc --noEmit --emitDeclarationOnly false",
-    "watch": "pnpm exec swc src -d build --watch"
+    "watch": "pnpm exec swc src -d build --watch",
+    "migrations:generate": "pnpm exec drizzle-kit generate:pg --config='drizzle.config.ts'",
+    "migrations:run": "pnpm exec tsx --tsconfig ./tsconfig.json ./src/scripts/run-migration.ts"
   },
   "exports": {
     ".": {
@@ -22,27 +22,37 @@
       "default": "./build/db.js",
       "types": "./build/db.d.ts"
     },
+    "./schema/enums": {
+      "types": "./build/schema/enums.d.ts",
+      "import": "./build/schema/enums.js",
+      "default": "./build/schema/enums.js"
+    },
+    "./schema/*": {
+      "types": "./build/schema/*.table.d.ts",
+      "import": "./build/schema/*.table.js",
+      "default": "./build/schema/*.table.js"
+    },
     "./package.json": "./package.json"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.61",
     "@swc/helpers": "^0.5.1",
     "@trainly/config": "workspace:^",
     "@types/node": "18",
-    "@types/pg": "^8.10.3",
     "chokidar": "^3.5.3",
-    "prisma": "^5.3.1",
+    "drizzle-kit": "^0.19.13",
+    "tsx": "^3.13.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "@trainly/utils": "workspace:^",
-    "kysely": "^0.26.3",
-    "pg": "^8.11.3",
-    "prisma-kysely": "^1.7.1",
+    "desm": "^1.3.0",
+    "drizzle-orm": "^0.28.6",
+    "postgres": "^3.4.0",
     "zod": "^3.22.2"
   }
 }
