@@ -20,10 +20,6 @@ export const retrieveCustomer: Handler<Schema> = async function retrieveFunction
 		request.query.expand,
 	);
 
-	const r = await CustomerRepository.getInstance().retrieveCustomer(request.params.id, [
-		"bookings",
-	]);
-
 	if (!customer) {
 		throw this.httpErrors.notFound("Customer not found");
 	}
