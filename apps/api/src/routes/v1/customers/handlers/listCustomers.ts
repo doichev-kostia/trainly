@@ -1,5 +1,5 @@
 import { type Handler } from "~/utils/types.js";
-import { type ListResponseSchema } from "@trainly/contracts";
+import { type ListResponseSchemaType } from "@trainly/contracts";
 import {
 	type CustomerResponseSchema,
 	type ListCustomerQuerySchema,
@@ -9,7 +9,7 @@ import { CustomerRepository } from "../customer.repository.js";
 type Schema = {
 	querystring: typeof ListCustomerQuerySchema;
 	response: {
-		"2xx": ReturnType<typeof ListResponseSchema<typeof CustomerResponseSchema>>;
+		"2xx": ListResponseSchemaType<typeof CustomerResponseSchema>;
 	};
 };
 
