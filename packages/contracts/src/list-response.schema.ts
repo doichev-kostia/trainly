@@ -11,3 +11,5 @@ export type ListResponse<T> = {
 	items: T[];
 	count: number;
 };
+
+export type ListResponseSchemaType<T extends z.ZodType> = ReturnType<typeof ListResponseSchema<T>>;
