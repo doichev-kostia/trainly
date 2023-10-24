@@ -3,6 +3,7 @@ import swagger from "@fastify/swagger";
 import * as path from "node:path";
 import swaggerUI from "@fastify/swagger-ui";
 import { type FastifyInstance } from "fastify";
+import { createJsonSchemaTransform } from "fastify-type-provider-zod";
 
 export default fp(
 	async function swaggerConfig(fastify: FastifyInstance, options) {
@@ -39,6 +40,9 @@ export default fp(
 					},
 				},
 			},
+			transform: createJsonSchemaTransform({
+				skipList: ["/_app/status"],
+			}),
 		} as swagger.SwaggerOptions);
 
 		fastify.register(swaggerUI, {
