@@ -1,0 +1,12 @@
+# @name Create a train
+
+POST {{api_url}}/trains
+Authorization: Bearer {{admin_api_key}}
+Content-Type: application/json
+
+{
+	"name": "Train 1",
+    "totalSeats": 100,
+    "carriageCapacity": 10,
+    "premiumCarriages": 2
+}
