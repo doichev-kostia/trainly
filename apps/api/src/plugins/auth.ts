@@ -5,6 +5,7 @@ import fastifyBearerAuth, {
 	type verifyBearerAuthFactory,
 } from "@fastify/bearer-auth";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import fastifyAuth from "@fastify/auth";
 
 declare module "fastify" {
 	interface FastifyInstance extends FastifyAuthPlugin {}
@@ -36,6 +37,7 @@ export default fp(
 		};
 
 		await fastify.register(fastifyBearerAuth, options);
+		await fastify.register(fastifyAuth);
 
 		fastify.decorate(
 			"verifyAuthToken",
