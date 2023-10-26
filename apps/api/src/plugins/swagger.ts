@@ -25,21 +25,13 @@ export default fp(
 			});
 		});
 
-		const packageJSON = await import(path.resolve("package.json"), {
-			assert: {
-				type: "json",
-			},
-		});
-
-		const version = packageJSON.version;
-
 		fastify.register(swagger, {
 			routePrefix: "/docs/openapi.json",
 			openapi: {
 				info: {
 					title: "Trainly API",
 					description: "Trainly API Documentation",
-					version,
+					version: "internal",
 				},
 				servers: [
 					{

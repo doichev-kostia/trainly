@@ -2,6 +2,7 @@ openapi: 3.0.3
 info:
   title: Trainly API
   description: Trainly API Documentation
+  version: internal
 components:
   securitySchemes:
     BearerAuth:
@@ -335,6 +336,232 @@ paths:
       responses:
         "200":
           description: Default Response
+  /v1/trains/:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                totalSeats:
+                  type: integer
+                  minimum: 1
+                carriageCapacity:
+                  type: integer
+                  minimum: 1
+                premiumCarriages:
+                  type: integer
+                  minimum: 0
+              required:
+                - name
+                - totalSeats
+                - carriageCapacity
+                - premiumCarriages
+              additionalProperties: false
+        required: true
+      security:
+        - AdminBearerAuth: []
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  name:
+                    type: string
+                  totalSeats:
+                    type: integer
+                  carriageCapacity:
+                    type: integer
+                  premiumCarriages:
+                    type: integer
+                required:
+                  - id
+                  - createdAt
+                  - name
+                  - totalSeats
+                  - carriageCapacity
+                  - premiumCarriages
+                additionalProperties: false
+    get:
+      parameters:
+        - schema:
+            type: integer
+            exclusiveMinimum: true
+            minimum: 0
+            default: 10
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+            default: 0
+          in: query
+          name: offset
+          required: false
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        createdAt:
+                          type: string
+                          format: date-time
+                        name:
+                          type: string
+                        totalSeats:
+                          type: integer
+                        carriageCapacity:
+                          type: integer
+                        premiumCarriages:
+                          type: integer
+                      required:
+                        - id
+                        - createdAt
+                        - name
+                        - totalSeats
+                        - carriageCapacity
+                        - premiumCarriages
+                      additionalProperties: false
+                  count:
+                    type: number
+                required:
+                  - items
+                  - count
+                additionalProperties: false
+  /v1/trains/{id}:
+    get:
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  name:
+                    type: string
+                  totalSeats:
+                    type: integer
+                  carriageCapacity:
+                    type: integer
+                  premiumCarriages:
+                    type: integer
+                required:
+                  - id
+                  - createdAt
+                  - name
+                  - totalSeats
+                  - carriageCapacity
+                  - premiumCarriages
+                additionalProperties: false
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                totalSeats:
+                  type: integer
+                  minimum: 1
+                carriageCapacity:
+                  type: integer
+                  minimum: 1
+                premiumCarriages:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  name:
+                    type: string
+                  totalSeats:
+                    type: integer
+                  carriageCapacity:
+                    type: integer
+                  premiumCarriages:
+                    type: integer
+                required:
+                  - id
+                  - createdAt
+                  - name
+                  - totalSeats
+                  - carriageCapacity
+                  - premiumCarriages
+                additionalProperties: false
+    delete:
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
   /v1/stations/:
     post:
       requestBody:
@@ -653,232 +880,6 @@ paths:
                   - id
                   - createdAt
                   - name
-                additionalProperties: false
-    delete:
-      parameters:
-        - schema:
-            type: string
-            format: uuid
-          in: path
-          name: id
-          required: true
-      responses:
-        "200":
-          description: Default Response
-  /v1/trains/:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  maxLength: 255
-                totalSeats:
-                  type: integer
-                  minimum: 1
-                carriageCapacity:
-                  type: integer
-                  minimum: 1
-                premiumCarriages:
-                  type: integer
-                  minimum: 0
-              required:
-                - name
-                - totalSeats
-                - carriageCapacity
-                - premiumCarriages
-              additionalProperties: false
-        required: true
-      security:
-        - AdminBearerAuth: []
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  createdAt:
-                    type: string
-                    format: date-time
-                  name:
-                    type: string
-                  totalSeats:
-                    type: integer
-                  carriageCapacity:
-                    type: integer
-                  premiumCarriages:
-                    type: integer
-                required:
-                  - id
-                  - createdAt
-                  - name
-                  - totalSeats
-                  - carriageCapacity
-                  - premiumCarriages
-                additionalProperties: false
-    get:
-      parameters:
-        - schema:
-            type: integer
-            exclusiveMinimum: true
-            minimum: 0
-            default: 10
-          in: query
-          name: limit
-          required: false
-        - schema:
-            type: integer
-            minimum: 0
-            default: 0
-          in: query
-          name: offset
-          required: false
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                        createdAt:
-                          type: string
-                          format: date-time
-                        name:
-                          type: string
-                        totalSeats:
-                          type: integer
-                        carriageCapacity:
-                          type: integer
-                        premiumCarriages:
-                          type: integer
-                      required:
-                        - id
-                        - createdAt
-                        - name
-                        - totalSeats
-                        - carriageCapacity
-                        - premiumCarriages
-                      additionalProperties: false
-                  count:
-                    type: number
-                required:
-                  - items
-                  - count
-                additionalProperties: false
-  /v1/trains/{id}:
-    get:
-      parameters:
-        - schema:
-            type: string
-            format: uuid
-          in: path
-          name: id
-          required: true
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  createdAt:
-                    type: string
-                    format: date-time
-                  name:
-                    type: string
-                  totalSeats:
-                    type: integer
-                  carriageCapacity:
-                    type: integer
-                  premiumCarriages:
-                    type: integer
-                required:
-                  - id
-                  - createdAt
-                  - name
-                  - totalSeats
-                  - carriageCapacity
-                  - premiumCarriages
-                additionalProperties: false
-    patch:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  maxLength: 255
-                totalSeats:
-                  type: integer
-                  minimum: 1
-                carriageCapacity:
-                  type: integer
-                  minimum: 1
-                premiumCarriages:
-                  type: integer
-                  minimum: 0
-              additionalProperties: false
-      parameters:
-        - schema:
-            type: string
-            format: uuid
-          in: path
-          name: id
-          required: true
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  createdAt:
-                    type: string
-                    format: date-time
-                  name:
-                    type: string
-                  totalSeats:
-                    type: integer
-                  carriageCapacity:
-                    type: integer
-                  premiumCarriages:
-                    type: integer
-                required:
-                  - id
-                  - createdAt
-                  - name
-                  - totalSeats
-                  - carriageCapacity
-                  - premiumCarriages
                 additionalProperties: false
     delete:
       parameters:
