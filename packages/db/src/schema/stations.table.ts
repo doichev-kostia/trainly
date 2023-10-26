@@ -6,7 +6,7 @@ import { platforms } from "./platforms.table.js";
 export const stations = pgTable("stations", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updateAt: timestamp("updated_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	name: varchar("name").notNull(),
 });
 
