@@ -1,11 +1,11 @@
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
-import { type InferSelectModel } from "drizzle-orm";
+import { type InferSelectModel, relations } from "drizzle-orm";
 import { stations } from "./stations.table.js";
 
 export const addresses = pgTable("addresses", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updateAt: timestamp("updated_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	country: varchar("country").notNull(),
 	city: varchar("city").notNull(),
 	street: varchar("street").notNull(),
@@ -13,7 +13,9 @@ export const addresses = pgTable("addresses", {
 	index: varchar("index").notNull(),
 	stationId: uuid("station_id")
 		.notNull()
-		.references(() => stations.id),
+		.references(() => stations.id, {
+			onDelete: "cascade",
+		}),
 });
 
 export type AddressesTable = typeof addresses;
