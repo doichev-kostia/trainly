@@ -4,6 +4,8 @@ import * as path from "node:path";
 import swaggerUI from "@fastify/swagger-ui";
 import { type FastifyInstance } from "fastify";
 import { createJsonSchemaTransform } from "fastify-type-provider-zod";
+import * as fs from "fs";
+import process from "node:process";
 
 export default fp(
 	async function swaggerConfig(fastify: FastifyInstance, options) {
@@ -11,6 +13,17 @@ export default fp(
 			fastify.log.info("Swagger UI is disabled in production.");
 			return;
 		}
+
+		fastify.addHook("onReady", async function onListen() {
+			process.nextTick(async function () {
+				try {
+					const document = fastify.swagger({ yaml: true });
+					await fs.promises.writeFile(path.resolve("./openapi.yaml"), document);
+				} catch (error) {
+					fastify.log.error(error, "Failed to write OpenAPI document to file.");
+				}
+			});
+		});
 
 		const packageJSON = await import(path.resolve("package.json"), {
 			assert: {
@@ -22,24 +35,37 @@ export default fp(
 
 		fastify.register(swagger, {
 			routePrefix: "/docs/openapi.json",
-			swagger: {
+			openapi: {
 				info: {
 					title: "Trainly API",
 					description: "Trainly API Documentation",
 					version,
 				},
-				host: "localhost",
-				schemes: ["http", "https"],
-				consumes: ["application/json"],
-				produces: ["application/json", "text/html"],
-				securityDefinitions: {
-					Bearer: {
-						type: "apiKey",
-						name: "Bearer",
-						in: "header",
+				servers: [
+					{
+						url: "http://localhost:8080",
+						description: "Local development server",
+					},
+				],
+				components: {
+					securitySchemes: {
+						BearerAuth: {
+							type: "http",
+							scheme: "bearer",
+						},
+						AdminBearerAuth: {
+							type: "http",
+							scheme: "bearer",
+						},
 					},
 				},
+				security: [
+					{
+						BearerAuth: [],
+					},
+				],
 			},
+			exposeRoute: true,
 			transform: createJsonSchemaTransform({
 				skipList: ["/_app/status"],
 			}),

@@ -9,7 +9,7 @@
 		"build:clean": "rm -rf build && pnpm run build",
 		"watch": "swc src -d build --watch",
 		"start": "node ./build/server.js",
-		"dev": "pnpm exec fastify start --options -w -l debug -P ./build/app.js"
+		"dev": "pnpm exec fastify start --ignore-watch openapi.yaml --options -w -l debug -P ./build/app.js"
 	},
 	"imports": {
 		"#constants": "./build/constants.js"

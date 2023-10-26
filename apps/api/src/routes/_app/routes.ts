@@ -1,7 +1,7 @@
-import { type FastifyInstance } from "fastify";
 import { z } from "zod";
+import { type Instance } from "~/utils/types.js";
 
-async function internalRoutes(fastify: FastifyInstance) {
+async function internalRoutes(fastify: Instance) {
 	fastify.route({
 		method: "GET",
 		url: "/status",
@@ -15,7 +15,7 @@ async function internalRoutes(fastify: FastifyInstance) {
 		},
 		handler: async function status() {
 			return {
-				status: "ok",
+				status: "ok" as const,
 			};
 		},
 	});

@@ -18,6 +18,7 @@ async function trainRoutes(fastify: Instance): Promise<void> {
 		method: "POST",
 		url: "/",
 		schema: {
+			security: [{ AdminBearerAuth: [] }],
 			body: CreateTrainBodySchema,
 			response: {
 				"2xx": TrainResponseSchema,
