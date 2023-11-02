@@ -7,7 +7,7 @@ import { journeyStops } from "./journey-stops.table.js";
 export const platforms = pgTable("platforms", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updateAt: timestamp("updated_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	name: varchar("name").notNull(),
 	stationId: uuid("station_id")
 		.notNull()

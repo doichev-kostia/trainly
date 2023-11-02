@@ -18,6 +18,7 @@ async function trainRoutes(fastify: Instance): Promise<void> {
 		method: "POST",
 		url: "/",
 		schema: {
+			operationId: "create",
 			security: [{ AdminBearerAuth: [] }],
 			body: CreateTrainBodySchema,
 			response: {
@@ -32,6 +33,7 @@ async function trainRoutes(fastify: Instance): Promise<void> {
 		method: "GET",
 		url: "/",
 		schema: {
+			operationId: "list",
 			querystring: PaginationQuerySchema,
 			response: {
 				"2xx": ListResponseSchema(TrainResponseSchema),
@@ -44,6 +46,7 @@ async function trainRoutes(fastify: Instance): Promise<void> {
 		method: "GET",
 		url: "/:id",
 		schema: {
+			operationId: "retrieve",
 			params: IdParamsSchema,
 			response: {
 				"2xx": TrainResponseSchema,
@@ -56,6 +59,7 @@ async function trainRoutes(fastify: Instance): Promise<void> {
 		method: "PATCH",
 		url: "/:id",
 		schema: {
+			operationId: "update",
 			params: IdParamsSchema,
 			body: UpdateTrainBodySchema,
 			response: {
@@ -70,6 +74,7 @@ async function trainRoutes(fastify: Instance): Promise<void> {
 		method: "DELETE",
 		url: "/:id",
 		schema: {
+			operationId: "del",
 			params: IdParamsSchema,
 		},
 		preHandler: fastify.auth([fastify.adminAuthToken]),

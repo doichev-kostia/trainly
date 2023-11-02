@@ -11,7 +11,7 @@ type Schema = {
 };
 
 export const listTrains: Handler<Schema> = async function listTrains(request, reply) {
-	const data = await TrainRepository.getInstance().listTrains(request.query);
+	const data = await TrainRepository.getInstance().list(request.query);
 
 	return data;
 };

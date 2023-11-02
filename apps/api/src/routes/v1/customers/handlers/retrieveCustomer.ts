@@ -1,21 +1,18 @@
 import { type Handler } from "~/utils/types.js";
-import { type IdParamsSchema } from "@trainly/contracts";
-import {
-	type CustomerResponseSchema,
-	type RetrieveCustomerQuerySchema,
-} from "@trainly/contracts/customers";
+import { type ExpansionQuerySchema, type IdParamsSchema } from "@trainly/contracts";
+import { type CustomerResponseSchema } from "@trainly/contracts/customers";
 import { CustomerRepository } from "~/routes/v1/customers/customer.repository.js";
 
 type Schema = {
 	params: typeof IdParamsSchema;
-	querystring: typeof RetrieveCustomerQuerySchema;
+	querystring: typeof ExpansionQuerySchema;
 	response: {
 		"2xx": typeof CustomerResponseSchema;
 	};
 };
 
 export const retrieveCustomer: Handler<Schema> = async function retrieveFunction(request) {
-	const customer = await CustomerRepository.getInstance().retrieveCustomer(
+	const customer = await CustomerRepository.getInstance().retrieve(
 		request.params.id,
 		request.query.expand,
 	);

@@ -5,7 +5,7 @@ import assert from "node:assert";
 import { type Platform } from "@trainly/db/schema/platforms";
 import { type ListResponse } from "@trainly/contracts";
 import { type ListStationQuery, type StationExpansion } from "@trainly/contracts/stations";
-import { stripValues } from "~/utils/db.js";
+import { relations, stripValues } from "~/utils/db.js";
 
 type CreateStationValues = Omit<InferInsertModel<StationsTable>, "id" | "createdAt" | "updatedAt">;
 
@@ -25,7 +25,7 @@ export class StationRepository {
 		return StationRepository.instance;
 	}
 
-	public async createStation(values: CreateStationValues): Promise<Station> {
+	public async create(values: CreateStationValues): Promise<Station> {
 		const data = {
 			...values,
 			updatedAt: new Date(),
@@ -38,7 +38,7 @@ export class StationRepository {
 		return result;
 	}
 
-	public async listStations(params?: ListStationQuery): Promise<ListResponse<RetrievedStation>> {
+	public async list(params?: ListStationQuery): Promise<ListResponse<RetrievedStation>> {
 		const { name, expand = [], offset, limit } = params ?? {};
 
 		const relations: Record<string, true | undefined> = {
@@ -76,32 +76,19 @@ export class StationRepository {
 		};
 	}
 
-	public async retrieveStation(
+	public async retrieve(
 		id: string,
-		expansion: StationExpansion[] = [],
+		expansion: string[] = [],
 	): Promise<RetrievedStation | undefined> {
-		const relations: Record<string, true | undefined> = {
-			address: undefined,
-			platforms: undefined,
-		};
-
-		for (const relation of expansion) {
-			if (relation === "address") {
-				relations.address = true;
-			} else if (relation === "platforms") {
-				relations.platforms = true;
-			}
-		}
-
 		const data = await db.query.stations.findFirst({
-			with: relations,
+			with: relations(expansion),
 			where: eq(stations.id, id),
 		});
 
 		return data;
 	}
 
-	public async updateStation(id: string, values: Partial<CreateStationValues>): Promise<Station> {
+	public async update(id: string, values: Partial<CreateStationValues>): Promise<Station> {
 		const data = stripValues(values) as InferInsertModel<StationsTable>;
 
 		data.updatedAt = new Date();
@@ -113,7 +100,7 @@ export class StationRepository {
 		return result;
 	}
 
-	public async deleteStation(id: string): Promise<{ affectedRows: number }> {
+	public async del(id: string): Promise<{ affectedRows: number }> {
 		const result = await db.delete(stations).where(eq(stations.id, id));
 
 		return {

@@ -1,11 +1,9 @@
 import { z } from "zod";
 import { PaginationQuerySchema } from "../pagination-query.schema.js";
-import { CustomerExpansionSchema } from "./customer-expansion.schema.js";
-import { castToArray } from "../utlls.js";
+import { ExpansionQuerySchema } from "../expansion-query.schema.js";
 
-export const ListCustomerQuerySchema = PaginationQuerySchema.extend({
+export const ListCustomerQuerySchema = PaginationQuerySchema.merge(ExpansionQuerySchema).extend({
 	email: z.string().optional(),
-	expand: z.preprocess(castToArray, CustomerExpansionSchema.array().optional()),
 });
 
 export type ListCustomerQuery = z.infer<typeof ListCustomerQuerySchema>;

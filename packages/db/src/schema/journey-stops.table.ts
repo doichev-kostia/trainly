@@ -7,7 +7,7 @@ import { type InferSelectModel, relations } from "drizzle-orm";
 export const journeyStops = pgTable("journey_stops", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updateAt: timestamp("updated_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	expectedArrival: timestamp("expected_arrival").notNull(),
 	actualArrival: timestamp("actual_arrival"),
 	journeyId: uuid("journey_id")

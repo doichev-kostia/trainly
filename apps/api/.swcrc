@@ -1,27 +1,38 @@
 {
-  "$schema": "https://json.schemastore.org/swcrc",
-  "jsc": {
-    "parser": {
-      "syntax": "typescript"
-    },
-    "target": "es2022",
-    "loose": false,
-    "minify": {
-      "compress": false,
-      "mangle": false
-    },
-    "baseUrl": ".",
-    "paths": {
-      "~/configs/*": ["./src/configs/*"],
-      "~/plugins/*": ["./src/plugins/*"],
-      "~/routes/*": ["./src/routes/*"],
-      "~/utils/*": ["./src/utils/*"]
-    }
-  },
-  "module": {
-    "type": "es6"
-  },
-  "minify": false,
-  "isModule": true,
-  "sourceMaps": true
+	"$schema": "https://json.schemastore.org/swcrc",
+	"jsc": {
+		"parser": {
+			"syntax": "typescript"
+		},
+		"target": "es2022",
+		"loose": false,
+		"minify": {
+			"compress": false,
+			"mangle": false
+		},
+		"baseUrl": ".",
+		"paths": {
+			"~/configs/*": [
+				"./src/configs/*"
+			],
+			"~/plugins/*": [
+				"./src/plugins/*"
+			],
+			"~/routes/*": [
+				"./src/routes/*"
+			],
+			"~/utils/*": [
+				"./src/utils/*"
+			],
+			"~/errors/*": [
+				"./src/errors/*"
+			]
+		}
+	},
+	"module": {
+		"type": "es6"
+	},
+	"minify": false,
+	"isModule": true,
+	"sourceMaps": true
 }

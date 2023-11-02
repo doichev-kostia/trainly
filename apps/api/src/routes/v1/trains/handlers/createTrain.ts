@@ -10,7 +10,7 @@ type Schema = {
 };
 
 export const createTrain: Handler<Schema> = async function createTrain(request, reply) {
-	const train = await TrainRepository.getInstance().createTrain({
+	const train = await TrainRepository.getInstance().create({
 		name: request.body.name,
 		totalSeats: request.body.totalSeats,
 		carriageCapacity: request.body.carriageCapacity,

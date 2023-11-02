@@ -7,7 +7,7 @@ type Schema = {
 };
 
 export const deleteTrain: Handler<Schema> = async function deleteTrain(request) {
-	const result = await TrainRepository.getInstance().deleteTrain(request.params.id);
+	const result = await TrainRepository.getInstance().del(request.params.id);
 
 	if (!result.affectedRows) {
 		throw this.httpErrors.notFound("Train not found");

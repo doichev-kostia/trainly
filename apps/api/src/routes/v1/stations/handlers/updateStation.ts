@@ -15,10 +15,7 @@ type Schema = {
 };
 
 export const updateStation: Handler<Schema> = async function updateStation(request, reply) {
-	const station = await StationRepository.getInstance().updateStation(
-		request.params.id,
-		request.body,
-	);
+	const station = await StationRepository.getInstance().update(request.params.id, request.body);
 
 	if (!station) {
 		throw this.httpErrors.notFound("Station not found");

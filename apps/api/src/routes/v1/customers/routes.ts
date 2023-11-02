@@ -2,10 +2,9 @@ import {
 	CreateCustomerBodySchema,
 	CustomerResponseSchema,
 	ListCustomerQuerySchema,
-	RetrieveCustomerQuerySchema,
 	UpdateCustomerBodySchema,
 } from "@trainly/contracts/customers";
-import { IdParamsSchema, ListResponseSchema } from "@trainly/contracts";
+import { ExpansionQuerySchema, IdParamsSchema, ListResponseSchema } from "@trainly/contracts";
 import { type Instance } from "~/utils/types.js";
 
 import { createCustomer } from "./handlers/createCustomer.js";
@@ -21,6 +20,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 		method: "POST",
 		url: "/",
 		schema: {
+			operationId: "create",
 			body: CreateCustomerBodySchema,
 			response: {
 				"2xx": CustomerResponseSchema,
@@ -33,6 +33,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 		method: "GET",
 		url: "/",
 		schema: {
+			operationId: "list",
 			querystring: ListCustomerQuerySchema,
 			response: {
 				"2xx": ListResponseSchema(CustomerResponseSchema),
@@ -45,8 +46,9 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 		method: "GET",
 		url: "/:id",
 		schema: {
+			operationId: "retrieve",
 			params: IdParamsSchema,
-			querystring: RetrieveCustomerQuerySchema,
+			querystring: ExpansionQuerySchema,
 			response: {
 				"2xx": CustomerResponseSchema,
 			},
@@ -58,6 +60,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 		method: "PATCH",
 		url: "/:id",
 		schema: {
+			operationId: "update",
 			params: IdParamsSchema,
 			body: UpdateCustomerBodySchema,
 			response: {
@@ -71,6 +74,7 @@ async function customerRoutes(fastify: Instance): Promise<void> {
 		method: "DELETE",
 		url: "/:id",
 		schema: {
+			operationId: "del",
 			params: IdParamsSchema,
 		},
 		handler: deleteCustomer,

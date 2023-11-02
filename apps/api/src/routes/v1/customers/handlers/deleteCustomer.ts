@@ -7,7 +7,7 @@ type Schema = {
 };
 
 export const deleteCustomer: Handler<Schema> = async function deleteCustomer(request) {
-	const result = await CustomerRepository.getInstance().deleteCustomer(request.params.id);
+	const result = await CustomerRepository.getInstance().del(request.params.id);
 
 	if (!result.affectedRows) {
 		throw this.httpErrors.notFound("Customer not found");

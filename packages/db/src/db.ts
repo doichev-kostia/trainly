@@ -18,3 +18,5 @@ export const db = drizzle(client, {
 });
 export type Schema = typeof schema;
 export * from "drizzle-orm";
+export type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+export type { PgDatabase } from "drizzle-orm/pg-core";

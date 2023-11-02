@@ -15,10 +15,7 @@ type Schema = {
 };
 
 export const updateCustomer: Handler<Schema> = async function updateCustomer(request) {
-	const customer = await CustomerRepository.getInstance().updateCustomer(
-		request.params.id,
-		request.body,
-	);
+	const customer = await CustomerRepository.getInstance().update(request.params.id, request.body);
 
 	if (!customer) {
 		throw this.httpErrors.notFound("Customer not found");

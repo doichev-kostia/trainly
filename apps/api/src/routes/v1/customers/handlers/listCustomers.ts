@@ -14,7 +14,7 @@ type Schema = {
 };
 
 export const listCustomers: Handler<Schema> = async function listCustomers(request, reply) {
-	const data = await CustomerRepository.getInstance().listCustomers(request.query);
+	const data = await CustomerRepository.getInstance().list(request.query);
 
 	return data;
 };

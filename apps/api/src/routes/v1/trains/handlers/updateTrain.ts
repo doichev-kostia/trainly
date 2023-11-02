@@ -12,7 +12,7 @@ type Schema = {
 };
 
 export const updateTrain: Handler<Schema> = async function updateTrain(request) {
-	const train = await TrainRepository.getInstance().updateTrain(request.params.id, request.body);
+	const train = await TrainRepository.getInstance().update(request.params.id, request.body);
 
 	if (!train) {
 		throw this.httpErrors.notFound("Train not found");

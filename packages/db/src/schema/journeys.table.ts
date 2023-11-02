@@ -7,7 +7,7 @@ import { seats } from "./seats.table.js";
 export const journeys = pgTable("journeys", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updateAt: timestamp("updated_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	departureTime: timestamp("departure_time").notNull(),
 	delay: integer("delay").notNull().default(0), // seconds
 	routeId: uuid("route_id")

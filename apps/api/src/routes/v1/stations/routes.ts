@@ -2,11 +2,10 @@ import { type Instance } from "~/utils/types.js";
 import {
 	CreateStationBodySchema,
 	ListStationQuerySchema,
-	RetrieveStationQuerySchema,
 	StationResponseSchema,
 	UpdateStationBodySchema,
 } from "@trainly/contracts/stations";
-import { IdParamsSchema, ListResponseSchema } from "@trainly/contracts";
+import { ExpansionQuerySchema, IdParamsSchema, ListResponseSchema } from "@trainly/contracts";
 import { createStation } from "./handlers/createStation.js";
 import { listStations } from "./handlers/listStations.js";
 import { retrieveStation } from "./handlers/retrieveStation.js";
@@ -45,7 +44,7 @@ async function stationRoutes(fastify: Instance): Promise<void> {
 		url: "/:id",
 		schema: {
 			params: IdParamsSchema,
-			querystring: RetrieveStationQuerySchema,
+			querystring: ExpansionQuerySchema,
 			response: {
 				"2xx": StationResponseSchema,
 			},

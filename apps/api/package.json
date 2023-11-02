@@ -12,7 +12,8 @@
 		"dev": "pnpm exec fastify start --ignore-watch openapi.yaml --options -w -l debug -P ./build/app.js"
 	},
 	"imports": {
-		"#constants": "./build/constants.js"
+		"#constants": "./build/constants.js",
+		"#base-repository": "./build/base-repository.js"
 	},
 	"devDependencies": {
 		"@swc-node/register": "^1.6.6",
@@ -21,9 +22,11 @@
 		"@swc/helpers": "^0.5.1",
 		"@types/node": "18",
 		"chokidar": "^3.5.3",
+		"type-fest": "^4.6.0",
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"@faker-js/faker": "^8.2.0",
 		"@fastify/auth": "^4.3.0",
 		"@fastify/autoload": "^5.7.1",
 		"@fastify/bearer-auth": "^9.0.0",

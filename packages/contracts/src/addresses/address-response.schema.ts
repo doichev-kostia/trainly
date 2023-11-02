@@ -5,9 +5,10 @@ export const AddressResponseSchema = z.object({
 	createdAt: z.date(),
 	country: z.string(),
 	city: z.string(),
-	street: z.string(),
-	streetNumber: z.string(),
-	index: z.string(),
+	line1: z.string(),
+	line2: z.string().nullable(),
+	postalCode: z.string(),
+	state: z.string().nullable(),
 });
 
 export type AddressResponse = z.infer<typeof AddressResponseSchema>;

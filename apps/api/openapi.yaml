@@ -40,20 +40,21 @@ paths:
                     type: string
                   city:
                     type: string
-                  street:
+                  line1:
                     type: string
-                  streetNumber:
+                  line2:
                     type: string
-                  index:
+                  postalCode:
+                    type: string
+                  state:
                     type: string
                 required:
                   - id
                   - createdAt
                   - country
                   - city
-                  - street
-                  - streetNumber
-                  - index
+                  - line1
+                  - postalCode
                 additionalProperties: false
     patch:
       requestBody:
@@ -68,15 +69,16 @@ paths:
                 city:
                   type: string
                   minLength: 1
-                street:
+                line1:
                   type: string
                   minLength: 1
-                streetNumber:
+                line2:
+                  type: string
+                postalCode:
                   type: string
                   minLength: 1
-                index:
+                state:
                   type: string
-                  minLength: 1
               additionalProperties: false
       parameters:
         - schema:
@@ -103,23 +105,25 @@ paths:
                     type: string
                   city:
                     type: string
-                  street:
+                  line1:
                     type: string
-                  streetNumber:
+                  line2:
                     type: string
-                  index:
+                  postalCode:
+                    type: string
+                  state:
                     type: string
                 required:
                   - id
                   - createdAt
                   - country
                   - city
-                  - street
-                  - streetNumber
-                  - index
+                  - line1
+                  - postalCode
                 additionalProperties: false
   /v1/customers/:
     post:
+      operationId: create
       requestBody:
         content:
           application/json:
@@ -168,6 +172,7 @@ paths:
                   - email
                 additionalProperties: false
     get:
+      operationId: list
       parameters:
         - schema:
             type: integer
@@ -235,6 +240,7 @@ paths:
                 additionalProperties: false
   /v1/customers/{id}:
     get:
+      operationId: retrieve
       parameters:
         - schema:
             type: array
@@ -276,6 +282,7 @@ paths:
                   - email
                 additionalProperties: false
     patch:
+      operationId: update
       requestBody:
         content:
           application/json:
@@ -326,232 +333,7 @@ paths:
                   - email
                 additionalProperties: false
     delete:
-      parameters:
-        - schema:
-            type: string
-            format: uuid
-          in: path
-          name: id
-          required: true
-      responses:
-        "200":
-          description: Default Response
-  /v1/trains/:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  maxLength: 255
-                totalSeats:
-                  type: integer
-                  minimum: 1
-                carriageCapacity:
-                  type: integer
-                  minimum: 1
-                premiumCarriages:
-                  type: integer
-                  minimum: 0
-              required:
-                - name
-                - totalSeats
-                - carriageCapacity
-                - premiumCarriages
-              additionalProperties: false
-        required: true
-      security:
-        - AdminBearerAuth: []
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  createdAt:
-                    type: string
-                    format: date-time
-                  name:
-                    type: string
-                  totalSeats:
-                    type: integer
-                  carriageCapacity:
-                    type: integer
-                  premiumCarriages:
-                    type: integer
-                required:
-                  - id
-                  - createdAt
-                  - name
-                  - totalSeats
-                  - carriageCapacity
-                  - premiumCarriages
-                additionalProperties: false
-    get:
-      parameters:
-        - schema:
-            type: integer
-            exclusiveMinimum: true
-            minimum: 0
-            default: 10
-          in: query
-          name: limit
-          required: false
-        - schema:
-            type: integer
-            minimum: 0
-            default: 0
-          in: query
-          name: offset
-          required: false
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                        createdAt:
-                          type: string
-                          format: date-time
-                        name:
-                          type: string
-                        totalSeats:
-                          type: integer
-                        carriageCapacity:
-                          type: integer
-                        premiumCarriages:
-                          type: integer
-                      required:
-                        - id
-                        - createdAt
-                        - name
-                        - totalSeats
-                        - carriageCapacity
-                        - premiumCarriages
-                      additionalProperties: false
-                  count:
-                    type: number
-                required:
-                  - items
-                  - count
-                additionalProperties: false
-  /v1/trains/{id}:
-    get:
-      parameters:
-        - schema:
-            type: string
-            format: uuid
-          in: path
-          name: id
-          required: true
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  createdAt:
-                    type: string
-                    format: date-time
-                  name:
-                    type: string
-                  totalSeats:
-                    type: integer
-                  carriageCapacity:
-                    type: integer
-                  premiumCarriages:
-                    type: integer
-                required:
-                  - id
-                  - createdAt
-                  - name
-                  - totalSeats
-                  - carriageCapacity
-                  - premiumCarriages
-                additionalProperties: false
-    patch:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  maxLength: 255
-                totalSeats:
-                  type: integer
-                  minimum: 1
-                carriageCapacity:
-                  type: integer
-                  minimum: 1
-                premiumCarriages:
-                  type: integer
-                  minimum: 0
-              additionalProperties: false
-      parameters:
-        - schema:
-            type: string
-            format: uuid
-          in: path
-          name: id
-          required: true
-      responses:
-        2XX:
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  createdAt:
-                    type: string
-                    format: date-time
-                  name:
-                    type: string
-                  totalSeats:
-                    type: integer
-                  carriageCapacity:
-                    type: integer
-                  premiumCarriages:
-                    type: integer
-                required:
-                  - id
-                  - createdAt
-                  - name
-                  - totalSeats
-                  - carriageCapacity
-                  - premiumCarriages
-                additionalProperties: false
-    delete:
+      operationId: del
       parameters:
         - schema:
             type: string
@@ -583,21 +365,21 @@ paths:
                     city:
                       type: string
                       minLength: 1
-                    street:
+                    line1:
                       type: string
                       minLength: 1
-                    streetNumber:
+                    line2:
+                      type: string
+                    postalCode:
                       type: string
                       minLength: 1
-                    index:
+                    state:
                       type: string
-                      minLength: 1
                   required:
                     - country
                     - city
-                    - street
-                    - streetNumber
-                    - index
+                    - line1
+                    - postalCode
                   additionalProperties: false
               required:
                 - name
@@ -633,20 +415,21 @@ paths:
                         type: string
                       city:
                         type: string
-                      street:
+                      line1:
                         type: string
-                      streetNumber:
+                      line2:
                         type: string
-                      index:
+                      postalCode:
+                        type: string
+                      state:
                         type: string
                     required:
                       - id
                       - createdAt
                       - country
                       - city
-                      - street
-                      - streetNumber
-                      - index
+                      - line1
+                      - postalCode
                     additionalProperties: false
                 required:
                   - id
@@ -719,20 +502,21 @@ paths:
                               type: string
                             city:
                               type: string
-                            street:
+                            line1:
                               type: string
-                            streetNumber:
+                            line2:
                               type: string
-                            index:
+                            postalCode:
+                              type: string
+                            state:
                               type: string
                           required:
                             - id
                             - createdAt
                             - country
                             - city
-                            - street
-                            - streetNumber
-                            - index
+                            - line1
+                            - postalCode
                           additionalProperties: false
                       required:
                         - id
@@ -793,20 +577,21 @@ paths:
                         type: string
                       city:
                         type: string
-                      street:
+                      line1:
                         type: string
-                      streetNumber:
+                      line2:
                         type: string
-                      index:
+                      postalCode:
+                        type: string
+                      state:
                         type: string
                     required:
                       - id
                       - createdAt
                       - country
                       - city
-                      - street
-                      - streetNumber
-                      - index
+                      - line1
+                      - postalCode
                     additionalProperties: false
                 required:
                   - id
@@ -861,20 +646,21 @@ paths:
                         type: string
                       city:
                         type: string
-                      street:
+                      line1:
                         type: string
-                      streetNumber:
+                      line2:
                         type: string
-                      index:
+                      postalCode:
+                        type: string
+                      state:
                         type: string
                     required:
                       - id
                       - createdAt
                       - country
                       - city
-                      - street
-                      - streetNumber
-                      - index
+                      - line1
+                      - postalCode
                     additionalProperties: false
                 required:
                   - id
@@ -882,6 +668,237 @@ paths:
                   - name
                 additionalProperties: false
     delete:
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Default Response
+  /v1/trains/:
+    post:
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                totalSeats:
+                  type: integer
+                  minimum: 1
+                carriageCapacity:
+                  type: integer
+                  minimum: 1
+                premiumCarriages:
+                  type: integer
+                  minimum: 0
+              required:
+                - name
+                - totalSeats
+                - carriageCapacity
+                - premiumCarriages
+              additionalProperties: false
+        required: true
+      security:
+        - AdminBearerAuth: []
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  name:
+                    type: string
+                  totalSeats:
+                    type: integer
+                  carriageCapacity:
+                    type: integer
+                  premiumCarriages:
+                    type: integer
+                required:
+                  - id
+                  - createdAt
+                  - name
+                  - totalSeats
+                  - carriageCapacity
+                  - premiumCarriages
+                additionalProperties: false
+    get:
+      operationId: list
+      parameters:
+        - schema:
+            type: integer
+            exclusiveMinimum: true
+            minimum: 0
+            default: 10
+          in: query
+          name: limit
+          required: false
+        - schema:
+            type: integer
+            minimum: 0
+            default: 0
+          in: query
+          name: offset
+          required: false
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        createdAt:
+                          type: string
+                          format: date-time
+                        name:
+                          type: string
+                        totalSeats:
+                          type: integer
+                        carriageCapacity:
+                          type: integer
+                        premiumCarriages:
+                          type: integer
+                      required:
+                        - id
+                        - createdAt
+                        - name
+                        - totalSeats
+                        - carriageCapacity
+                        - premiumCarriages
+                      additionalProperties: false
+                  count:
+                    type: number
+                required:
+                  - items
+                  - count
+                additionalProperties: false
+  /v1/trains/{id}:
+    get:
+      operationId: retrieve
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  name:
+                    type: string
+                  totalSeats:
+                    type: integer
+                  carriageCapacity:
+                    type: integer
+                  premiumCarriages:
+                    type: integer
+                required:
+                  - id
+                  - createdAt
+                  - name
+                  - totalSeats
+                  - carriageCapacity
+                  - premiumCarriages
+                additionalProperties: false
+    patch:
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                totalSeats:
+                  type: integer
+                  minimum: 1
+                carriageCapacity:
+                  type: integer
+                  minimum: 1
+                premiumCarriages:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  name:
+                    type: string
+                  totalSeats:
+                    type: integer
+                  carriageCapacity:
+                    type: integer
+                  premiumCarriages:
+                    type: integer
+                required:
+                  - id
+                  - createdAt
+                  - name
+                  - totalSeats
+                  - carriageCapacity
+                  - premiumCarriages
+                additionalProperties: false
+    delete:
+      operationId: del
       parameters:
         - schema:
             type: string

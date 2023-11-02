@@ -8,9 +8,10 @@ export const addresses = pgTable("addresses", {
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	country: varchar("country").notNull(),
 	city: varchar("city").notNull(),
-	street: varchar("street").notNull(),
-	streetNumber: varchar("street_number").notNull(),
-	index: varchar("index").notNull(),
+	line1: varchar("line1").notNull(),
+	line2: varchar("line2"),
+	postalCode: varchar("postal_code").notNull(),
+	state: varchar("state"),
 	stationId: uuid("station_id")
 		.notNull()
 		.references(() => stations.id, {

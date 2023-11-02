@@ -7,7 +7,7 @@ import { tickets } from "./tickets.table.js";
 export const seats = pgTable("seats", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updateAt: timestamp("updated_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	number: integer("number").notNull(),
 	class: seatClassEnum("class").notNull(),
 	status: seatStatusEnum("status").notNull().default(seatStatus.available),

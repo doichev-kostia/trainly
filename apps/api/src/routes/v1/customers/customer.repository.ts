@@ -1,10 +1,12 @@
 import { db, eq, ilike, type InferInsertModel, sql } from "@trainly/db";
 import { type Customer, customers, type CustomersTable } from "@trainly/db/schema/customers";
 import assert from "node:assert";
-import { stripValues } from "~/utils/db.js";
-import { type CustomerExpansion, type ListCustomerQuery } from "@trainly/contracts/customers";
-import { type Booking, bookings } from "@trainly/db/schema/bookings";
+import { relations, stripValues } from "~/utils/db.js";
+import { type ListCustomerQuery } from "@trainly/contracts/customers";
+import { type Booking } from "@trainly/db/schema/bookings";
 import { type ListResponse } from "@trainly/contracts";
+import { BaseRepository } from "#base-repository";
+import { InternalError } from "~/errors/domain/InternalError.js";
 
 type CreateCustomerValues = Omit<
 	InferInsertModel<CustomersTable>,
@@ -17,60 +19,60 @@ type RetrievedCustomer = Customer & {
 
 export class CustomerRepository {
 	private static instance: CustomerRepository | undefined;
+	private base: BaseRepository<typeof customers, typeof db>;
 
+	private constructor(database: typeof db, table: typeof customers) {
+		this.base = new BaseRepository(table, database);
+	}
 	public static getInstance() {
 		if (!CustomerRepository.instance) {
-			CustomerRepository.instance = new CustomerRepository();
+			CustomerRepository.instance = new CustomerRepository(db, customers);
 		}
 
 		return CustomerRepository.instance;
 	}
 
 	public async checkExists(email: string): Promise<boolean> {
-		const rows = await db
+		const rows = await this.base.db
 			.select({
-				id: customers.id,
+				id: this.base.table.id,
 			})
-			.from(customers)
-			.where(eq(customers.email, email))
+			.from(this.base.table)
+			.where(eq(this.base.table.email, email))
 			.limit(1);
 
 		return rows.length > 0;
 	}
 
-	public async createCustomer(values: CreateCustomerValues): Promise<Customer> {
-		const data = {
-			...values,
-			updatedAt: new Date(),
-		} satisfies InferInsertModel<CustomersTable>;
+	public async create(values: CreateCustomerValues): Promise<Customer> {
+		const result = await this.base.create(values);
 
-		const [result] = await db.insert(customers).values(data).returning();
-
-		assert.ok(result, "Failed to create customer");
+		if (!result) {
+			throw new InternalError("Failed to create customer");
+		}
 
 		return result;
 	}
 
-	public async listCustomers(
-		params?: ListCustomerQuery,
-	): Promise<ListResponse<RetrievedCustomer>> {
+	public async list(params?: ListCustomerQuery): Promise<ListResponse<RetrievedCustomer>> {
 		const { email, limit, expand, offset } = params ?? {};
-		const data = await db.query.customers.findMany({
-			with: {
-				bookings: expand?.includes("bookings") as true | undefined,
-			},
-			where: ilike(customers.email, `%${email}%`),
+		const data = await this.base.db.query.customers.findMany({
+			with: relations(expand ?? []),
+			where: ilike(this.base.table.email, `%${email}%`),
 			offset,
 			limit,
 		});
 
-		const rows = await db
+		const rows = await this.base.db
 			.select({ count: sql<number>`count(*)` })
-			.from(customers)
-			.where(ilike(customers.email, `%${email}%`));
+			.from(this.base.table)
+			.where(ilike(this.base.table.email, `%${email}%`));
 
 		const res = rows[0];
-		assert.ok(res, "Failed to count customers");
+
+		if (!res) {
+			throw new InternalError("Failed to count customers");
+		}
 
 		return {
 			items: data,
@@ -78,44 +80,28 @@ export class CustomerRepository {
 		};
 	}
 
-	public async retrieveCustomer(
+	public async retrieve(
 		id: string,
-		expansion?: CustomerExpansion[],
+		expansion?: string[],
 	): Promise<RetrievedCustomer | undefined> {
-		const data = await db.query.customers.findFirst({
-			with: {
-				bookings: expansion?.includes("bookings") as true | undefined,
-			},
-			where: eq(customers.id, id),
-		});
+		const data = await this.base.retrieve(id, expansion);
 
 		return data;
 	}
 
-	public async updateCustomer(
-		id: string,
-		values: Partial<CreateCustomerValues>,
-	): Promise<Customer> {
-		const data = stripValues(values) as InferInsertModel<CustomersTable>;
+	public async update(id: string, values: Partial<CreateCustomerValues>): Promise<Customer> {
+		const result = await this.base.update(id, values);
 
-		data.updatedAt = new Date();
-
-		const [result] = await db
-			.update(customers)
-			.set(data)
-			.where(eq(customers.id, id))
-			.returning();
-
-		assert.ok(result, "Failed to update customer");
+		if (!result) {
+			throw new InternalError("Failed to update customer");
+		}
 
 		return result;
 	}
 
-	public async deleteCustomer(id: string): Promise<{ affectedRows: number }> {
-		const result = await db.delete(customers).where(eq(customers.id, id));
+	public async del(id: string): Promise<{ affectedRows: number }> {
+		const result = await this.base.del(id);
 
-		return {
-			affectedRows: result.length,
-		};
+		return result;
 	}
 }

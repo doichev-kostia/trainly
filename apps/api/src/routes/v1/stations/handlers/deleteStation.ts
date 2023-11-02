@@ -7,7 +7,7 @@ type Schema = {
 };
 
 export const deleteStation: Handler<Schema> = async function deleteStation(request) {
-	const result = await StationRepository.getInstance().deleteStation(request.params.id);
+	const result = await StationRepository.getInstance().del(request.params.id);
 
 	if (!result.affectedRows) {
 		throw this.httpErrors.notFound("Station not found");

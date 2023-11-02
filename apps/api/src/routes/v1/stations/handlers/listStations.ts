@@ -14,7 +14,7 @@ type Schema = {
 };
 
 export const listStations: Handler<Schema> = async function listStations(request, reply) {
-	const data = await StationRepository.getInstance().listStations(request.query);
+	const data = await StationRepository.getInstance().list(request.query);
 
 	return data;
 };

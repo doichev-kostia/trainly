@@ -11,7 +11,7 @@ type Schema = {
 };
 
 export const retrieveTrain: Handler<Schema> = async function retrieveTrain(request, reply) {
-	const train = await TrainRepository.getInstance().retrieveTrain(request.params.id);
+	const train = await TrainRepository.getInstance().retrieve(request.params.id);
 
 	if (!train) {
 		throw this.httpErrors.notFound("Train not found");

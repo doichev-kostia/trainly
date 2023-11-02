@@ -16,7 +16,7 @@ type Schema = {
 
 export const createStation: Handler<Schema> = async function createStation(request, reply) {
 	const { address: addressBody, ...stationBody } = request.body;
-	const station = await StationRepository.getInstance().createStation(stationBody);
+	const station = await StationRepository.getInstance().create(stationBody);
 	const address = await AddressRepository.getInstance().createAddress(station.id, addressBody);
 
 	// performance reasons

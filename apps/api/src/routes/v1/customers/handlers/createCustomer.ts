@@ -19,7 +19,7 @@ export const createCustomer: Handler<Schema> = async function createCustomer(req
 		throw this.httpErrors.conflict("Customer already exists");
 	}
 
-	const customer = await CustomerRepository.getInstance().createCustomer({
+	const customer = await CustomerRepository.getInstance().create({
 		email: request.body.email,
 		firstName: request.body.firstName,
 		lastName: request.body.lastName,

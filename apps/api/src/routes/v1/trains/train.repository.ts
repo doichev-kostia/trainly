@@ -1,89 +1,71 @@
-import { db, type InferInsertModel, sql, eq } from "@trainly/db";
+import { db, type InferInsertModel } from "@trainly/db";
 import { type Train, trains, type TrainsTable } from "@trainly/db/schema/trains";
-import assert from "node:assert";
-import { type ListResponse, type PaginationQuery } from "@trainly/contracts";
-import { stripValues } from "~/utils/db.js";
+import { type ListResponse } from "@trainly/contracts";
+import { type ListOptions } from "~/utils/db.js";
+import { BaseRepository } from "#base-repository";
+import { InternalError } from "~/errors/domain/InternalError.js";
 
 type CreateTrainValues = Omit<InferInsertModel<TrainsTable>, "id" | "createdAt" | "updatedAt">;
 
 export class TrainRepository {
 	private static instance: TrainRepository | undefined;
+	private base: BaseRepository<typeof trains, typeof db>;
+
+	private constructor(database: typeof db, table: typeof trains) {
+		this.base = new BaseRepository(table, database);
+	}
 
 	public static getInstance() {
 		if (!TrainRepository.instance) {
-			TrainRepository.instance = new TrainRepository();
+			TrainRepository.instance = new TrainRepository(db, trains);
 		}
 
 		return TrainRepository.instance;
 	}
 
-	public async createTrain(values: CreateTrainValues): Promise<Train> {
-		const data = {
-			...values,
-			updatedAt: new Date(),
-		} satisfies InferInsertModel<TrainsTable>;
+	public async create(values: CreateTrainValues): Promise<Train> {
+		const result = await this.base.create(values);
 
-		const [result] = await db.insert(trains).values(data).returning();
-
-		assert.ok(result, "Failed to create a train");
+		if (!result) {
+			throw new InternalError("Failed to create train");
+		}
 
 		return result;
 	}
 
-	public async listTrains(params: PaginationQuery): Promise<ListResponse<Train>> {
-		const { limit, offset } = params ?? {};
+	public async list(params: ListOptions = {}): Promise<ListResponse<Train>> {
+		const trains = await this.base.list(params);
+		const count = await this.base.count();
 
-		const data = await db.query.trains.findMany({
-			offset,
-			limit,
-		});
-
-		const rows = await db
-			.select({
-				count: sql<number>`count(*)`,
-			})
-			.from(trains)
-			.limit(1);
-
-		const res = rows[0];
-		assert.ok(res, "Failed to count trains");
+		if (!count) {
+			throw new InternalError("Failed to count trains");
+		}
 
 		return {
-			items: data,
-			count: res.count,
+			items: trains,
+			count: count,
 		};
 	}
 
-	public async retrieveTrain(id: string): Promise<Train | undefined> {
-		const data = await db.query.trains.findFirst({
-			where: eq(trains.id, id),
-		});
+	public async retrieve(id: string): Promise<Train | undefined> {
+		const data = await this.base.retrieve(id);
 
 		return data;
 	}
 
-	public async updateTrain(
-		id: string,
-		values: Partial<CreateTrainValues>,
-	): Promise<Train | undefined> {
-		const data = stripValues(values) as InferInsertModel<TrainsTable>;
+	public async update(id: string, values: Partial<CreateTrainValues>): Promise<Train> {
+		const result = await this.base.update(id, values);
 
-		data.updatedAt = new Date();
-
-		const [result] = await db.update(trains).set(data).where(eq(trains.id, id)).returning();
-
-		assert.ok(result, "Failed to update train");
+		if (!result) {
+			throw new InternalError("Failed to update train");
+		}
 
 		return result;
 	}
 
-	public async deleteTrain(id: string): Promise<{ affectedRows: number }> {
-		const result = await db.delete(trains).where(eq(trains.id, id));
+	public async del(id: string): Promise<{ affectedRows: number }> {
+		const result = await this.base.del(id);
 
-		assert.ok(result, "Failed to delete train");
-
-		return {
-			affectedRows: result.length,
-		};
+		return result;
 	}
 }
