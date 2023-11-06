@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Route } from "~/data";
 	import { formatter, getFormattedTimeDifference } from "./formatter";
 	import Typography from "~/components/Typography.svelte";
 	import ArrowRightIcon from "~/icons/ArrowRightIcon.svelte";
@@ -14,7 +13,7 @@
 
 	const diff = getFormattedTimeDifference(endDate, startDate);
 
-	let path = `/route/${id}`;
+	let path = `/journey/${id}`;
 
 	onMount(() => {
 		const url = new URL(path, window.location.origin);

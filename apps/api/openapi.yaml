@@ -945,6 +945,674 @@ paths:
                   - items
                   - count
                 additionalProperties: false
+  /v1/journeys/{id}:
+    get:
+      parameters:
+        - schema:
+            type: array
+            items:
+              type: string
+          in: query
+          name: expand
+          required: false
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  departureTime:
+                    type: string
+                  delay:
+                    type: integer
+                  routeId:
+                    type: string
+                  route:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      pricing: {}
+                      trainId:
+                        type: string
+                      train:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                          createdAt:
+                            type: string
+                          name:
+                            type: string
+                          totalSeats:
+                            type: integer
+                          carriageCapacity:
+                            type: integer
+                          premiumCarriages:
+                            type: integer
+                          routes:
+                            type: array
+                            items: {}
+                        required:
+                          - id
+                          - createdAt
+                          - name
+                          - totalSeats
+                          - carriageCapacity
+                          - premiumCarriages
+                        additionalProperties: false
+                      journeys:
+                        type: array
+                        items: {}
+                      stops:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            durationFromPrevious:
+                              type: integer
+                            order:
+                              type: integer
+                            routeId:
+                              type: string
+                            platformId:
+                              type: string
+                              nullable: true
+                            route: {}
+                            platform:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                createdAt:
+                                  type: string
+                                updatedAt:
+                                  type: string
+                                name:
+                                  type: string
+                                stationId:
+                                  type: string
+                                  format: uuid
+                                station:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                      format: uuid
+                                    createdAt:
+                                      type: string
+                                    name:
+                                      type: string
+                                    address:
+                                      type: object
+                                      properties:
+                                        id:
+                                          type: string
+                                          format: uuid
+                                        createdAt:
+                                          type: string
+                                        country:
+                                          type: string
+                                        city:
+                                          type: string
+                                        line1:
+                                          type: string
+                                        line2:
+                                          type: string
+                                          nullable: true
+                                        postalCode:
+                                          type: string
+                                        state:
+                                          type: string
+                                          nullable: true
+                                        stationId:
+                                          type: string
+                                        station: {}
+                                      required:
+                                        - id
+                                        - createdAt
+                                        - country
+                                        - city
+                                        - line1
+                                        - line2
+                                        - postalCode
+                                        - state
+                                        - stationId
+                                      additionalProperties: false
+                                    platforms:
+                                      type: array
+                                      items: {}
+                                  required:
+                                    - id
+                                    - createdAt
+                                    - name
+                                  additionalProperties: false
+                                stops:
+                                  type: array
+                                  items: {}
+                                journeyStops:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      expectedArrival:
+                                        type: string
+                                      actualArrival:
+                                        type: string
+                                        nullable: true
+                                      journeyId:
+                                        type: string
+                                      stopId:
+                                        type: string
+                                      platformId:
+                                        type: string
+                                        nullable: true
+                                      journey: {}
+                                      stop: {}
+                                      platform:
+                                        nullable: true
+                                    required:
+                                      - id
+                                      - expectedArrival
+                                      - actualArrival
+                                      - journeyId
+                                      - stopId
+                                      - platformId
+                                    additionalProperties: false
+                              required:
+                                - id
+                                - createdAt
+                                - updatedAt
+                                - name
+                                - stationId
+                              additionalProperties: false
+                            journeyStops:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  expectedArrival:
+                                    type: string
+                                  actualArrival:
+                                    type: string
+                                    nullable: true
+                                  journeyId:
+                                    type: string
+                                  stopId:
+                                    type: string
+                                  platformId:
+                                    type: string
+                                    nullable: true
+                                  journey: {}
+                                  stop: {}
+                                  platform:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                        format: uuid
+                                      createdAt:
+                                        type: string
+                                      updatedAt:
+                                        type: string
+                                      name:
+                                        type: string
+                                      stationId:
+                                        type: string
+                                        format: uuid
+                                      station:
+                                        type: object
+                                        properties:
+                                          id:
+                                            type: string
+                                            format: uuid
+                                          createdAt:
+                                            type: string
+                                          name:
+                                            type: string
+                                          address:
+                                            type: object
+                                            properties:
+                                              id:
+                                                type: string
+                                                format: uuid
+                                              createdAt:
+                                                type: string
+                                              country:
+                                                type: string
+                                              city:
+                                                type: string
+                                              line1:
+                                                type: string
+                                              line2:
+                                                type: string
+                                                nullable: true
+                                              postalCode:
+                                                type: string
+                                              state:
+                                                type: string
+                                                nullable: true
+                                              stationId:
+                                                type: string
+                                              station: {}
+                                            required:
+                                              - id
+                                              - createdAt
+                                              - country
+                                              - city
+                                              - line1
+                                              - line2
+                                              - postalCode
+                                              - state
+                                              - stationId
+                                            additionalProperties: false
+                                          platforms:
+                                            type: array
+                                            items: {}
+                                        required:
+                                          - id
+                                          - createdAt
+                                          - name
+                                        additionalProperties: false
+                                      stops:
+                                        type: array
+                                        items: {}
+                                      journeyStops:
+                                        type: array
+                                        items: {}
+                                    required:
+                                      - id
+                                      - createdAt
+                                      - updatedAt
+                                      - name
+                                      - stationId
+                                    additionalProperties: false
+                                    nullable: true
+                                required:
+                                  - id
+                                  - expectedArrival
+                                  - actualArrival
+                                  - journeyId
+                                  - stopId
+                                  - platformId
+                                additionalProperties: false
+                          required:
+                            - id
+                            - durationFromPrevious
+                            - order
+                            - routeId
+                            - platformId
+                          additionalProperties: false
+                    required:
+                      - id
+                      - name
+                      - trainId
+                    additionalProperties: false
+                  journeyStops:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        expectedArrival:
+                          type: string
+                        actualArrival:
+                          type: string
+                          nullable: true
+                        journeyId:
+                          type: string
+                        stopId:
+                          type: string
+                        platformId:
+                          type: string
+                          nullable: true
+                        journey: {}
+                        stop:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            durationFromPrevious:
+                              type: integer
+                            order:
+                              type: integer
+                            routeId:
+                              type: string
+                            platformId:
+                              type: string
+                              nullable: true
+                            route:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                name:
+                                  type: string
+                                pricing: {}
+                                trainId:
+                                  type: string
+                                train:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                      format: uuid
+                                    createdAt:
+                                      type: string
+                                    name:
+                                      type: string
+                                    totalSeats:
+                                      type: integer
+                                    carriageCapacity:
+                                      type: integer
+                                    premiumCarriages:
+                                      type: integer
+                                    routes:
+                                      type: array
+                                      items: {}
+                                  required:
+                                    - id
+                                    - createdAt
+                                    - name
+                                    - totalSeats
+                                    - carriageCapacity
+                                    - premiumCarriages
+                                  additionalProperties: false
+                                journeys:
+                                  type: array
+                                  items: {}
+                                stops:
+                                  type: array
+                                  items: {}
+                              required:
+                                - id
+                                - name
+                                - trainId
+                              additionalProperties: false
+                            platform:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                createdAt:
+                                  type: string
+                                updatedAt:
+                                  type: string
+                                name:
+                                  type: string
+                                stationId:
+                                  type: string
+                                  format: uuid
+                                station:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                      format: uuid
+                                    createdAt:
+                                      type: string
+                                    name:
+                                      type: string
+                                    address:
+                                      type: object
+                                      properties:
+                                        id:
+                                          type: string
+                                          format: uuid
+                                        createdAt:
+                                          type: string
+                                        country:
+                                          type: string
+                                        city:
+                                          type: string
+                                        line1:
+                                          type: string
+                                        line2:
+                                          type: string
+                                          nullable: true
+                                        postalCode:
+                                          type: string
+                                        state:
+                                          type: string
+                                          nullable: true
+                                        stationId:
+                                          type: string
+                                        station: {}
+                                      required:
+                                        - id
+                                        - createdAt
+                                        - country
+                                        - city
+                                        - line1
+                                        - line2
+                                        - postalCode
+                                        - state
+                                        - stationId
+                                      additionalProperties: false
+                                    platforms:
+                                      type: array
+                                      items: {}
+                                  required:
+                                    - id
+                                    - createdAt
+                                    - name
+                                  additionalProperties: false
+                                stops:
+                                  type: array
+                                  items: {}
+                                journeyStops:
+                                  type: array
+                                  items: {}
+                              required:
+                                - id
+                                - createdAt
+                                - updatedAt
+                                - name
+                                - stationId
+                              additionalProperties: false
+                            journeyStops:
+                              type: array
+                              items: {}
+                          required:
+                            - id
+                            - durationFromPrevious
+                            - order
+                            - routeId
+                            - platformId
+                          additionalProperties: false
+                        platform:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            createdAt:
+                              type: string
+                            updatedAt:
+                              type: string
+                            name:
+                              type: string
+                            stationId:
+                              type: string
+                              format: uuid
+                            station:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                createdAt:
+                                  type: string
+                                name:
+                                  type: string
+                                address:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                      format: uuid
+                                    createdAt:
+                                      type: string
+                                    country:
+                                      type: string
+                                    city:
+                                      type: string
+                                    line1:
+                                      type: string
+                                    line2:
+                                      type: string
+                                      nullable: true
+                                    postalCode:
+                                      type: string
+                                    state:
+                                      type: string
+                                      nullable: true
+                                    stationId:
+                                      type: string
+                                    station: {}
+                                  required:
+                                    - id
+                                    - createdAt
+                                    - country
+                                    - city
+                                    - line1
+                                    - line2
+                                    - postalCode
+                                    - state
+                                    - stationId
+                                  additionalProperties: false
+                                platforms:
+                                  type: array
+                                  items: {}
+                              required:
+                                - id
+                                - createdAt
+                                - name
+                              additionalProperties: false
+                            stops:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  durationFromPrevious:
+                                    type: integer
+                                  order:
+                                    type: integer
+                                  routeId:
+                                    type: string
+                                  platformId:
+                                    type: string
+                                    nullable: true
+                                  route:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: string
+                                      name:
+                                        type: string
+                                      pricing: {}
+                                      trainId:
+                                        type: string
+                                      train:
+                                        type: object
+                                        properties:
+                                          id:
+                                            type: string
+                                            format: uuid
+                                          createdAt:
+                                            type: string
+                                          name:
+                                            type: string
+                                          totalSeats:
+                                            type: integer
+                                          carriageCapacity:
+                                            type: integer
+                                          premiumCarriages:
+                                            type: integer
+                                          routes:
+                                            type: array
+                                            items: {}
+                                        required:
+                                          - id
+                                          - createdAt
+                                          - name
+                                          - totalSeats
+                                          - carriageCapacity
+                                          - premiumCarriages
+                                        additionalProperties: false
+                                      journeys:
+                                        type: array
+                                        items: {}
+                                      stops:
+                                        type: array
+                                        items: {}
+                                    required:
+                                      - id
+                                      - name
+                                      - trainId
+                                    additionalProperties: false
+                                  platform: {}
+                                  journeyStops:
+                                    type: array
+                                    items: {}
+                                required:
+                                  - id
+                                  - durationFromPrevious
+                                  - order
+                                  - routeId
+                                  - platformId
+                                additionalProperties: false
+                            journeyStops:
+                              type: array
+                              items: {}
+                          required:
+                            - id
+                            - createdAt
+                            - updatedAt
+                            - name
+                            - stationId
+                          additionalProperties: false
+                          nullable: true
+                      required:
+                        - id
+                        - expectedArrival
+                        - actualArrival
+                        - journeyId
+                        - stopId
+                        - platformId
+                      additionalProperties: false
+                  seats:
+                    type: array
+                required:
+                  - id
+                  - departureTime
+                  - delay
+                  - routeId
+                additionalProperties: false
   /v1/stations/:
     post:
       requestBody:

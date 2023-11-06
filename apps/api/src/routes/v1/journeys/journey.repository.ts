@@ -98,11 +98,13 @@ export class JourneyRepository {
 			offset,
 		});
 
-		console.dir({ data }, { depth: null });
-
 		return {
 			items: data,
 			count: journeyIds.length,
 		};
+	}
+
+	public retrieve(id: string, expand?: string[]): Promise<RetrievedJourney | undefined> {
+		return this.base.retrieve(id, expand);
 	}
 }

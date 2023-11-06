@@ -12,20 +12,20 @@ export const load: PageServerLoad = async (event) => {
 
 	if (!from || !to || !date) {
 		return {
-			routes: [],
+			journeys: [],
 			from: null,
 			to: null,
 			date: null,
 		};
 	}
 
-	let journeys: ListResponse<JourneyResponse> = {
+	let journeyList: ListResponse<JourneyResponse> = {
 		items: [],
 		count: 0,
 	};
 
 	try {
-		journeys = await api.journeys.list({
+		journeyList = await api.journeys.list({
 			departure: from,
 			arrival: to,
 			date: new Date(date),
@@ -47,29 +47,29 @@ export const load: PageServerLoad = async (event) => {
 	}
 
 	let departureStopId: string | undefined;
-	if (journeys.items.length > 0) {
-		departureStopId = journeys.items[0].journeyStops?.find(
+	if (journeyList.items.length > 0) {
+		departureStopId = journeyList.items[0].journeyStops?.find(
 			(jst: JourneyStopResponse) => jst.stop?.platform?.station?.name === from,
 		)?.stop?.id;
 	}
 
 	let arrivalStopId: string | undefined;
-	if (journeys.items.length > 0) {
-		arrivalStopId = journeys.items[0].journeyStops?.find(
+	if (journeyList.items.length > 0) {
+		arrivalStopId = journeyList.items[0].journeyStops?.find(
 			(jst: JourneyStopResponse) => jst.stop?.platform?.station?.name === to,
 		)?.stop?.id;
 	}
 
 	if (!departureStopId || !arrivalStopId) {
 		return {
-			routes: [],
+			journeys: [],
 			from,
 			to,
 			date,
 		};
 	}
 
-	const routes = journeys.items.map((journey) => {
+	const journeys = journeyList.items.map((journey) => {
 		const departureStop = journey.journeyStops?.find(
 			(jst: JourneyStopResponse) => jst.stop?.id === departureStopId,
 		);
@@ -89,7 +89,7 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	return {
-		routes,
+		journeys,
 		from,
 		to,
 		date,

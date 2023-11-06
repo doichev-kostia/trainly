@@ -3,7 +3,7 @@
 	import Typography from "~/components/Typography.svelte";
 	import Button from "~/components/Button.svelte";
 	import { onMount } from "svelte";
-	import Route from "~/routes/book/Route.svelte";
+	import Route from "~/routes/book/Journey.svelte";
 	import ArrowRightIcon from "~/icons/ArrowRightIcon.svelte";
 
 	export let data: PageServerData;
@@ -47,11 +47,11 @@
 
 	<div class="container">
 		<ul class="flex w-full flex-col gap-y-3">
-			{#each data.routes as route (route.id)}
+			{#each data.journeys as journey (journey.id)}
 				<Route
-					id={route.id}
-					startDate={new Date(route.startDate)}
-					endDate={new Date(route.endDate)}
+					id={journey.id}
+					startDate={new Date(journey.startDate)}
+					endDate={new Date(journey.endDate)}
 				/>
 			{/each}
 		</ul>
