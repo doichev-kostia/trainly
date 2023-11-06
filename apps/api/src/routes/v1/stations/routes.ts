@@ -24,6 +24,7 @@ async function stationRoutes(fastify: Instance): Promise<void> {
 				"2xx": StationResponseSchema,
 			},
 		},
+		preHandler: fastify.auth([fastify.adminAuthToken]),
 		handler: createStation,
 	});
 
@@ -62,6 +63,7 @@ async function stationRoutes(fastify: Instance): Promise<void> {
 				"2xx": StationResponseSchema,
 			},
 		},
+		preHandler: fastify.auth([fastify.adminAuthToken]),
 		handler: updateStation,
 	});
 
@@ -71,6 +73,7 @@ async function stationRoutes(fastify: Instance): Promise<void> {
 		schema: {
 			params: IdParamsSchema,
 		},
+		preHandler: fastify.auth([fastify.adminAuthToken]),
 		handler: deleteStation,
 	});
 }
