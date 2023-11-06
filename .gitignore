@@ -12,3 +12,4 @@ vite.config.ts.timestamp-*
 .idea
 http-client.private*.json
 .turbo
+.db-data
