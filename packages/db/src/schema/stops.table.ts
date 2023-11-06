@@ -9,13 +9,13 @@ export const stops = pgTable("stops", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	durationFromPrevious: integer("duration_from_previous").notNull(), // in seconds
+	order: integer("order").notNull(),
 	routeId: uuid("route_id")
 		.notNull()
 		.references(() => routes.id),
 	platformId: uuid("platform_id")
 		.notNull()
 		.references(() => platforms.id),
-	nextStopId: uuid("next_stop_id"), // self-referencing
 });
 
 export type StopsTable = typeof stops;
@@ -32,21 +32,6 @@ export const stopsRelations = relations(stops, ({ one, many }) => {
 			fields: [stops.platformId],
 			references: [platforms.id],
 		}),
-		nextStop: one(stops, {
-			fields: [stops.nextStopId],
-			references: [stops.id],
-		}),
-		routeStartStop: one(stops, {
-			fields: [routes.startStopId as any],
-			references: [stops.id],
-		}),
-		routeEndStop: one(stops, {
-			fields: [routes.endStopId as any],
-			references: [stops.id],
-		}),
-		journeyStop: one(journeyStops, {
-			fields: [stops.id],
-			references: [journeyStops.stopId],
-		}),
+		journeyStops: many(journeyStops),
 	};
 });

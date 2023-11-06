@@ -14,7 +14,8 @@
     "typecheck": "pnpm exec tsc --noEmit --emitDeclarationOnly false",
     "watch": "pnpm exec swc src -d build --watch",
     "migrations:generate": "pnpm exec drizzle-kit generate:pg --config='drizzle.config.ts'",
-    "migrations:run": "pnpm exec tsx --tsconfig ./tsconfig.json ./src/scripts/run-migration.ts"
+    "migrations:run": "pnpm exec tsx --tsconfig ./tsconfig.json ./src/scripts/run-migration.ts",
+    "db:push": "pnpm exec drizzle-kit push:pg --config='drizzle.config.ts'"
   },
   "exports": {
     ".": {

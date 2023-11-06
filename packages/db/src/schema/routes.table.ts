@@ -13,8 +13,6 @@ export const routes = pgTable("routes", {
 	trainId: uuid("train_id")
 		.notNull()
 		.references(() => trains.id),
-	startStopId: uuid("start_stop_id"), // Can't use references here because of circular dependency
-	endStopId: uuid("end_stop_id"), // Can't use references here because of circular dependency
 });
 
 export type RoutesTable = typeof routes;
