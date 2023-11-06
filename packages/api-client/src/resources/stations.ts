@@ -1,90 +1,90 @@
 import { type ExpansionQuery, type IdResponse, type ListResponse } from "@trainly/contracts";
 import {
-	type CreateCustomerBody,
-	type CustomerResponse,
-	type ListCustomerQuery,
-	type UpdateCustomerBody,
-} from "@trainly/contracts/customers";
+	type CreateStationBody,
+	type StationResponse,
+	type ListStationQuery,
+	type UpdateStationBody,
+} from "@trainly/contracts/stations";
 import { type HttpClient } from "../http-client.js";
 import { type RequestOptions } from "../options.js";
 
-type RetrieveCustomerQuery = ExpansionQuery;
+type RetrieveStationQuery = ExpansionQuery;
 
-export class Customers {
+export class Stations {
 	constructor(private client: HttpClient) {}
 
 	async create(
-		customer: CreateCustomerBody,
+		station: CreateStationBody,
 		requestOptions?: RequestOptions,
-	): Promise<CustomerResponse> {
+	): Promise<StationResponse> {
 		const response = await this.client.post(
-			"customers",
+			"stations",
 			{
-				json: customer,
+				json: station,
 			},
 			requestOptions,
 		);
 
-		const data = await response.json<CustomerResponse>();
+		const data = await response.json<StationResponse>();
 
 		return data;
 	}
 
 	async list(
-		params?: ListCustomerQuery,
+		params?: ListStationQuery,
 		requestOptions?: RequestOptions,
-	): Promise<ListResponse<CustomerResponse>> {
+	): Promise<ListResponse<StationResponse>> {
 		const response = await this.client.get(
-			"customers",
+			"stations",
 			{
 				searchParams: params,
 			},
 			requestOptions,
 		);
 
-		const data = await response.json<ListResponse<CustomerResponse>>();
+		const data = await response.json<ListResponse<StationResponse>>();
 
 		return data;
 	}
 
 	async retrieve(
 		id: string,
-		params?: RetrieveCustomerQuery,
+		params?: RetrieveStationQuery,
 		requestOptions?: RequestOptions,
-	): Promise<CustomerResponse> {
+	): Promise<StationResponse> {
 		const response = await this.client.get(
-			`customers/${id}`,
+			`stations/${id}`,
 			{
 				searchParams: params,
 			},
 			requestOptions,
 		);
 
-		const data = await response.json<CustomerResponse>();
+		const data = await response.json<StationResponse>();
 
 		return data;
 	}
 
 	async update(
 		id: string,
-		params: UpdateCustomerBody,
+		params: UpdateStationBody,
 		requestOptions?: RequestOptions,
-	): Promise<CustomerResponse> {
+	): Promise<StationResponse> {
 		const response = await this.client.patch(
-			`customers/${id}`,
+			`stations/${id}`,
 			{
 				json: params,
 			},
 			requestOptions,
 		);
 
-		const data = await response.json<CustomerResponse>();
+		const data = await response.json<StationResponse>();
 
 		return data;
 	}
 
 	async del(id: string, requestOptions?: RequestOptions): Promise<IdResponse> {
-		const response = await this.client.delete(`customers/${id}`, {}, requestOptions);
+		const response = await this.client.delete(`stations/${id}`, {}, requestOptions);
 
 		const data = await response.json<IdResponse>();
 

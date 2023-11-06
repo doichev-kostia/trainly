@@ -1,5 +1,7 @@
 import { HttpClient } from "./http-client.js";
 import { Customers } from "./resources/customers.js";
+import { Journeys } from "./resources/journeys.js";
+import { Stations } from "./resources/stations.js";
 
 type Options = {
 	host?: string;
@@ -17,6 +19,8 @@ export class API {
 	private options: Options;
 
 	public customers: Customers;
+	public journeys: Journeys;
+	public stations: Stations;
 
 	constructor(apiKey: string, options?: Options) {
 		this.options = {
@@ -37,5 +41,7 @@ export class API {
 			prefixUrl: url.toString(),
 		});
 		this.customers = new Customers(this.client);
+		this.journeys = new Journeys(this.client);
+		this.stations = new Stations(this.client);
 	}
 }

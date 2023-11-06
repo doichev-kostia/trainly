@@ -3,7 +3,18 @@ import * as querystring from "querystring";
 import { type ParsedUrlQueryInput } from "querystring";
 
 export type Options = Omit<KyOptions, "searchParams"> & {
-	searchParams?: ParsedUrlQueryInput;
+	searchParams?: Record<
+		string,
+		| string
+		| number
+		| boolean
+		| Date
+		| ReadonlyArray<string>
+		| ReadonlyArray<number>
+		| ReadonlyArray<boolean>
+		| ReadonlyArray<Date>
+		| null
+	>;
 };
 
 export type RequestOptions = {
@@ -19,7 +30,26 @@ export function processOptions(
 	const opts: KyOptions = options as KyOptions;
 
 	if (options.searchParams) {
-		opts.searchParams = new URLSearchParams(querystring.stringify(options.searchParams));
+		const params = { ...options.searchParams };
+		for (const key in params) {
+			const value = params[key as keyof typeof params];
+			if (value instanceof Date) {
+				// @ts-ignore
+				params[key] = value.toISOString();
+			} else if (Array.isArray(value)) {
+				for (let i = 0; i < value.length; i++) {
+					const item = value[i];
+					if (item instanceof Date) {
+						// @ts-ignore
+						value[i] = item.toISOString();
+					}
+				}
+			}
+		}
+
+		opts.searchParams = new URLSearchParams(
+			querystring.stringify(params as ParsedUrlQueryInput),
+		);
 	}
 
 	if (!options.headers) {
