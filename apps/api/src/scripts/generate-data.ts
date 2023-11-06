@@ -68,7 +68,7 @@ function createPlatform(stationId: string): Platform {
 	};
 }
 
-function createRoute(trainId: string, startStopId: string | null, endStopId: string | null): Route {
+function createRoute(trainId: string): Route {
 	return {
 		id: randomUUID(),
 		createdAt: new Date(),
@@ -76,12 +76,10 @@ function createRoute(trainId: string, startStopId: string | null, endStopId: str
 		name: `${faker.location.city()} - ${faker.location.city()}`,
 		pricing: {},
 		trainId,
-		startStopId,
-		endStopId,
 	};
 }
 
-function createStop(routeId: string, platformId: string, nextStopId: string | null): Stop {
+function createStop(routeId: string, platformId: string, order: number): Stop {
 	return {
 		id: randomUUID(),
 		createdAt: new Date(),
@@ -89,7 +87,7 @@ function createStop(routeId: string, platformId: string, nextStopId: string | nu
 		durationFromPrevious: faker.number.int({ min: 300, max: 3600 }),
 		routeId,
 		platformId,
-		nextStopId,
+		order,
 	};
 }
 
@@ -110,17 +108,14 @@ function createJourney(routeId: string): Journey {
 function createJourneyStop(
 	stopId: string,
 	journeyId: string,
-	referenceDate: Date,
+	expectedArrival: Date,
 	platformId: string | null,
 ): JourneyStop {
 	return {
 		id: randomUUID(),
 		createdAt: new Date(),
 		updatedAt: new Date(),
-		expectedArrival: faker.date.soon({
-			days: 1,
-			refDate: referenceDate,
-		}),
+		expectedArrival,
 		actualArrival: null,
 		stopId,
 		journeyId,
@@ -140,6 +135,10 @@ function createSeat(journeyId: string, num: number): Seat {
 	};
 }
 
+function getRandomElement<T>(array: T[]): T {
+	return array[faker.number.int({ min: 0, max: array.length - 1 })];
+}
+
 function generateData() {
 	const trains = Array.from({ length: NUMBER_OF_TRAINS }, createTrain);
 	console.log(`Generated ${trains.length} trains`);
@@ -149,7 +148,7 @@ function generateData() {
 	console.log(`Generated ${addresses.length} addresses`);
 	const platforms = stations.map((station) => createPlatform(station.id));
 	console.log(`Generated ${platforms.length} platforms`);
-	const routes = trains.map((train) => createRoute(train.id, null, null));
+	const routes = trains.map((train) => createRoute(train.id));
 	console.log(`Generated ${routes.length} routes`);
 
 	const stopMap = new Map<string, Stop[]>();
@@ -161,17 +160,15 @@ function generateData() {
 			console.log(`Generating ${i + 1} stop`);
 		}
 		const route = routes[i];
-		const platform = platforms[i];
-		const lastStop = createStop(route.id, platform.id, null);
-		const stop2 = createStop(route.id, platform.id, lastStop.id);
-		const startStop = createStop(route.id, platform.id, stop2.id);
+		assert(route);
+		const stop1 = createStop(route.id, getRandomElement(platforms).id, 0);
+		const stop2 = createStop(route.id, getRandomElement(platforms).id, 1);
+		const stop3 = createStop(route.id, getRandomElement(platforms).id, 2);
 
-		const stops = [startStop, stop2, lastStop];
+		const stops = [stop1, stop2, stop3];
 		assert.equal(stops.length, STOPS_PER_ROUTE);
 
 		stopMap.set(route.id, stops);
-		route.startStopId = startStop.id;
-		route.endStopId = lastStop.id;
 	}
 	console.log(`Generated stops for ${routes.length} routes`);
 
@@ -196,6 +193,7 @@ function generateData() {
 		}
 		const route = routes[routeIdx];
 		const stops = stopMap.get(route.id);
+		assert(stops);
 		const routeJourneys = Array.from({ length: JOURNEYS_PER_ROUTE }, () =>
 			createJourney(route.id),
 		);
@@ -207,12 +205,16 @@ function generateData() {
 		for (let journeyIdx = 0; journeyIdx < routeJourneys.length; journeyIdx += 1) {
 			const journey = routeJourneys[journeyIdx];
 
+			// seconds
+			let stopsDuration = 0;
 			for (let stopIdx = 0; stopIdx < stops.length; stopIdx += 1) {
 				const stop = stops[stopIdx];
+				stopsDuration += stop.durationFromPrevious;
+				const expectedArrival = journey.departureTime.getTime() + stopsDuration * 1000;
 				const journeyStop = createJourneyStop(
 					stop.id,
 					journey.id,
-					journey.departureTime,
+					new Date(expectedArrival),
 					stop.platformId,
 				);
 
@@ -303,55 +305,55 @@ async function main() {
 	/* prettier-ignore */
 	const sql = `
 start transaction;
-COPY trains (id, created_at, updated_at, name, total_seats, carriage_capacity, premium_carriages) FROM stdin;
+COPY trains ("id", "created_at", "updated_at", "name", "total_seats", "carriage_capacity", "premium_carriages") FROM stdin;
 ${trains.map(normalizeData).map((train) => `${train.id}\t${train.createdAt}\t${train.updatedAt}\t${train.name}\t${train.totalSeats}\t${train.carriageCapacity}\t${train.premiumCarriages}`).join("\n")}
 \\.
 
 ${sqlLog("Trains imported")}
 
-COPY stations (id, created_at, updated_at, name) FROM stdin;
+COPY stations ("id", "created_at", "updated_at", "name") FROM stdin;
 ${stations.map(normalizeData).map((station) => `${station.id}\t${station.createdAt}\t${station.updatedAt}\t${station.name}`).join("\n")}
 \\.
 
 ${sqlLog("Stations imported")}
 
-COPY addresses (id, created_at, updated_at, country, city, line1, line2, postal_code, state, station_id) FROM stdin;
+COPY addresses ("id", "created_at", "updated_at", "country", "city", "line1", "line2", "postal_code", "state", "station_id") FROM stdin;
 ${addresses.map(normalizeData).map((address) => `${address.id}\t${address.createdAt}\t${address.updatedAt}\t${address.country}\t${address.city}\t${address.line1}\t${address.line2}\t${address.postalCode}\t${address.state}\t${address.stationId}`).join("\n")}
 \\.
 
 ${sqlLog("Addresses imported")}
 
-COPY platforms (id, created_at, updated_at, name, station_id) FROM stdin;
+COPY platforms ("id", "created_at", "updated_at", "name", "station_id") FROM stdin;
 ${platforms.map(normalizeData).map((platform) => `${platform.id}\t${platform.createdAt}\t${platform.updatedAt}\t${platform.name}\t${platform.stationId}`).join("\n")}
 \\.
 
 ${sqlLog("Platforms imported")}
 
-COPY routes (id, created_at, updated_at, name, pricing, train_id, start_stop_id, end_stop_id) FROM stdin;
-${routes.map(normalizeData).map((route) => `${route.id}\t${route.createdAt}\t${route.updatedAt}\t${route.name}\t${route.pricing}\t${route.trainId}\t${route.startStopId}\t${route.endStopId}`).join("\n")}
+COPY routes ("id", "created_at", "updated_at", "name", "pricing", "train_id") FROM stdin;
+${routes.map(normalizeData).map((route) => `${route.id}\t${route.createdAt}\t${route.updatedAt}\t${route.name}\t${route.pricing}\t${route.trainId}`).join("\n")}
 \\.
 
 ${sqlLog("Routes imported")}
 
-COPY stops (id, created_at, updated_at, duration_from_previous, route_id, platform_id, next_stop_id) FROM stdin;
-${stops.map(normalizeData).map((stop) => `${stop.id}\t${stop.createdAt}\t${stop.updatedAt}\t${stop.durationFromPrevious}\t${stop.routeId}\t${stop.platformId}\t${stop.nextStopId}`).join("\n")}
+COPY stops ("id", "created_at", "updated_at", "duration_from_previous", "route_id", "platform_id", "order") FROM stdin;
+${stops.map(normalizeData).map((stop) => `${stop.id}\t${stop.createdAt}\t${stop.updatedAt}\t${stop.durationFromPrevious}\t${stop.routeId}\t${stop.platformId}\t${stop.order}`).join("\n")}
 \\.
 
 ${sqlLog("Stops imported")}
 
-COPY journeys (id, created_at, updated_at, departure_time, route_id) FROM stdin;
+COPY journeys ("id", "created_at", "updated_at", "departure_time", "route_id") FROM stdin;
 ${journeys.map(normalizeData).map((journey) => `${journey.id}\t${journey.createdAt}\t${journey.updatedAt}\t${journey.departureTime}\t${journey.routeId}`).join("\n")}
 \\.
 
 ${sqlLog("Journeys imported")}
 
-COPY journey_stops (id, created_at, updated_at, expected_arrival, actual_arrival, stop_id, journey_id, platform_id) FROM stdin;
+COPY journey_stops ("id", "created_at", "updated_at", "expected_arrival", "actual_arrival", "stop_id", "journey_id", "platform_id") FROM stdin;
 ${journeyStops.map(normalizeData).map((stop) => `${stop.id}\t${stop.createdAt}\t${stop.updatedAt}\t${stop.expectedArrival}\t${stop.actualArrival}\t${stop.stopId}\t${stop.journeyId}\t${stop.platformId}`).join("\n")}
 \\.
 
 ${sqlLog("Journey stops imported")}
 
-COPY seats (id, created_at, updated_at, number, class, journey_id) FROM stdin;
+COPY seats ("id", "created_at", "updated_at", "number", "class", "journey_id") FROM stdin;
 ${seats.map(normalizeData).map((seat) => `${seat.id}\t${seat.createdAt}\t${seat.updatedAt}\t${seat.number}\t${seat.class}\t${seat.journeyId}`).join("\n")}
 \\.
 
