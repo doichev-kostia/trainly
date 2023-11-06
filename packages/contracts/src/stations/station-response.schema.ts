@@ -1,11 +1,21 @@
-import { z } from "zod";
+import { z, type ZodType, type ZodTypeDef } from "zod";
 import { AddressResponseSchema } from "../addresses/address-response.schema.js";
+import { isoDate } from "../utils.js";
+import { PlatformResponseSchema } from "../platforms/platform-response.schema.js";
 
-export const StationResponseSchema = z.object({
+export const StationSchema = z.object({
 	id: z.string().uuid(),
-	createdAt: z.date(),
+	createdAt: isoDate,
 	name: z.string(),
-	address: AddressResponseSchema.optional(),
 });
 
-export type StationResponse = z.infer<typeof StationResponseSchema>;
+export type StationResponse = z.infer<typeof StationSchema> & {
+	address?: z.infer<typeof AddressResponseSchema>;
+	platforms?: z.infer<typeof PlatformResponseSchema>[];
+};
+
+export const StationResponseSchema: ZodType<StationResponse, ZodTypeDef, unknown> =
+	StationSchema.extend({
+		address: z.lazy(() => AddressResponseSchema.optional()),
+		platforms: z.lazy(() => z.array(PlatformResponseSchema).optional()),
+	});
