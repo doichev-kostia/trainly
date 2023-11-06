@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
+	import type { PageServerData } from "./$types";
 	import Typography from "~/components/Typography.svelte";
 	import Button from "~/components/Button.svelte";
 	import { onMount } from "svelte";
 	import Route from "~/routes/book/Route.svelte";
 	import ArrowRightIcon from "~/icons/ArrowRightIcon.svelte";
 
-	export let data: PageData;
+	export let data: PageServerData;
 
 	const from = data.from;
 	const to = data.to;
@@ -30,23 +30,29 @@
 </script>
 
 <section>
-	<header class="flex justify-between gap-x-3 mb-3 items-center container">
+	<header class="container mb-3 flex items-center justify-between gap-x-3">
 		<div class="flex items-center gap-x-0.5 text-xl">
 			<Typography component="h2" class="capitalize">{from}</Typography>
-			<Typography component="span"><ArrowRightIcon /></Typography>
+			<Typography component="span">
+				<ArrowRightIcon />
+			</Typography>
 			<Typography component="h2" class="capitalize">{to}</Typography>
 		</div>
 		<div>
 			<Button component="a" variant="link" href={backlink ? backlink.toString() : "/"}
-				>Edit</Button
-			>
+				>Edit
+			</Button>
 		</div>
 	</header>
 
 	<div class="container">
-		<ul class="flex flex-col w-full gap-y-3">
+		<ul class="flex w-full flex-col gap-y-3">
 			{#each data.routes as route (route.id)}
-				<Route {route} />
+				<Route
+					id={route.id}
+					startDate={new Date(route.startDate)}
+					endDate={new Date(route.endDate)}
+				/>
 			{/each}
 		</ul>
 	</div>
