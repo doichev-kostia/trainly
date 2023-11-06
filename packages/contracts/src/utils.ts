@@ -1,7 +1,11 @@
-import { z, type ZodEffects, type ZodType, type ZodTypeDef } from "zod";
+import { z } from "zod";
 
 export function castToArray<T>(val: T): T extends Array<unknown> ? T : T[] {
 	return Array.isArray(val) ? (val as any) : [val];
+}
+export type ValueOf<T> = T[keyof T];
+export function castToEnum<T extends object, V = T[keyof T]>(object: T) {
+	return Object.freeze(Object.values(object)) as Readonly<[V, ...V[]]>;
 }
 
 export function toDate<T>(value: T): Date | null {

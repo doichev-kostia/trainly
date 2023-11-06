@@ -1,12 +1,15 @@
 import type { PageServerLoad } from "./$types";
 import type { Route } from "~/data";
 import { api } from "~/api/client";
+import type { ListResponse } from "@trainly/contracts";
+import type { SeatResponse } from "@trainly/contracts/build/seats";
 
 export const load: PageServerLoad = async (
 	event,
 ): Promise<{
 	backlink: string | null;
 	journey: Route;
+	seats: ListResponse<SeatResponse>;
 	from: string | null;
 	to: string | null;
 	date: string | null;
@@ -52,6 +55,10 @@ export const load: PageServerLoad = async (
 		throw new Error("Route not found");
 	}
 
+	const seatList = await api.seats.list({
+		journeyId: journey.id,
+	});
+
 	return {
 		backlink,
 		journey: {
@@ -61,6 +68,7 @@ export const load: PageServerLoad = async (
 			origin: originStation ?? "",
 			destination: destinationStation ?? "",
 		},
+		seats: seatList,
 		from,
 		to,
 		date,

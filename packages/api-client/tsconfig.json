@@ -7,7 +7,11 @@
 		"declarationMap": true,
 		"outDir": "./build",
 		"rootDir": "./src",
-		"tsBuildInfoFile": "./build/.tsbuildinfo"
+		"tsBuildInfoFile": "./build/.tsbuildinfo",
+		"paths": {
+			"@trainly/contracts": ["../contracts/build/index.d.ts"],
+			"@trainly/contracts/*": ["../contracts/build/*/index.d.ts"]
+		}
 	},
 	"include": ["./src/**/*"],
 	"references": [

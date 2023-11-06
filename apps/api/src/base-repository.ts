@@ -58,14 +58,14 @@ export class BaseRepository<T extends Table, DB extends PostgresJsDatabase<Recor
 	public async count(): Promise<number | undefined> {
 		const rows = await this._db
 			.select({
-				count: sql<number>`count(*)`,
+				count: sql<string>`count(*)`,
 			})
 			.from(this._table)
 			.limit(1);
 
 		const res = rows[0];
 
-		return res?.count;
+		return Number(res?.count);
 	}
 
 	public async retrieve(id: string, expand: string[] = []): Promise<Selectable<T> | undefined> {

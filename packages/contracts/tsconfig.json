@@ -7,7 +7,12 @@
 		"emitDeclarationOnly": true,
 		"outDir": "./build",
 		"rootDir": "./src",
-		"tsBuildInfoFile": "./build/.tsbuildinfo"
+		"tsBuildInfoFile": "./build/.tsbuildinfo",
+		"paths": {
+			"@trainly/db": ["../db"],
+			"@trainly/db/schema/enums": ["../db/build/schema/enums.d.ts"],
+			"@trainly/db/schema/*": ["../db/build/schema/*.table.d.ts"]
+		}
 	},
 	"include": ["./src/**/*"],
 	"references": [
