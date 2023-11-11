@@ -45,7 +45,7 @@
 		"fastify-cli": "^5.8.0",
 		"fastify-plugin": "^4.5.1",
 		"fastify-type-provider-zod": "^1.1.9",
-		"globby": "^13.2.2",
+		"globby": "^14.0.0",
 		"pino-pretty": "^10.2.3",
 		"stripe": "^13.10.0",
 		"zod": "^3.21.4"
