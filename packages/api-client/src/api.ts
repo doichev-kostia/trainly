@@ -3,6 +3,7 @@ import { Customers } from "./resources/customers.js";
 import { Journeys } from "./resources/journeys.js";
 import { Stations } from "./resources/stations.js";
 import { Seats } from "./resources/seats.js";
+import { Checkout } from "./resources/checkout.js";
 
 type Options = {
 	host?: string;
@@ -23,6 +24,7 @@ export class API {
 	public journeys: Journeys;
 	public stations: Stations;
 	public seats: Seats;
+	public checkout: Checkout;
 
 	constructor(apiKey: string, options?: Options) {
 		this.options = {
@@ -46,5 +48,6 @@ export class API {
 		this.journeys = new Journeys(this.client);
 		this.stations = new Stations(this.client);
 		this.seats = new Seats(this.client);
+		this.checkout = new Checkout(this.client);
 	}
 }

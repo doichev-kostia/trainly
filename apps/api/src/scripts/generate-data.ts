@@ -133,7 +133,7 @@ function createSeat(journeyId: string, num: number): Seat {
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		number: num,
-		class: faker.helpers.arrayElement(Object.values(seatClass)),
+		class: num < PREMIUM_CARRIAGES * CARRIAGE_CAPACITY ? seatClass.premium : seatClass.standard,
 		status: seatStatus.available,
 		journeyId,
 	};

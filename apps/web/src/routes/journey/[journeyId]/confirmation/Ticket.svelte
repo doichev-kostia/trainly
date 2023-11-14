@@ -1,26 +1,69 @@
 <script lang="ts">
 	import type { Seat } from "./types.js";
+	import Typography from "~/components/Typography.svelte";
 
 	export let seat: Seat;
+	export let idx: number;
 
 	const price = (seat.price / 100).toFixed(2);
+
+	function getSeatName(name: string) {
+		return `seats[${idx}][${name}]`;
+	}
+
+	function getPassengerName(name: string) {
+		return `${getSeatName("passenger")}[${name}]`;
+	}
+
+	const names = {
+		id: getSeatName("id"),
+		firstName: getPassengerName("firstName"),
+		lastName: getPassengerName("lastName"),
+	};
 </script>
 
-<div>
-	<input type="text" hidden readonly name="id" value={seat.id} />
-	<div>
-		<p>Class</p>
-		<p>{seat.class}</p>
-		<p>Number</p>
-		<p>{seat.number + 1}</p>
+<div class="bg-card text-card-foreground rounded-lg border px-3 py-2 shadow-md">
+	<input type="text" hidden readonly name={names.id} value={seat.id} />
+	<div class="mb-4">
+		<div>
+			<Typography component="span" class="text-muted-foreground">Class:</Typography>
+			<Typography component="span">{seat.class}</Typography>
+		</div>
+		<div>
+			<Typography component="span" class="text-muted-foreground">Seat:</Typography>
+			<Typography component="span">{seat.number + 1}</Typography>
+		</div>
+		<div>
+			<Typography component="span" class="text-muted-foreground">Price:</Typography>
+			<Typography component="span">{price} €</Typography>
+		</div>
 	</div>
 
-	<p>{price} €</p>
+	<Typography component="h3" class="mb-3 text-lg">Passenger details</Typography>
 
-	<h3>Passenger details</h3>
-	<label for="firstName">First name</label>
-	<input type="text" name="firstName" id="firstName" required min="1" />
+	<div class="mb-3">
+		<label for="firstName" class="mb-2 block text-sm font-medium">First name</label>
+		<input
+			type="text"
+			name={names.firstName}
+			id={names.firstName}
+			required
+			min="1"
+			autocomplete="given-name"
+			class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+		/>
+	</div>
 
-	<label for="lastName">Last name</label>
-	<input type="text" name="lastName" id="lastName" required min="1" />
+	<div class="mb-3">
+		<label for="lastName" class="mb-2 block text-sm font-medium">Last name</label>
+		<input
+			type="text"
+			name={names.lastName}
+			id={names.lastName}
+			required
+			min="1"
+			autocomplete="family-name"
+			class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+		/>
+	</div>
 </div>

@@ -1,6 +1,11 @@
-import type { PageServerLoad } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
 import { api } from "~/api/client";
 import type { Seat } from "./types";
+import { transformFormDataToObject } from "$lib/utils";
+import type { CreateBookingBody } from "@trainly/contracts/bookings";
+import { redirect } from "@sveltejs/kit";
+import { z } from "zod";
+import { CreateBookingBodySchema } from "@trainly/contracts/bookings";
 
 export const load: PageServerLoad = async (
 	event,
@@ -46,3 +51,18 @@ export const load: PageServerLoad = async (
 		totalPrice,
 	};
 };
+
+export const actions = {
+	default: async (event) => {
+		const data = await event.request.formData();
+		const object = CreateBookingBodySchema.parse(transformFormDataToObject(data));
+
+		const body: CreateBookingBody = {
+			callbackURL: new URL("bookings", event.url).toString(),
+			...object,
+		};
+		const response = await api.checkout.create(body);
+
+		throw redirect(303, response.url);
+	},
+} satisfies Actions;

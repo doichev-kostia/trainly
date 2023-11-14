@@ -53,34 +53,55 @@ export const checkout: Handler<Schema> = async function checkout(request, reply)
 		}
 	}
 
-	let successCallbackUrl: string | undefined;
-	if (request.body.successURL) {
-		const url = new URL(request.body.successURL);
+	let callbackUrl: string | undefined;
+	if (request.body.callbackURL) {
+		const url = new URL(request.body.callbackURL);
 		if (url.pathname.endsWith("/")) {
 			url.pathname = url.pathname.slice(0, -1);
 		}
 
 		url.pathname += `/${booking}`;
+		callbackUrl = url.toString();
+	}
+
+	let successCallbackUrl: string | undefined;
+	if (callbackUrl) {
+		const url = new URL(callbackUrl);
+		url.searchParams.set("status", "success");
 		successCallbackUrl = url.toString();
+	}
+
+	let cancelCallbackUrl: string | undefined;
+	if (callbackUrl) {
+		const url = new URL(callbackUrl);
+		url.searchParams.set("status", "cancel");
+		cancelCallbackUrl = url.toString();
+	}
+
+	const items = [];
+	if (premium > 0) {
+		items.push({
+			price: pricing[seatClass.premium],
+			quantity: premium,
+		});
+	} else if (standard > 0) {
+		items.push({
+			price: pricing[seatClass.standard],
+			quantity: standard,
+		});
+	} else {
+		throw this.httpErrors.badRequest("No seats selected");
 	}
 
 	const session = await this.stripe.checkout.sessions.create({
 		mode: "payment",
-		cancel_url: request.body.cancelURL, // Maybe just return URL?
+		customer_email: request.body.email,
+		cancel_url: cancelCallbackUrl,
 		success_url: successCallbackUrl,
 		metadata: {
 			bookingId: booking,
 		},
-		line_items: [
-			{
-				price: pricing[seatClass.premium],
-				quantity: premium,
-			},
-			{
-				price: pricing[seatClass.standard],
-				quantity: standard,
-			},
-		],
+		line_items: items,
 	});
 
 	if (session.url === null) {
