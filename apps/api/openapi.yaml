@@ -1097,6 +1097,59 @@ paths:
                   - state
                   - stationId
                 additionalProperties: false
+  /v1/checkout/:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId:
+                  type: string
+                successURL:
+                  type: string
+                cancelURL:
+                  type: string
+                seats:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      passenger:
+                        type: object
+                        properties:
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
+                        required:
+                          - firstName
+                          - lastName
+                        additionalProperties: false
+                    required:
+                      - id
+                      - passenger
+                    additionalProperties: false
+              required:
+                - seats
+              additionalProperties: false
+        required: true
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                required:
+                  - url
+                additionalProperties: false
   /v1/customers/:
     post:
       operationId: create
@@ -2697,6 +2750,31 @@ paths:
                   - delay
                   - routeId
                 additionalProperties: false
+  /v1/journeys/{id}/pricing:
+    get:
+      parameters:
+        - schema:
+            type: string
+            format: uuid
+          in: path
+          name: id
+          required: true
+      responses:
+        2XX:
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - standard
+                  - premium
+                properties:
+                  standard:
+                    type: number
+                  premium:
+                    type: number
+                additionalProperties: false
   /v1/seats/:
     get:
       parameters:
@@ -2727,6 +2805,13 @@ paths:
           in: query
           name: journeyId
           required: true
+        - schema:
+            type: array
+            items:
+              type: string
+          in: query
+          name: ids
+          required: false
       responses:
         2XX:
           description: Default Response
@@ -8170,6 +8255,11 @@ paths:
           in: path
           name: id
           required: true
+      responses:
+        "200":
+          description: Default Response
+  /v1/webhooks/stripe:
+    post:
       responses:
         "200":
           description: Default Response

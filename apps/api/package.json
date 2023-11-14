@@ -41,6 +41,7 @@
 		"@trainly/db": "workspace:^",
 		"@trainly/utils": "workspace:^",
 		"desm": "^1.3.0",
+		"effect": "2.0.0-next.54",
 		"fastify": "^4.23.2",
 		"fastify-cli": "^5.8.0",
 		"fastify-plugin": "^4.5.1",
