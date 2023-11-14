@@ -1,0 +1,63 @@
+# flyctl launch added from .gitignore
+**/.DS_Store
+**/node_modules
+**/build
+**/.svelte-kit
+package
+**/.env
+**/.env.*
+!**/.env.example
+**/vite.config.js.timestamp-*
+**/vite.config.ts.timestamp-*
+
+**/.idea
+**/http-client.private*.json
+**/.turbo
+**/.db-data
+
+# flyctl launch added from .idea/.gitignore
+# Default ignored files
+.idea/shelf
+.idea/workspace.xml
+# Editor-based HTTP Client requests
+.idea/httpRequests
+# Datasource local storage ignored files
+.idea/dataSources
+.idea/dataSources.local.xml
+
+# flyctl launch added from node_modules/.pnpm/tailwindcss@3.3.3/node_modules/tailwindcss/stubs/.gitignore
+!node_modules/.pnpm/tailwindcss@3.3.3/node_modules/tailwindcss/stubs/**/*
+
+# flyctl launch added from out/full/.gitignore
+out/full/**/.DS_Store
+out/full/**/node_modules
+out/full/**/build
+out/full/**/.svelte-kit
+out/full/package
+out/full/**/.env
+out/full/**/.env.*
+!out/full/**/.env.example
+out/full/**/vite.config.js.timestamp-*
+out/full/**/vite.config.ts.timestamp-*
+
+out/full/**/.idea
+out/full/**/http-client.private*.json
+out/full/**/.turbo
+out/full/**/.db-data
+
+# flyctl launch added from out/full/packages/db/.gitignore
+out/full/packages/db/**/node_modules
+# Keep environment variables out of version control
+out/full/packages/db/**/.env
+
+# flyctl launch added from packages/db/.gitignore
+packages/db/**/node_modules
+# Keep environment variables out of version control
+packages/db/**/.env
+
+# flyctl launch added from packages/supabase/.gitignore
+# Supabase
+packages/supabase/**/.branches
+packages/supabase/**/.temp
+packages/supabase/**/.vscode
+fly.toml

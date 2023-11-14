@@ -13,3 +13,5 @@ vite.config.ts.timestamp-*
 http-client.private*.json
 .turbo
 .db-data
+/out
+data.sql
