@@ -91,11 +91,19 @@ export class JourneyRepository {
 
 		const journeyIds = journeys.map((j) => j.id);
 
+		if (journeyIds.length === 0) {
+			return {
+				items: [],
+				count: 0,
+			};
+		}
+
 		const data = await db.query.journeys.findMany({
 			where: inArray(table.id, journeyIds),
 			with: relations(expand),
 			limit,
 			offset,
+			orderBy: table.departureTime,
 		});
 
 		return {

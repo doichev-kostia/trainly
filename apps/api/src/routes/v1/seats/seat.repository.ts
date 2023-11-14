@@ -1,6 +1,6 @@
 import { BaseRepository } from "#base-repository";
 import { type Seat, seats } from "@trainly/db/schema/seats";
-import { db, eq, inArray, sql } from "@trainly/db";
+import { type SQL, and, db, eq, inArray, sql } from "@trainly/db";
 import { relations } from "~/utils/db.js";
 import { InternalError } from "~/errors/domain/InternalError.js";
 import { type Journey } from "@trainly/db/schema/journeys";
@@ -12,6 +12,7 @@ type ListParams = {
 	limit?: number;
 	offset?: number;
 	expand?: string[];
+	ids?: string[];
 };
 
 type RetrievedSeat = Seat & {
@@ -22,6 +23,7 @@ type RetrievedSeat = Seat & {
 export class SeatRepository {
 	private static instance: SeatRepository | undefined;
 	private base: BaseRepository<typeof seats, typeof db>;
+
 	private constructor(database: typeof db, table: typeof seats) {
 		this.base = new BaseRepository(table, database);
 	}
@@ -38,13 +40,20 @@ export class SeatRepository {
 		journeyId: string,
 		params?: ListParams,
 	): Promise<ListResponse<RetrievedSeat>> {
-		const { limit, offset, expand = [] } = params ?? {};
+		const { limit, offset, expand = [], ids } = params ?? {};
+
+		let condition: SQL | undefined = eq(seats.journeyId, journeyId);
+
+		if (Array.isArray(ids) && ids.length > 0) {
+			condition = and(condition, inArray(seats.id, ids));
+		}
 
 		const data = await db.query.seats.findMany({
-			where: eq(seats.journeyId, journeyId),
+			where: condition,
 			with: relations(expand),
 			limit,
 			offset,
+			orderBy: seats.number,
 		});
 
 		const rows = await db
@@ -52,7 +61,7 @@ export class SeatRepository {
 				count: sql<string>`count(*)`,
 			})
 			.from(seats)
-			.where(eq(seats.journeyId, journeyId));
+			.where(condition);
 
 		const res = rows[0];
 		if (!res) {

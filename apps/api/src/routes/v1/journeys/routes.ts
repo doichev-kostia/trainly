@@ -1,8 +1,13 @@
 import { type Instance } from "~/utils/types.js";
-import { JourneyResponseSchema, ListJourneysQuerySchema } from "@trainly/contracts/journeys";
+import {
+	JourneyPricingResponseSchema,
+	JourneyResponseSchema,
+	ListJourneysQuerySchema,
+} from "@trainly/contracts/journeys";
 import { ExpansionQuerySchema, IdParamsSchema, ListResponseSchema } from "@trainly/contracts";
 import { listAvailableJourneys } from "./handlers/list-available-journeys.js";
 import { retrieveJourney } from "~/routes/v1/journeys/handlers/retrieve-journey.js";
+import { retrieveJourneyPricing } from "./handlers/retrieve-journey-pricing.js";
 
 async function journeyRoutes(fastify: Instance) {
 	fastify.addHook("onRequest", fastify.verifyAuthToken);
@@ -30,6 +35,18 @@ async function journeyRoutes(fastify: Instance) {
 			},
 		},
 		handler: retrieveJourney,
+	});
+
+	fastify.route({
+		method: "GET",
+		url: "/:id/pricing",
+		schema: {
+			params: IdParamsSchema,
+			response: {
+				"2xx": JourneyPricingResponseSchema,
+			},
+		},
+		handler: retrieveJourneyPricing,
 	});
 }
 
