@@ -14,6 +14,7 @@ import assert from "node:assert";
 import process from "node:process";
 import * as path from "path";
 import * as fs from "fs";
+import { SeatClass } from "@trainly/contracts/seats";
 
 const SEATS_PER_TRAIN = 20;
 const CARRIAGE_CAPACITY = 10;
@@ -74,7 +75,10 @@ function createRoute(trainId: string): Route {
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		name: `${faker.location.city()} - ${faker.location.city()}`,
-		pricing: {},
+		pricing: {
+			[SeatClass.standard]: process.env.STANDARD_PRICE,
+			[SeatClass.premium]: process.env.PREMIUM_PRICE,
+		},
 		trainId,
 	};
 }
