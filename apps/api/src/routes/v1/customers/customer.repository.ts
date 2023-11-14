@@ -76,7 +76,7 @@ export class CustomerRepository {
 
 		return {
 			items: data,
-			count: res.count,
+			count: NUmber(res.count),
 		};
 	}
 

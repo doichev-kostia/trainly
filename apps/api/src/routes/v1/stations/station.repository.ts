@@ -4,7 +4,7 @@ import { type Station, stations, type StationsTable } from "@trainly/db/schema/s
 import assert from "node:assert";
 import { type Platform } from "@trainly/db/schema/platforms";
 import { type ListResponse } from "@trainly/contracts";
-import { type ListStationQuery, type StationExpansion } from "@trainly/contracts/stations";
+import { type ListStationQuery } from "@trainly/contracts/stations";
 import { relations, stripValues } from "~/utils/db.js";
 
 type CreateStationValues = Omit<InferInsertModel<StationsTable>, "id" | "createdAt" | "updatedAt">;
@@ -54,9 +54,11 @@ export class StationRepository {
 			}
 		}
 
+		const condition = name ? ilike(stations.name, `%${name}%`) : undefined;
+
 		const data = await db.query.stations.findMany({
 			with: relations,
-			where: ilike(stations.name, `%${name}%`),
+			where: condition,
 			offset,
 			limit,
 		});
@@ -72,7 +74,7 @@ export class StationRepository {
 
 		return {
 			items: data,
-			count: res.count,
+			count: Number(res.count),
 		};
 	}
 
