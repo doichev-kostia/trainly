@@ -19,7 +19,7 @@ import { SeatClass } from "@trainly/contracts/seats";
 const SEATS_PER_TRAIN = 20;
 const CARRIAGE_CAPACITY = 10;
 const PREMIUM_CARRIAGES = 1;
-const NUMBER_OF_TRAINS = 10;
+const NUMBER_OF_TRAINS = 3;
 const STOPS_PER_ROUTE = 3;
 const JOURNEYS_PER_ROUTE = 3;
 
