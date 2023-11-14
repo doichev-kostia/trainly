@@ -7,6 +7,9 @@
 	import { page } from "$app/stores";
 	import { goto } from "$app/navigation";
 	import { browser } from "$app/environment";
+	import ChevronLeft from "~/icons/ChevronLeft.svelte";
+	import ChevronRight from "~/icons/ChevronRight.svelte";
+	import Button from "~/components/Button.svelte";
 
 	export let data: PageData;
 
@@ -24,7 +27,6 @@
 	};
 
 	$: {
-		console.log(chosenSeats);
 		$page.url.searchParams.delete("seat");
 		for (const seat of chosenSeats) {
 			$page.url.searchParams.append("seat", seat);
@@ -118,19 +120,18 @@
 
 	<div class="container mb-4 py-2">
 		<p class="mb-4">Carriage: {data.carriage + 1}</p>
-		<div class="flex items-center gap-x-3">
-			<aside>
-				<button on:click={prev} disabled={!data.hasPrevious}>P</button>
+		<div class="flex gap-x-3">
+			<aside class="flex items-center">
+				<Button on:click={prev} disabled={!data.hasPrevious} variant="link" class="p-0">
+					<ChevronLeft />
+				</Button>
 			</aside>
 			<section
-				class="bg-card text-card-foreground flex-1 rounded-lg border px-3 py-2 shadow-md"
+				class="bg-card text-card-foreground flex-1 overflow-x-auto rounded-lg border px-4 py-3 shadow-md"
 			>
-				<ul class="grid grid-flow-col grid-rows-2 gap-4">
+				<ul class="grid grid-flow-col grid-rows-2 gap-x-5 gap-y-8">
 					{#each data.seats.items as seat (seat.id)}
-						<li>
-							<label for={seat.id}>
-								{seat.number + 1}
-							</label>
+						<li class="flex items-center">
 							<input
 								id={seat.id}
 								type="checkbox"
@@ -138,18 +139,24 @@
 								disabled={seat.status !== SeatStatus.available}
 								on:change={updateSeats}
 								checked={chosenSeats.includes(seat.id)}
+								class="accent-primary text-primary h-5 w-5 rounded border-gray-300 bg-gray-100 focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
 							/>
+							<label for={seat.id} class="ml-2 text-sm font-medium">
+								{seat.number + 1}
+							</label>
 						</li>
 					{/each}
 				</ul>
 			</section>
-			<aside>
-				<button on:click={next} disabled={!data.hasNext}>N</button>
+			<aside class="flex items-center">
+				<Button on:click={next} disabled={!data.hasNext} variant="link" class="p-0">
+					<ChevronRight />
+				</Button>
 			</aside>
 		</div>
 	</div>
 
-	<div class="container py-2">
-		<a href={nextPage}>Continue</a>
+	<div class="container py-2 text-right">
+		<Button component="a" href={nextPage}>Continue</Button>
 	</div>
 </section>

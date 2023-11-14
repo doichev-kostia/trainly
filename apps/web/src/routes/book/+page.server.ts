@@ -11,12 +11,7 @@ export const load: PageServerLoad = async (event) => {
 	const date = event.url.searchParams.get("date");
 
 	if (!from || !to || !date) {
-		return {
-			journeys: [],
-			from: null,
-			to: null,
-			date: null,
-		};
+		throw new Error("Missing query parameters");
 	}
 
 	let journeyList: ListResponse<JourneyResponse> = {
