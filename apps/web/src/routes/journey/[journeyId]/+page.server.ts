@@ -2,7 +2,8 @@ import type { PageServerLoad } from "./$types";
 import type { Route } from "~/data";
 import { api } from "~/api/client";
 import type { ListResponse } from "@trainly/contracts";
-import type { SeatResponse } from "@trainly/contracts/build/seats";
+import type { SeatClassEnum, SeatResponse } from "@trainly/contracts/seats";
+import { SeatClass } from "@trainly/contracts/seats";
 
 export const load: PageServerLoad = async (
 	event,
@@ -13,10 +14,16 @@ export const load: PageServerLoad = async (
 	from: string | null;
 	to: string | null;
 	date: string | null;
+	seatClass: SeatClassEnum;
+	carriage: number;
+	hasNext: boolean;
+	hasPrevious: boolean;
 }> => {
 	const from = event.url.searchParams.get("from");
 	const to = event.url.searchParams.get("to");
 	const date = event.url.searchParams.get("date");
+	const seatClass = event.url.searchParams.get("seatClass") ?? SeatClass.standard;
+	let carriage: string | null | number = event.url.searchParams.get("carriage");
 
 	if (!from || !to || !date) {
 		throw new Error("Invalid parameters");
@@ -33,7 +40,13 @@ export const load: PageServerLoad = async (
 	}
 
 	const journey = await api.journeys.retrieve(event.params.journeyId, {
-		expand: ["route", "route.stops", "route.stops.platform", "route.stops.platform.station"],
+		expand: [
+			"route",
+			"route.stops",
+			"route.stops.platform",
+			"route.stops.platform.station",
+			"route.train",
+		],
 	});
 
 	// seconds
@@ -55,8 +68,53 @@ export const load: PageServerLoad = async (
 		throw new Error("Route not found");
 	}
 
+	const totalSeats = journey.route?.train?.totalSeats ?? 20;
+	const carriageCapacity = journey.route?.train?.carriageCapacity ?? 20;
+	const premiumCarriages = journey.route?.train?.premiumCarriages ?? 0;
+
+	const standardOffset = premiumCarriages * carriageCapacity;
+
+	const carriageCount = Math.ceil(totalSeats / carriageCapacity);
+
+	let hasNext = false;
+	let hasPrevious = false;
+
+	if (carriage == null) {
+		if (seatClass === SeatClass.premium) {
+			carriage = 0;
+		} else {
+			carriage = premiumCarriages;
+		}
+	} else if (typeof carriage === "string") {
+		carriage = Number(carriage);
+	}
+
+	if (Number.isNaN(carriage)) {
+		throw new Error("Invalid carriage");
+	}
+
+	if (carriage >= carriageCount) {
+		throw new Error("Invalid carriage");
+	}
+
+	if (carriage < 0) {
+		throw new Error("Invalid carriage");
+	}
+
+	if (seatClass === SeatClass.premium && carriage < premiumCarriages - 1) {
+		hasNext = true;
+	} else if (seatClass === SeatClass.premium && carriage > 0) {
+		hasPrevious = true;
+	} else if (seatClass === SeatClass.standard && carriage < carriageCount - 1) {
+		hasNext = true;
+	} else if (seatClass === SeatClass.standard && carriage > premiumCarriages) {
+		hasPrevious = true;
+	}
+
 	const seatList = await api.seats.list({
 		journeyId: journey.id,
+		limit: carriageCapacity,
+		offset: carriage * carriageCapacity,
 	});
 
 	return {
@@ -72,5 +130,9 @@ export const load: PageServerLoad = async (
 		from,
 		to,
 		date,
+		seatClass,
+		carriage, // number
+		hasNext,
+		hasPrevious,
 	};
 };

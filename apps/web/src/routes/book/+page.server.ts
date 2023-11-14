@@ -46,35 +46,12 @@ export const load: PageServerLoad = async (event) => {
 		console.error(error);
 	}
 
-	let departureStopId: string | undefined;
-	if (journeyList.items.length > 0) {
-		departureStopId = journeyList.items[0].journeyStops?.find(
-			(jst: JourneyStopResponse) => jst.stop?.platform?.station?.name === from,
-		)?.stop?.id;
-	}
-
-	let arrivalStopId: string | undefined;
-	if (journeyList.items.length > 0) {
-		arrivalStopId = journeyList.items[0].journeyStops?.find(
-			(jst: JourneyStopResponse) => jst.stop?.platform?.station?.name === to,
-		)?.stop?.id;
-	}
-
-	if (!departureStopId || !arrivalStopId) {
-		return {
-			journeys: [],
-			from,
-			to,
-			date,
-		};
-	}
-
 	const journeys = journeyList.items.map((journey) => {
 		const departureStop = journey.journeyStops?.find(
-			(jst: JourneyStopResponse) => jst.stop?.id === departureStopId,
+			(jst: JourneyStopResponse) => jst.stop?.platform?.station?.name === from,
 		);
 		const arrivalStop = journey.journeyStops?.find(
-			(jst: JourneyStopResponse) => jst.stop?.id === arrivalStopId,
+			(jst: JourneyStopResponse) => jst.stop?.platform?.station?.name === to,
 		);
 
 		if (!departureStop || !arrivalStop) {
