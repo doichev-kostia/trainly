@@ -29,5 +29,13 @@ export const ticketsRelations = relations(tickets, ({ one, many }) => {
 			fields: [tickets.bookingId],
 			references: [bookings.id],
 		}),
+		seat: one(seats, {
+			fields: [tickets.seatId],
+			references: [seats.id],
+		}),
+		passenger: one(passengers, {
+			fields: [tickets.passengerId],
+			references: [passengers.id],
+		}),
 	};
 });

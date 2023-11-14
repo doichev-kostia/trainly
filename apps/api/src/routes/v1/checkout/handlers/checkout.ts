@@ -19,6 +19,7 @@ type Schema = {
 export const checkout: Handler<Schema> = async function checkout(request, reply) {
 	const booking = await BookingRepository.getInstance().createBooking(
 		request.body.seats,
+		request.body.email,
 		request.body.customerId,
 	);
 

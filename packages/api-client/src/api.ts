@@ -4,6 +4,7 @@ import { Journeys } from "./resources/journeys.js";
 import { Stations } from "./resources/stations.js";
 import { Seats } from "./resources/seats.js";
 import { Checkout } from "./resources/checkout.js";
+import { Bookings } from "./resources/bookings.js";
 
 type Options = {
 	host?: string;
@@ -25,6 +26,7 @@ export class API {
 	public stations: Stations;
 	public seats: Seats;
 	public checkout: Checkout;
+	public bookings: Bookings;
 
 	constructor(apiKey: string, options?: Options) {
 		this.options = {
@@ -49,5 +51,6 @@ export class API {
 		this.stations = new Stations(this.client);
 		this.seats = new Seats(this.client);
 		this.checkout = new Checkout(this.client);
+		this.bookings = new Bookings(this.client);
 	}
 }

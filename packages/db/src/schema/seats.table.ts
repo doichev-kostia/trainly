@@ -14,7 +14,7 @@ export const seats = pgTable("seats", {
 	journeyId: uuid("journey_id")
 		.notNull()
 		.references(() => journeys.id),
-	// reservedAt
+	reservedAt: timestamp("reserved_at"),
 });
 
 export type SeatsTable = typeof seats;
@@ -28,6 +28,10 @@ export const seatsRelations = relations(seats, ({ one, many }) => {
 			references: [journeys.id],
 		}),
 		ticket: one(tickets, {
+			fields: [seats.id],
+			references: [tickets.seatId],
+		}),
+		passenger: one(tickets, {
 			fields: [seats.id],
 			references: [tickets.seatId],
 		}),

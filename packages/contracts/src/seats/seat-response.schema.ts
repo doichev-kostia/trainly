@@ -9,6 +9,8 @@ export const SeatSchema = z.object({
 	journeyId: z.string(),
 });
 
+export type Seat = z.infer<typeof SeatSchema>;
+
 export type SeatResponse = z.infer<typeof SeatSchema> & {
 	journey?: z.infer<typeof JourneyResponseSchema>;
 	ticket?: unknown;

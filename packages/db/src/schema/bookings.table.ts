@@ -1,4 +1,4 @@
-import { pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { bookingStatusEnum } from "./enums.js";
 import { customers } from "./customers.table.js";
 import { type InferSelectModel, relations } from "drizzle-orm";
@@ -10,7 +10,7 @@ export const bookings = pgTable("bookings", {
 	updateAt: timestamp("updated_at").notNull().defaultNow(),
 	status: bookingStatusEnum("status").notNull(),
 	customerId: uuid("customer_id").references(() => customers.id),
-	// email: varchar("email").notNull(),
+	email: varchar("email").notNull(),
 });
 
 export type BookingsTable = typeof bookings;

@@ -58,7 +58,7 @@ export const actions = {
 		const object = CreateBookingBodySchema.parse(transformFormDataToObject(data));
 
 		const body: CreateBookingBody = {
-			callbackURL: new URL("bookings", event.url).toString(),
+			callbackURL: new URL("bookings", event.url.origin).toString(),
 			...object,
 		};
 		const response = await api.checkout.create(body);

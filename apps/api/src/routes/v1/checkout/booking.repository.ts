@@ -1,7 +1,7 @@
 import { BaseRepository } from "#base-repository";
 
 import { bookings } from "@trainly/db/schema/bookings";
-import { db } from "@trainly/db";
+import { db, eq } from "@trainly/db";
 import { passengers } from "@trainly/db/schema/passengers";
 import { bookingStatus } from "@trainly/db/schema/enums";
 import { tickets } from "@trainly/db/schema/tickets";
@@ -31,11 +31,12 @@ export class BookingRepository {
 		return BookingRepository.instance;
 	}
 
-	public async createBooking(seats: Seat[], customerId?: string) {
+	public async createBooking(seats: Seat[], email: string, customerId?: string) {
 		const booking = await db.transaction(async (trx) => {
 			const [booking] = await trx
 				.insert(bookings)
 				.values({
+					email,
 					status: bookingStatus.reserved,
 					customerId: customerId ?? null,
 				})
@@ -79,9 +80,15 @@ export class BookingRepository {
 				}),
 			);
 
+			// TODO: reserve seats
+
 			return booking;
 		});
 
 		return booking.id;
+	}
+
+	async retrieve(id: string, expand?: string[]) {
+		return this.base.retrieve(id, expand);
 	}
 }

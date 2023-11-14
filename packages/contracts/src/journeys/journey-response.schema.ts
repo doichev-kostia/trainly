@@ -2,6 +2,7 @@ import { z, type ZodType, type ZodTypeDef } from "zod";
 import { RouteResponseSchema } from "../routes/route-response.schema.js";
 import { isoDate } from "../utils.js";
 import { JourneyStopResponseSchema } from "../journey-stops/journey-stop-response.schema.js";
+import { type SeatResponseSchema } from "../seats/seat-response.schema.js";
 
 export const JourneySchema = z.object({
 	id: z.string(),
@@ -15,7 +16,7 @@ export type Journey = z.infer<typeof JourneySchema>;
 export type JourneyResponse = z.infer<typeof JourneySchema> & {
 	route?: z.infer<typeof RouteResponseSchema>;
 	journeyStops?: z.infer<typeof JourneyStopResponseSchema>[];
-	seats?: any[];
+	seats?: z.infer<typeof SeatResponseSchema>[];
 };
 
 export const JourneyResponseSchema: ZodType<JourneyResponse, ZodTypeDef, unknown> =

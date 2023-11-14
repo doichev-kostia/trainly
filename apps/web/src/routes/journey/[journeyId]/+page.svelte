@@ -60,6 +60,8 @@
 
 	let nextPage = `/journey/${data.journey.id}/confirmation`;
 
+	console.log(data.seats);
+
 	$: {
 		nextPage = `/journey/${data.journey.id}/confirmation?${$page.url.searchParams.toString()}`;
 	}
