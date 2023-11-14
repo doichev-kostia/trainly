@@ -5,6 +5,7 @@ export const EnvSchema = z.object({
 	API_KEY: z.string(),
 	ADMIN_API_KEY: z.string(),
 	STRIPE_API_KEY: z.string(),
+	STRIPE_WEBHOOK_SECRET: z.string(),
 	PORT: z.string().default("8080"),
 });
 
