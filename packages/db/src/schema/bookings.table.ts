@@ -10,6 +10,7 @@ export const bookings = pgTable("bookings", {
 	updateAt: timestamp("updated_at").notNull().defaultNow(),
 	status: bookingStatusEnum("status").notNull(),
 	customerId: uuid("customer_id").references(() => customers.id),
+	// email: varchar("email").notNull(),
 });
 
 export type BookingsTable = typeof bookings;

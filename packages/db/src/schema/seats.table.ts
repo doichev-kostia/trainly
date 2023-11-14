@@ -14,6 +14,7 @@ export const seats = pgTable("seats", {
 	journeyId: uuid("journey_id")
 		.notNull()
 		.references(() => journeys.id),
+	// reservedAt
 });
 
 export type SeatsTable = typeof seats;
