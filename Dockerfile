@@ -1,4 +1,4 @@
-FROM node:18.18.2-bookworm as base
+FROM node:21.2.0-bookworm as base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
