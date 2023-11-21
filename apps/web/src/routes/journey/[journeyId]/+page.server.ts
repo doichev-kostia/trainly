@@ -18,6 +18,7 @@ export const load: PageServerLoad = async (
 	carriage: number;
 	hasNext: boolean;
 	hasPrevious: boolean;
+	title: string;
 }> => {
 	const from = event.url.searchParams.get("from");
 	const to = event.url.searchParams.get("to");
@@ -134,5 +135,6 @@ export const load: PageServerLoad = async (
 		carriage, // number
 		hasNext,
 		hasPrevious,
+		title: `${originStation} to ${destinationStation} | Journey`,
 	};
 };

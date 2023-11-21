@@ -13,5 +13,6 @@ export const load: PageServerLoad = async (event) => {
 		to,
 		date,
 		stations: stationList.items,
+		title: "Home",
 	};
 };

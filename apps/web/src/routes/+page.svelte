@@ -3,6 +3,8 @@
 	import Button from "~/components/Button.svelte";
 	import Typography from "~/components/Typography.svelte";
 	import Advantages from "~/routes/Advantages.svelte";
+	import { goto } from "$app/navigation";
+	import { browser } from "$app/environment";
 
 	export let data: PageData;
 
@@ -18,6 +20,18 @@
 	$: {
 		arrivalOptions = options.filter((option) => option.name !== from);
 		departureOptions = options.filter((option) => option.name !== to);
+	}
+
+	$: {
+		if (browser) {
+			const searchParams = new URLSearchParams(window.location.search);
+
+			searchParams.set("from", from);
+			searchParams.set("to", to);
+			searchParams.set("date", date);
+
+			goto(`?${searchParams.toString()}`);
+		}
 	}
 </script>
 

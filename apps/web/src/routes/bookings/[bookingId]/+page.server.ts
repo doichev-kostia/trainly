@@ -11,6 +11,7 @@ export const load: PageServerLoad = async (
 	journey: JourneyResponse;
 	departureStation: StationResponse;
 	arrivalStation: StationResponse;
+	title: string;
 }> => {
 	const bookingId = event.params.bookingId;
 
@@ -42,5 +43,6 @@ export const load: PageServerLoad = async (
 		journey,
 		departureStation,
 		arrivalStation,
+		title: "Booking",
 	};
 };
