@@ -1,32 +1,27 @@
 import fp from "fastify-plugin";
 import swagger from "@fastify/swagger";
-import * as path from "node:path";
 import swaggerUI from "@fastify/swagger-ui";
 import { type FastifyInstance } from "fastify";
 import { createJsonSchemaTransform } from "fastify-type-provider-zod";
-import * as fs from "fs";
-import process from "node:process";
+
+type Options = {
+	swagger?: {
+		load?: boolean;
+	};
+} & (Record<string, unknown> & {});
 
 export default fp(
-	async function swaggerConfig(fastify: FastifyInstance, options) {
-		if (fastify.secrets.NODE_ENV === "production") {
-			fastify.log.info("Swagger UI is disabled in production.");
+	async function swaggerConfig(fastify: FastifyInstance, options: Options) {
+		const load = !!options?.swagger?.load ?? false;
+		if (!load) {
+			fastify.log.info("Swagger is disabled.");
 			return;
 		}
 
-		fastify.addHook("onReady", async function onListen() {
-			process.nextTick(async function () {
-				try {
-					const document = fastify.swagger({ yaml: true });
-					await fs.promises.writeFile(path.resolve("./openapi.yaml"), document);
-				} catch (error) {
-					fastify.log.error(error, "Failed to write OpenAPI document to file.");
-				}
-			});
-		});
+		const docsPrefix = "/docs";
 
 		fastify.register(swagger, {
-			routePrefix: "/docs/openapi.json",
+			routePrefix: `${docsPrefix}/openapi.json`,
 			openapi: {
 				info: {
 					title: "Trainly API",
@@ -35,8 +30,24 @@ export default fp(
 				},
 				servers: [
 					{
-						url: "http://localhost:8080",
-						description: "Local development server",
+						url: "http://127.0.0.1:{port}",
+						description: "Local development server IPv4",
+						variables: {
+							port: {
+								enum: ["8080", "8000", "3000"],
+								default: "8080",
+							},
+						},
+					},
+					{
+						url: "http://[::1]:{port}",
+						description: "Local development server IPv6",
+						variables: {
+							port: {
+								enum: ["8080", "8000", "3000"],
+								default: "8080",
+							},
+						},
 					},
 				],
 				components: {
@@ -64,8 +75,10 @@ export default fp(
 		} as swagger.SwaggerOptions);
 
 		fastify.register(swaggerUI, {
-			routePrefix: "/docs",
+			routePrefix: docsPrefix,
 		});
+
+		fastify.log.info(`Docs are available at ${docsPrefix}`);
 	},
 	{
 		name: "swagger-config",

@@ -32,16 +32,20 @@ RUN pnpm run build --filter "@trainly/api"
 
 FROM base as runner
 RUN apt-get update && apt-get install -y dumb-init
-WORKDIR /app
+ENV APP_HOME=/app
+WORKDIR $APP_HOME
 
-COPY --from=installer --chown=node:node /app/apps/api/package.json ./
-COPY --from=installer --chown=node:node /app/node_modules ./node_modules
-COPY --from=installer --chown=node:node /app/apps/api ./apps/api
-COPY --from=installer --chown=node:node /app/packages ./packages/
+ENV FASTIFY_CONFIG=$APP_HOME/apps/api/fastify.config.json
+
+COPY --from=installer --chown=node:node /app/apps/api/package.json $APP_HOME
+COPY --from=installer --chown=node:node /app/node_modules $APP_HOME/node_modules
+COPY --from=installer --chown=node:node /app/apps/api $APP_HOME/apps/api
+COPY --from=installer --chown=node:node /app/packages $APP_HOME/packages
+COPY --from=installer --chown=node:node /app/apps/api/fastify.config.json $FASTIFY_CONFIG
 
 USER node
 EXPOSE 8080
 
 WORKDIR /app/apps/api
 ENTRYPOINT ["dumb-init"]
-CMD ["./node_modules/.bin/fastify", "start", "-l", "info", "-a", "0.0.0.0", "--options", "./build/app.js"]
+CMD ["./node_modules/.bin/fastify", "start", "./build/app.js"]

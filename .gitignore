@@ -15,3 +15,4 @@ http-client.private*.json
 .db-data
 /out
 data.sql
+openapi.yaml

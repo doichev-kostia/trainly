@@ -3,11 +3,25 @@ import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod
 import { configLoader } from "./configs/config.js";
 import AutoLoad from "@fastify/autoload";
 import { join } from "desm";
+import { env } from "~/configs/env.js";
+import { loadFastifyConfig } from "~/configs/fastify-config.js";
+import * as O from "effect/Option";
 
 export default async function application(
 	fastify: FastifyInstance,
 	options: Record<string, unknown>,
 ) {
+	const fastifyConfig = await loadFastifyConfig(env.FASTIFY_CONFIG);
+
+	let pluginOptions = {};
+	if (O.isSome(fastifyConfig)) {
+		fastify.log.info("Loaded fastify config");
+		pluginOptions = {
+			...pluginOptions,
+			...fastifyConfig.value,
+		};
+	}
+
 	fastify.setValidatorCompiler(validatorCompiler);
 	fastify.setSerializerCompiler(serializerCompiler);
 
@@ -19,7 +33,7 @@ export default async function application(
 		dirNameRoutePrefix: false,
 		ignorePattern: /.*.no-load\.(js|ts)$/,
 		indexPattern: /^no$/i,
-		options: Object.assign({}, options),
+		options: Object.assign({}, pluginOptions, options),
 	});
 
 	fastify.register(AutoLoad, {
@@ -29,6 +43,6 @@ export default async function application(
 		autoHooksPattern: /.*hooks(\.js|\.ts)$/i,
 		autoHooks: true,
 		cascadeHooks: true,
-		options: Object.assign({}, options),
+		options: Object.assign({}, pluginOptions, options),
 	});
 }
