@@ -12,7 +12,7 @@
 	export let title: string = defaultTitle;
 	const locale = "en_GB";
 	const image = {
-		src: "/logo.svg",
+		src: "/logo.png",
 		alt: "Trainly Logo",
 	};
 
@@ -46,7 +46,6 @@
 	<title>{title}</title>
 
 	<link rel="canonical" href={canonicalURL.toString()} />
-	<link rel="apple-touch-icon" type="image/svg+xml" sizes="180x180" href="/logo.svg" />
 	<meta name="generator" content="SvelteKit" />
 	<meta name="description" content={description} />
 
@@ -65,4 +64,7 @@
 	<meta name="twitter:image" content={twitter.image.src} />
 	<meta name="twitter:image:alt" content={twitter.image.alt} />
 	<meta name="twitter:site" content={twitter.handle} />
+
+	<link rel="apple-touch-icon" sizes="192x192" href={image.src} />
+	<link rel="mask-icon" href="favicon.svg" color="#16a34a" />
 </svelte:head>
