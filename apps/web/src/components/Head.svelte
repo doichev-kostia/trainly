@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte";
+	import { page } from "$app/stores";
 
 	const defaultTitle = "Trainly";
 	const url = "https://trainly.doichevkostia.dev";
@@ -12,7 +13,7 @@
 	export let title: string = defaultTitle;
 	const locale = "en_GB";
 	const image = {
-		src: "/logo.png",
+		src: new URL("/logo.png", $page.url).toString(),
 		alt: "Trainly Logo",
 	};
 
