@@ -7,28 +7,16 @@ charset = utf-8
 indent_style = tab
 indent_size = 4
 tab_width = 4
-max_line_length = 80
-
-[*.prisma] # prisma provides its own formatting
-indent_size = unset
-indent_style = unset
-max_line_length = unset
+max_line_length = 120
 
 [*.md]
 trim_trailing_whitespace = false
-max_line_length = 120
-
-[*.svelte]
-max_line_length = 120
 
 [*.yml]
 indent_size = 2
-max_line_length = 120
 
 [*.yaml]
 indent_size = 2
-max_line_length = 120
 
 [*.json]
 indent_size = 2
-max_line_length = 120

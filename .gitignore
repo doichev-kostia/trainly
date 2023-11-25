@@ -8,6 +8,8 @@ build
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+secrets.json5
+.sentryclirc
 
 .idea
 http-client.private*.json
