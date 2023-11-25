@@ -43,6 +43,24 @@ export const ConfigSchema = S.struct({
 			disabledInstrumentation: S.optional(S.array(S.string)).withDefault(() => []),
 		}),
 	),
+
+	// Services configuration to avoid the dependency on process.env
+	services: S.struct({
+		error: S.struct({
+			implementation: S.literal("sentry", "local"),
+			sentryOptions: S.optional(
+				S.struct({
+					enabled: S.optional(S.boolean),
+				}),
+			),
+		}),
+		payment: S.struct({
+			implementation: S.literal("stripe", "mock"),
+		}),
+		secrets: S.struct({
+			implementation: S.literal("gcp", "local"),
+		}),
+	}),
 });
 
 export type Config = S.Schema.To<typeof ConfigSchema>;

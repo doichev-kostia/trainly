@@ -16,5 +16,16 @@
     "metrics": "gcp",
     "serviceName": "trainly-api",
     "serviceVersion": "1.0.0"
+  },
+  "services": {
+    "error": {
+      "implementation": "sentry",
+    },
+    "payment": {
+      "implementation": "stripe",
+    },
+    "secrets": {
+      "implementation": "gcp",
+    }
   }
 }

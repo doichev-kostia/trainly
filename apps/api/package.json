@@ -54,6 +54,7 @@
 		"@opentelemetry/sdk-node": "^0.45.1",
 		"@opentelemetry/sdk-trace-node": "^1.18.1",
 		"@opentelemetry/semantic-conventions": "^1.18.1",
+		"@sentry/integrations": "^7.81.1",
 		"@sentry/node": "^7.81.1",
 		"@supabase/supabase-js": "^2.38.0",
 		"@trainly/config": "workspace:^",
