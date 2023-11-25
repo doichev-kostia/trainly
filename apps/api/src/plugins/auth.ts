@@ -12,21 +12,9 @@ declare module "fastify" {
 }
 
 interface FastifyAuthPlugin {
-	verifyAuthToken: (
-		request: FastifyRequest,
-		reply: FastifyReply,
-		done: (err?: Error) => void,
-	) => void;
-	regularAuthToken: (
-		request: FastifyRequest,
-		reply: FastifyReply,
-		done: (err?: Error) => void,
-	) => void;
-	adminAuthToken: (
-		request: FastifyRequest,
-		reply: FastifyReply,
-		done: (err?: Error) => void,
-	) => void;
+	verifyAuthToken: (request: FastifyRequest, reply: FastifyReply, done: (err?: Error) => void) => void;
+	regularAuthToken: (request: FastifyRequest, reply: FastifyReply, done: (err?: Error) => void) => void;
+	adminAuthToken: (request: FastifyRequest, reply: FastifyReply, done: (err?: Error) => void) => void;
 }
 
 export default fp(
@@ -39,10 +27,7 @@ export default fp(
 		await fastify.register(fastifyBearerAuth, options);
 		await fastify.register(fastifyAuth);
 
-		fastify.decorate(
-			"verifyAuthToken",
-			fastify.verifyBearerAuth as unknown as verifyBearerAuth,
-		);
+		fastify.decorate("verifyAuthToken", fastify.verifyBearerAuth as unknown as verifyBearerAuth);
 
 		// casting because addHook: false is not affecting the type definition
 		const factory = fastify.verifyBearerAuthFactory as unknown as verifyBearerAuthFactory;
@@ -63,6 +48,5 @@ export default fp(
 	},
 	{
 		name: "authentication-plugin",
-		dependencies: ["application-configuration"],
 	},
 );

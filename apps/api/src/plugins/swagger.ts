@@ -4,16 +4,9 @@ import swaggerUI from "@fastify/swagger-ui";
 import { type FastifyInstance } from "fastify";
 import { createJsonSchemaTransform } from "fastify-type-provider-zod";
 
-type Options = {
-	swagger?: {
-		load?: boolean;
-	};
-} & (Record<string, unknown> & {});
-
 export default fp(
-	async function swaggerConfig(fastify: FastifyInstance, options: Options) {
-		const load = !!options?.swagger?.load ?? false;
-		if (!load) {
+	async function swaggerConfig(fastify: FastifyInstance, options: Record<string, any>) {
+		if (!fastify.config.swagger.enabled) {
 			fastify.log.info("Swagger is disabled.");
 			return;
 		}
@@ -70,7 +63,7 @@ export default fp(
 			},
 			exposeRoute: true,
 			transform: createJsonSchemaTransform({
-				skipList: ["/_app/status"],
+				skipList: ["/metrics", "/health"],
 			}),
 		} as swagger.SwaggerOptions);
 
@@ -82,6 +75,5 @@ export default fp(
 	},
 	{
 		name: "swagger-config",
-		dependencies: ["application-configuration"],
 	},
 );

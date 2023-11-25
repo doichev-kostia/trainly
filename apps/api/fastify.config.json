@@ -1,8 +1,0 @@
-{
-	"logLevel" : "info",
-	"pluginOptions" : {
-		"swagger": {
-			"load": false
-		}
-	}
-}

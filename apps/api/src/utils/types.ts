@@ -1,29 +1,17 @@
 import {
 	type FastifyBaseLogger,
 	type FastifyInstance,
-	type FastifyPluginAsync,
-	type FastifyPluginOptions,
-	type FastifyReply,
-	type FastifyRequest,
 	type RawReplyDefaultExpression,
-	type RawServerBase,
 	type RawServerDefault,
 	type RouteHandlerMethod,
 } from "fastify";
 import { type IncomingMessage, type ServerResponse } from "node:http";
 import { type RouteGenericInterface } from "fastify/types/route.js";
-import {
-	type ContextConfigDefault,
-	type RawRequestDefaultExpression,
-} from "fastify/types/utils.js";
+import { type ContextConfigDefault, type RawRequestDefaultExpression } from "fastify/types/utils.js";
 import { type FastifySchema } from "fastify/types/schema.js";
-import { type ResolveFastifyReplyReturnType } from "fastify/types/type-provider.js";
 import { type ZodTypeProvider } from "fastify-type-provider-zod";
-
-export type Plugin<
-	Options extends FastifyPluginOptions = Record<never, never>,
-	Server extends RawServerBase = RawServerDefault,
-> = FastifyPluginAsync<Options, Server, ZodTypeProvider>;
+import type * as B from "effect/Brand";
+import type * as S from "@effect/schema/Schema";
 
 export type Instance = FastifyInstance<
 	RawServerDefault,
@@ -33,31 +21,34 @@ export type Instance = FastifyInstance<
 	ZodTypeProvider
 >;
 
-export type HandlerRequest<Schema extends FastifySchema> = FastifyRequest<
-	RouteGenericInterface,
-	RawServerDefault,
-	RawRequestDefaultExpression<RawServerDefault>,
-	Schema,
-	ZodTypeProvider,
-	ContextConfigDefault,
-	FastifyBaseLogger
->;
+export type Seconds = number & B.Brand<"Seconds">;
+export type Milliseconds = number & B.Brand<"Milliseconds">;
 
-export type HandlerReply<Schema extends FastifySchema> = FastifyReply<
-	RawServerDefault,
-	RawRequestDefaultExpression<RawServerDefault>,
-	RawReplyDefaultExpression<RawServerDefault>,
-	RouteGenericInterface,
-	ContextConfigDefault,
-	Schema,
-	ZodTypeProvider
->;
+type HandlerSchema = {
+	body?: unknown;
+	querystring?: unknown;
+	params?: unknown;
+	headers?: unknown;
+	response?: unknown;
+};
 
-export type HandlerReturnType<Schema extends FastifySchema> = ResolveFastifyReplyReturnType<
-	ZodTypeProvider,
-	Schema,
-	RouteGenericInterface
->;
+// if there is something defined in the Handler Schema -> transform it to a Effect Schema
+// else ?: unknown
+type ToFastifySchema<Schema extends HandlerSchema> = FastifySchema & {
+	[P in keyof Schema]: S.Schema<Schema[P]>;
+} & {
+	[P in Exclude<keyof HandlerSchema, keyof Schema>]?: unknown;
+};
+
+// export type Handler<Schema extends HandlerSchema> = RouteHandlerMethod<
+// 	RawServerDefault,
+// 	RawRequestDefaultExpression<RawServerDefault>,
+// 	RawReplyDefaultExpression<RawServerDefault>,
+// 	RouteGenericInterface,
+// 	ContextConfigDefault,
+// 	ToFastifySchema<Schema>,
+// 	EffectTypeProvider
+// >;
 
 export type Handler<Schema extends FastifySchema> = RouteHandlerMethod<
 	RawServerDefault,

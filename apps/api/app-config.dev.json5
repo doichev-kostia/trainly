@@ -1,0 +1,25 @@
+{
+  "secrets": {
+    "manager": "local",
+    "name": "secrets.json5",
+  },
+  "fastify": {},
+  "logger": {
+    "prettyPrint": true,
+  },
+  "swagger": {
+    "enabled": true,
+  },
+  "telemetry": {
+    "enabled": true,
+    "tracing": "jaeger",
+    "metrics": "prometheus",
+    "serviceName": "trainly-api",
+    "serviceVersion": "1.0.0",
+    "metricsOptions": {
+      "endpoint": "/metrics",
+      "port": 9464
+    },
+    "disabledInstrumentation": ["@opentelemetry/instrumentation-fs"]
+  }
+}

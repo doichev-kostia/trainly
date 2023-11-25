@@ -1,3 +1,15 @@
-import { loadEnv } from "./loader.js";
+import process from "node:process";
 
-export const env = loadEnv();
+import * as E from "effect/Either";
+import { TreeFormatter } from "@effect/schema";
+
+import { loadEnv } from "./loaders.js";
+
+const record = loadEnv();
+if (E.isLeft(record)) {
+	console.error("Invalid environment variables ❌");
+	console.error(TreeFormatter.formatErrors(record.left.errors));
+	process.exit(1);
+}
+
+export const env = record.right;

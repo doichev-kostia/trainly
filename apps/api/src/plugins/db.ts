@@ -14,6 +14,5 @@ export default fp(
 	},
 	{
 		name: "db-plugin",
-		dependencies: ["application-configuration"],
 	},
 );

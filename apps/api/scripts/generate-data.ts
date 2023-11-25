@@ -1,20 +1,20 @@
-import { type Train } from "@trainly/db/schema/trains";
+import { type Train } from "@trainly/db/build/schema/trains.table";
 import { randomUUID } from "node:crypto";
 import { faker } from "@faker-js/faker";
-import { type Station } from "@trainly/db/schema/stations";
-import { type Address } from "@trainly/db/schema/addresses";
-import { type Platform } from "@trainly/db/schema/platforms";
-import { type Route } from "@trainly/db/schema/routes";
-import { type Stop } from "@trainly/db/schema/stops";
-import { type Journey } from "@trainly/db/schema/journeys";
-import { type JourneyStop } from "@trainly/db/schema/journey-stops";
-import { type Seat } from "@trainly/db/schema/seats";
-import { seatClass, seatStatus } from "@trainly/db/schema/enums";
+import { type Station } from "@trainly/db/build/schema/stations.table";
+import { type Address } from "@trainly/db/build/schema/addresses.table";
+import { type Platform } from "@trainly/db/build/schema/platforms.table";
+import { type Route } from "@trainly/db/build/schema/routes.table";
+import { type Stop } from "@trainly/db/build/schema/stops.table";
+import { type Journey } from "@trainly/db/build/schema/journeys.table";
+import { type JourneyStop } from "@trainly/db/build/schema/journey-stops.table";
+import { type Seat } from "@trainly/db/build/schema/seats.table";
+import { seatClass, seatStatus } from "@trainly/db/build/schema/enums";
 import assert from "node:assert";
 import process from "node:process";
 import * as path from "path";
 import * as fs from "fs";
-import { SeatClass } from "@trainly/contracts/seats";
+import { SeatClass } from "@trainly/contracts/build/seats";
 
 const SEATS_PER_TRAIN = 20;
 const CARRIAGE_CAPACITY = 10;
@@ -198,9 +198,7 @@ function generateData() {
 		const route = routes[routeIdx];
 		const stops = stopMap.get(route.id);
 		assert(stops);
-		const routeJourneys = Array.from({ length: JOURNEYS_PER_ROUTE }, () =>
-			createJourney(route.id),
-		);
+		const routeJourneys = Array.from({ length: JOURNEYS_PER_ROUTE }, () => createJourney(route.id));
 		const routeJourneyStopsMap = new Map<string, JourneyStop[]>();
 
 		if (shouldLog) {
@@ -215,12 +213,7 @@ function generateData() {
 				const stop = stops[stopIdx];
 				stopsDuration += stop.durationFromPrevious;
 				const expectedArrival = journey.departureTime.getTime() + stopsDuration * 1000;
-				const journeyStop = createJourneyStop(
-					stop.id,
-					journey.id,
-					new Date(expectedArrival),
-					stop.platformId,
-				);
+				const journeyStop = createJourneyStop(stop.id, journey.id, new Date(expectedArrival), stop.platformId);
 
 				const array = routeJourneyStopsMap.get(journey.id);
 				if (array) {
@@ -299,8 +292,7 @@ END $$;
 }
 
 async function main() {
-	const { trains, stations, addresses, platforms, routes, stops, journeys, journeyStops, seats } =
-		generateData();
+	const { trains, stations, addresses, platforms, routes, stops, journeys, journeyStops, seats } = generateData();
 
 	const filepath = path.resolve(process.cwd(), "data.sql");
 

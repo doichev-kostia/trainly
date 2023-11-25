@@ -1,0 +1,20 @@
+{
+  "secrets": {
+    "manager": "gcp",
+    "name": "api",
+  },
+  "fastify": {},
+  "logger": {
+    "prettyPrint": false,
+  },
+  "swagger": {
+    "enabled": false,
+  },
+  "telemetry": {
+    "enabled": true,
+    "tracing": "gcp",
+    "metrics": "gcp",
+    "serviceName": "trainly-api",
+    "serviceVersion": "1.0.0"
+  }
+}
