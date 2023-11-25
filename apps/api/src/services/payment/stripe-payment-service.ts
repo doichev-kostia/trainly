@@ -1,4 +1,4 @@
-import { type CheckoutSessionOptions, type PaymentProvider, type WebhookEvent } from "~/services/payment/types.js";
+import { type CheckoutSessionOptions, type PaymentService, type WebhookEvent } from "~/services/payment/types.js";
 import { Stripe } from "stripe";
 import * as O from "effect/Option";
 import { logger } from "~/configs/logger.js";
@@ -6,7 +6,7 @@ import { context, trace } from "@opentelemetry/api";
 import { toOpenTelemetryAttributes } from "~/utils/helpers.js";
 import { match, P } from "ts-pattern";
 
-export class StripePaymentProvider implements PaymentProvider {
+export class StripePaymentService implements PaymentService {
 	#client: Stripe;
 	#webhookSecret: string;
 
@@ -24,11 +24,6 @@ export class StripePaymentProvider implements PaymentProvider {
 			apiVersion,
 		});
 	}
-
-	get client(): Stripe {
-		return this.#client;
-	}
-
 	async createCheckoutSession(options: CheckoutSessionOptions): Promise<O.Option<{ url: string }>> {
 		try {
 			const successUrl = match(options.callbackURL)

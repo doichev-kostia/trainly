@@ -18,7 +18,7 @@ export type WebhookEvent = {
 	payload: unknown;
 };
 
-export interface PaymentProvider {
+export interface PaymentService {
 	createCheckoutSession(options: CheckoutSessionOptions): Promise<O.Option<{ url: string }>>;
 	parseWebhookEvent(payload: Uint8Array, signature: string): Promise<O.Option<WebhookEvent>>;
 }
