@@ -23,7 +23,7 @@
 			"~/errors/*": ["./src/errors/*"]
 		}
 	},
-	"include": ["./src/**/*"],
+	"include": ["./src/**/*", "types"],
 	"references": [
 		{
 			"path": "../../packages/config"
