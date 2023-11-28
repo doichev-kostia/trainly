@@ -54,7 +54,7 @@ export class AddressRepository {
 		const result = await db.delete(addresses).where(eq(addresses.id, id));
 
 		return {
-			affectedRows: result.length,
+			affectedRows: result.rowCount ?? 0,
 		};
 	}
 }

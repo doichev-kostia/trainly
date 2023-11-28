@@ -1,6 +1,7 @@
 import { type CreateTrainBodySchema, type TrainResponseSchema } from "@trainly/contracts/trains";
 import { type ZodHandler } from "~/utils/types.js";
 import { TrainRepository } from "~/routes/v1/trains/train.repository.js";
+import { StatusCodes } from "#constants";
 
 type Schema = {
 	body: typeof CreateTrainBodySchema;
@@ -21,7 +22,7 @@ export const createTrain: ZodHandler<Schema> = async function createTrain(reques
 		throw this.httpErrors.internalServerError("Failed to create a train");
 	}
 
-	reply.code(this.httpStatus.CREATED);
+	reply.code(StatusCodes.CREATED);
 
 	return train;
 };

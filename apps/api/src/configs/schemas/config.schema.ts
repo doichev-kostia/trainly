@@ -62,6 +62,7 @@ export const ConfigSchema = S.struct({
 	}),
 	miscellaneous: S.struct({
 		frontendURL: S.string.pipe(S.nonEmpty<string>()),
+		host: S.optional(S.string),
 	}),
 });
 

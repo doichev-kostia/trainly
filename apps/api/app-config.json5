@@ -30,5 +30,6 @@
 	},
 	"miscellaneous": {
 		frontendURL: "https://trainly.doichevkostia.dev",
+		host: "0.0.0.0" // be mindful of Docker
 	}
 }

@@ -17,5 +17,5 @@ export const retrieveAddress: ZodHandler<Schema> = async function retrieveAddres
 		throw this.httpErrors.notFound("Address not found");
 	}
 
-	return address;
+	return address as any;
 };

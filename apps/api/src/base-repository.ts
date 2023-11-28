@@ -3,7 +3,7 @@ import {
 	getTableName,
 	type InferInsertModel,
 	type InferSelectModel,
-	type PostgresJsDatabase,
+	type NodePgDatabase,
 	sql,
 	type Table,
 } from "@trainly/db";
@@ -12,7 +12,7 @@ import { type ListOptions, relations, stripValues } from "~/utils/db.js";
 type CreateValues<T extends Table> = Omit<InferSelectModel<T>, "id" | "createdAt" | "updatedAt">;
 type Selectable<T extends Table> = InferSelectModel<T>;
 
-export class BaseRepository<T extends Table, DB extends PostgresJsDatabase<Record<string, any>>> {
+export class BaseRepository<T extends Table, DB extends NodePgDatabase<Record<string, any>>> {
 	protected _db: DB;
 	protected _table: T;
 
@@ -37,7 +37,7 @@ export class BaseRepository<T extends Table, DB extends PostgresJsDatabase<Recor
 
 		const [result] = await this._db.insert(this._table).values(data).returning();
 
-		return result;
+		return result as Selectable<T> | undefined;
 	}
 
 	public async list(options: ListOptions = {}): Promise<Selectable<T>[]> {
@@ -58,14 +58,14 @@ export class BaseRepository<T extends Table, DB extends PostgresJsDatabase<Recor
 	public async count(): Promise<number | undefined> {
 		const rows = await this._db
 			.select({
-				count: sql<string>`count(*)`,
+				count: sql<number>`count(*)`,
 			})
 			.from(this._table)
 			.limit(1);
 
 		const res = rows[0];
 
-		return Number(res?.count);
+		return res?.count;
 	}
 
 	public async retrieve(id: string, expand: string[] = []): Promise<Selectable<T> | undefined> {
@@ -80,10 +80,7 @@ export class BaseRepository<T extends Table, DB extends PostgresJsDatabase<Recor
 		return data as Selectable<T> | undefined;
 	}
 
-	public async update(
-		id: string,
-		values: Partial<CreateValues<T>>,
-	): Promise<Selectable<T> | undefined> {
+	public async update(id: string, values: Partial<CreateValues<T>>): Promise<Selectable<T> | undefined> {
 		const data = stripValues(values) as InferInsertModel<T> & {
 			updatedAt: Date;
 		};
@@ -96,14 +93,14 @@ export class BaseRepository<T extends Table, DB extends PostgresJsDatabase<Recor
 			.where(eq((this._table as any).id, id))
 			.returning();
 
-		return result;
+		return result as Selectable<T> | undefined;
 	}
 
 	public async del(id: string): Promise<{ affectedRows: number }> {
 		const result = await this._db.delete(this._table).where(eq((this._table as any).id, id));
 
 		return {
-			affectedRows: result.length,
+			affectedRows: result.rowCount ?? 0,
 		};
 	}
 }

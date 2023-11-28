@@ -1,37 +1,24 @@
-import postgres, { type PostgresType } from "postgres";
 import * as schema from "./schema/index.js";
-import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { type Logger } from "drizzle-orm";
-import { match, P } from "ts-pattern";
 import * as E from "effect/Either";
-
-type ConnectionOptions =
-	| {
-			connectionString: string;
-	  }
-	| {
-			host: string;
-			port: number;
-			database: string;
-			user: string;
-			password: string;
-	  };
+import pg from "pg";
 
 type Options = {
-	connectionOptions: ConnectionOptions;
+	connectionOptions: pg.PoolConfig;
 	logger: boolean | Logger;
 };
 
 export type Schema = typeof schema;
-export type DB = PostgresJsDatabase<Schema>;
+export type DB = NodePgDatabase<Schema>;
 
 export function init(options: Options): E.Either<unknown, DB> {
 	try {
-		const client = match(options.connectionOptions)
-			.with({ connectionString: P._ }, (connectionOptions) => postgres(connectionOptions.connectionString))
-			.otherwise((connectionOptions: postgres.Options<Record<string, PostgresType>>) =>
-				postgres(connectionOptions),
-			);
+		const client = new pg.Pool(options.connectionOptions);
+
+		pg.types.setTypeParser(pg.types.builtins.INT2, (value) => parseInt(value));
+		pg.types.setTypeParser(pg.types.builtins.INT4, (value) => parseInt(value));
+		pg.types.setTypeParser(pg.types.builtins.INT8, (value) => parseInt(value));
 
 		return E.right(
 			drizzle(client, {
@@ -45,5 +32,5 @@ export function init(options: Options): E.Either<unknown, DB> {
 }
 
 export * from "drizzle-orm";
-export type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+export type { NodePgDatabase } from "drizzle-orm/node-postgres";
 export type { PgDatabase } from "drizzle-orm/pg-core";

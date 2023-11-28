@@ -104,7 +104,7 @@ export class StationRepository {
 		const result = await db.delete(stations).where(eq(stations.id, id));
 
 		return {
-			affectedRows: result.length,
+			affectedRows: result.rowCount ?? 0,
 		};
 	}
 }

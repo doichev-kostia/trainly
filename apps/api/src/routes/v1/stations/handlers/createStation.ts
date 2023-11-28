@@ -6,6 +6,7 @@ import {
 import { type ZodHandler } from "~/utils/types.js";
 import { StationRepository } from "~/routes/v1/stations/station.repository.js";
 import { AddressRepository } from "~/routes/v1/addresses/address.repository.js";
+import { StatusCodes } from "#constants";
 
 type Schema = {
 	body: typeof CreateStationBodySchema;
@@ -21,8 +22,9 @@ export const createStation: ZodHandler<Schema> = async function createStation(re
 
 	// performance reasons
 	const result = station as any as StationResponse;
+	// @ts-ignore
 	result.address = address;
 
-	reply.code(this.httpStatus.CREATED);
-	return result;
+	reply.code(StatusCodes.CREATED);
+	return result as any;
 };
