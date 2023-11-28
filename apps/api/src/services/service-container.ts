@@ -1,11 +1,13 @@
 import { type ErrorService } from "~/services/error/types.js";
 import { type PaymentService } from "~/services/payment/types.js";
 import { type SecretManager } from "~/services/secrets/types.js";
+import { type EmailService } from "~/services/email/types.js";
 
 export type Services = {
 	error: ErrorService;
 	payment: PaymentService;
 	secrets: SecretManager;
+	email: EmailService;
 };
 
 export class ServiceContainer {

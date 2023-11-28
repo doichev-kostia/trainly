@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Booking Confirmation</title>
+	<style>
+      body {
+          background-color: #F4F4F5;
+          color: #333333;
+          font-family: Arial, sans-serif;
+      }
+
+      .container {
+          width: 80%;
+          margin: 0 auto;
+          background-color: #FFFFFF;
+          padding: 20px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .button {
+          background-color: #16A34A;
+          color: white;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          margin: 20px 0;
+          border: none;
+          cursor: pointer;
+      }
+
+      .footer {
+          font-size: 0.8em;
+          margin-top: 40px;
+      }
+	</style>
+</head>
+<body>
+<div class="container">
+	<h2>Booking Confirmation</h2>
+	<p>Thank you for your booking!</p>
+	<p>You can view your booking details and manage your reservation by clicking the button below:</p>
+	<a href="{{bookingLink}}" class="button">View Your Booking</a>
+	<p>If you have any questions or need assistance, please do not hesitate to contact our customer support team.</p>
+	<div class="footer">
+		<p>Best regards,</p>
+		<p>Trainly</p>
+		<p><a href="mailto:team@trainly.doichevkostia.dev" style="color: #333333; "> team@trainly.doichevkostia.dev</a></p>
+	</div>
+</div>
+</body>
+</html>

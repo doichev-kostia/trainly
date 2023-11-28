@@ -1,10 +1,29 @@
-import { type CheckoutSessionOptions, type PaymentService, type WebhookEvent } from "~/services/payment/types.js";
+import {
+	type CheckoutEvent,
+	type CheckoutSessionOptions,
+	type PaymentService,
+	type WebhookEvent,
+} from "~/services/payment/types.js";
 import { Stripe } from "stripe";
 import * as O from "effect/Option";
+import * as S from "@effect/schema/Schema";
 import { logger } from "~/configs/logger.js";
 import { context, trace } from "@opentelemetry/api";
 import { toOpenTelemetryAttributes } from "~/utils/helpers.js";
 import { match, P } from "ts-pattern";
+
+const CheckoutEventSchema = S.parseOption(
+	S.struct({
+		object: S.struct({
+			id: S.string,
+			object: S.literal("checkout.session"),
+			metadata: S.struct({
+				bookingId: S.string,
+			}),
+			payment_status: S.string,
+		}),
+	}),
+);
 
 export class StripePaymentService implements PaymentService {
 	#client: Stripe;
@@ -24,6 +43,7 @@ export class StripePaymentService implements PaymentService {
 			apiVersion,
 		});
 	}
+
 	async createCheckoutSession(options: CheckoutSessionOptions): Promise<O.Option<{ url: string }>> {
 		try {
 			const successUrl = match(options.callbackURL)
@@ -117,5 +137,54 @@ export class StripePaymentService implements PaymentService {
 			logger.error(error);
 			return O.none();
 		}
+	}
+
+	async retrievePrice(id: string): Promise<O.Option<number>> {
+		try {
+			const price = await this.#client.prices.retrieve(id);
+
+			const span = trace.getSpan(context.active());
+			span?.addEvent("price.retrieved", {
+				"price.id": price.id,
+			});
+
+			if (!price.unit_amount) {
+				return O.none();
+			}
+
+			return O.some(price.unit_amount);
+		} catch (error) {
+			const span = trace.getSpan(context.active());
+			span?.recordException(error);
+			span?.end();
+			logger.error("Failed to retrieve the price");
+			logger.error(error);
+			return O.none();
+		}
+	}
+
+	async prepareCheckoutEvent(event: WebhookEvent): Promise<O.Option<CheckoutEvent>> {
+		if (event.type !== "checkout.session.completed") {
+			return O.none();
+		}
+
+		const payload = CheckoutEventSchema(event.payload);
+
+		if (O.isNone(payload)) {
+			return O.none();
+		}
+
+		const { object } = payload.value;
+
+		return O.some({
+			type: "checkout.session.completed",
+			payload: {
+				id: object.id,
+				paymentStatus: object.payment_status,
+				metadata: {
+					bookingId: object.metadata.bookingId,
+				},
+			},
+		});
 	}
 }

@@ -17,6 +17,8 @@ app.register(import("./app.js"), {
 	secrets,
 });
 
+app.ready();
+
 const closeListeners = closeWithGrace({ delay: config.fastify.graceCloseDelay }, async function ({
 	signal,
 	err,

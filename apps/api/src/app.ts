@@ -1,5 +1,4 @@
 import { type FastifyInstance } from "fastify";
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import AutoLoad from "@fastify/autoload";
 import { join } from "desm";
 import * as S from "@effect/schema/Schema";
@@ -7,6 +6,7 @@ import * as S from "@effect/schema/Schema";
 import { type Env } from "~/configs/schemas/env.schema.js";
 import { type Config } from "~/configs/schemas/config.schema.js";
 import { type Secrets } from "~/configs/schemas/secrets.schema.js";
+import { serializerCompiler, validatorCompiler } from "~/utils/validation.js";
 
 type Options = {
 	env: Env;

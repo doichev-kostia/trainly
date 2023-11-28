@@ -1,15 +1,16 @@
 import fp from "fastify-plugin";
-import { type FastifyInstance } from "fastify";
-import { db } from "@trainly/db";
+import { type DB } from "@trainly/db";
+import { type Instance } from "~/utils/types.js";
+import { db } from "~/configs/db.js";
 
 declare module "fastify" {
 	interface FastifyInstance {
-		db: typeof db;
+		db: DB;
 	}
 }
 
 export default fp(
-	async function dbPlugin(fastify: FastifyInstance) {
+	async function dbPlugin(fastify: Instance) {
 		fastify.decorate("db", db);
 	},
 	{

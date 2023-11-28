@@ -37,10 +37,6 @@ export const url =
 
 type AnySchema = Schema<any, any>;
 
-export interface EffectTypeProvider extends FastifyTypeProvider {
-	output: this["input"] extends AnySchema ? Schema.To<this["input"]> : never;
-}
-
 export const validatorCompiler: FastifySchemaCompiler<AnySchema> =
 	({ schema }) =>
 	(
