@@ -1,10 +1,8 @@
 import { migrate as _migrate } from "drizzle-orm/postgres-js/migrator";
 import { migrationsDirectory } from "./config.js";
-import { db } from "./db.js";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
-// for migrations
-
-export function migrate() {
+export function migrate(db: PostgresJsDatabase<any>) {
 	return _migrate(db, {
 		migrationsFolder: migrationsDirectory,
 		migrationsTable: "migrations",
