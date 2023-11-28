@@ -30,7 +30,8 @@
 			searchParams.set("to", to);
 			searchParams.set("date", date);
 
-			goto(`?${searchParams.toString()}`);
+			const search = searchParams.toString();
+			history.replaceState(null, "", search ? `?${search}` : "/");
 		}
 	}
 </script>
@@ -47,9 +48,7 @@
 							<div class="mb-3 flex flex-col">
 								<div class="mb-4 flex flex-col gap-y-3">
 									<div>
-										<label
-											for="from"
-											class="mb-2 block text-sm font-medium text-gray-900"
+										<label for="from" class="mb-2 block text-sm font-medium text-gray-900"
 											>From:
 										</label>
 										<select
@@ -66,9 +65,7 @@
 										</select>
 									</div>
 									<div>
-										<label
-											for="to"
-											class="mb-2 block text-sm font-medium text-gray-900"
+										<label for="to" class="mb-2 block text-sm font-medium text-gray-900"
 											>To:
 										</label>
 										<select
