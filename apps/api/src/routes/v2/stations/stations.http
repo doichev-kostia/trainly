@@ -1,0 +1,4 @@
+# @name List stations
+GET http://127.0.0.1:{{port}}/v1/stations?pageSize=2&pageToken=bmFtZT1DYXJsb2xhbmQ=
+Content-Type: application/json
+Authorization: Bearer {{api_key}}
