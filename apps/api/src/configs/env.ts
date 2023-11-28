@@ -12,4 +12,5 @@ if (E.isLeft(record)) {
 	process.exit(1);
 }
 
+console.log("Environment variables loaded ✅");
 export const env = record.right;

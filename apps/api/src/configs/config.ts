@@ -13,4 +13,5 @@ if (E.isLeft(record)) {
 	process.exit(1);
 }
 
+console.log("Config loaded ✅");
 export const config = record.right;

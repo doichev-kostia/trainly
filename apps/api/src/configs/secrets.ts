@@ -32,4 +32,5 @@ if (E.isLeft(record)) {
 	process.exit(1);
 }
 
+console.log("Secrets loaded ✅");
 export const secrets = record.right;
