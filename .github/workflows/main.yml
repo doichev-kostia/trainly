@@ -50,6 +50,6 @@ jobs:
           sed -i '/service-account.json/d' ./.gitignore
 
       - name: Deploy
-        run: railway up --services trainly --environment production
+        run: railway up --service trainly --environment production
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
