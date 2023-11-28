@@ -18,13 +18,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm add -g @railway/cli
+
       - id: auth
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
-          credentials_file_path: ./credentials.json
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -36,10 +45,11 @@ jobs:
         run: |
           gcloud secrets versions access latest --project=${{ secrets.GCP_PROJECT_ID }} --secret=${{ secrets.SERVICE_ACCOUNT_SECRET_NAME }} > ./apps/api/service-account.json
 
-      - name:  Remove the service account key from the gitignore file to allow railway to access it
+      - name: Remove the service account key from the gitignore file to allow railway to access it
         run: |
           sed -i '/service-account.json/d' ./.gitignore
 
-      - name: Log
-        run: |
-          cat ./.gitignore
+      - name: Deploy
+        run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
