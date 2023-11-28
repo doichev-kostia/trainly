@@ -125,10 +125,19 @@ The following is the list of standard field names that should be used if applica
 | title       | string    | The official name of an entity, such as company name    |
 | description | string    | One or more paragraphs of text description of an entity |
 
-## Errors 
+### Pagination
+
+Listable collections should support pagination, even if results are typically small.
+It's recommended to use the cursor-based pagination due to its performance and stability.
+
+!!! note
+When clients pass in query parameters in addition to a page token, the service must fail the request if the query
+parameters are not consistent with the page token.
+!!!
+
+## Errors
 
 [//]: # (TODO: create a guideline)
-
 
 ## API versioning
 

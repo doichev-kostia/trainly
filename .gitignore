@@ -18,3 +18,4 @@ http-client.private*.json
 /out
 data.sql
 openapi.yaml
+service-account.json
