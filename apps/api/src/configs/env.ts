@@ -1,4 +1,4 @@
-import process from "node:process";
+import * as process from "node:process";
 
 import * as E from "effect/Either";
 import { TreeFormatter } from "@effect/schema";

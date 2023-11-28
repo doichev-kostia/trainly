@@ -1,31 +1,34 @@
 {
-  "secrets": {
-    "manager": "gcp",
-    "name": "api",
-  },
-  "fastify": {},
-  "logger": {
-    "prettyPrint": false,
-  },
-  "swagger": {
-    "enabled": false,
-  },
-  "telemetry": {
-    "enabled": true,
-    "tracing": "gcp",
-    "metrics": "gcp",
-    "serviceName": "trainly-api",
-    "serviceVersion": "1.0.0"
-  },
-  "services": {
-    "error": {
-      "implementation": "sentry",
-    },
-    "payment": {
-      "implementation": "stripe",
-    },
-    "secrets": {
-      "implementation": "gcp",
-    }
-  }
+	"secrets": {
+		"manager": "gcp",
+		"name": "api",
+	},
+	"fastify": {},
+	"logger": {
+		"prettyPrint": false,
+	},
+	"swagger": {
+		"enabled": false,
+	},
+	"telemetry": {
+		"enabled": false
+	},
+	"services": {
+		"error": {
+			"implementation": "sentry",
+		},
+		"payment": {
+			"implementation": "stripe",
+		},
+		"secrets": {
+			"implementation": "gcp",
+		},
+		"email": {
+			"implementation": "resend",
+			"from": "Trainly <team@trainly.doichevkostia.dev>"
+		}
+	},
+	"miscellaneous": {
+		frontendURL: "https://trainly.doichevkostia.dev",
+	}
 }

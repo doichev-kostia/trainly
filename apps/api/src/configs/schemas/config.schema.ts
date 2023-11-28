@@ -48,11 +48,6 @@ export const ConfigSchema = S.struct({
 	services: S.struct({
 		error: S.struct({
 			implementation: S.literal("sentry", "local"),
-			sentryOptions: S.optional(
-				S.struct({
-					enabled: S.optional(S.boolean),
-				}),
-			),
 		}),
 		payment: S.struct({
 			implementation: S.literal("stripe", "mock"),
@@ -60,6 +55,13 @@ export const ConfigSchema = S.struct({
 		secrets: S.struct({
 			implementation: S.literal("gcp", "local"),
 		}),
+		email: S.struct({
+			implementation: S.literal("resend", "mock"),
+			from: S.string.pipe(S.nonEmpty<string>()),
+		}),
+	}),
+	miscellaneous: S.struct({
+		frontendURL: S.string.pipe(S.nonEmpty<string>()),
 	}),
 });
 

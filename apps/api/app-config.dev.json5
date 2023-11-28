@@ -1,36 +1,45 @@
 {
-  "secrets": {
-    "manager": "local",
-    "name": "secrets.json5",
-  },
-  "fastify": {},
-  "logger": {
-    "prettyPrint": true,
-  },
-  "swagger": {
-    "enabled": true,
-  },
-  "telemetry": {
-    "enabled": true,
-    "tracing": "jaeger",
-    "metrics": "prometheus",
-    "serviceName": "trainly-api",
-    "serviceVersion": "1.0.0",
-    "metricsOptions": {
-      "endpoint": "/metrics",
-      "port": 9464
-    },
-    "disabledInstrumentation": ["@opentelemetry/instrumentation-fs"]
-  },
-  "services": {
-    "error": {
-      "implementation": "sentry",
-    },
-    "payment": {
-        "implementation": "stripe",
-    },
-    "secrets": {
-      "implementation": "gcp",
-    }
-  }
+	"secrets": {
+		"manager": "local",
+		"name": "secrets.json5",
+	},
+	"fastify": {},
+	"logger": {
+		"prettyPrint": true,
+	},
+	"swagger": {
+		"enabled": false,
+	},
+	"telemetry": {
+		"enabled": true,
+		"tracing": "jaeger",
+		"metrics": "prometheus",
+		"serviceName": "trainly-api",
+		"serviceVersion": "1.0.0",
+		"metricsOptions": {
+			"endpoint": "/metrics",
+			"port": 9464
+		},
+		"disabledInstrumentation": [
+			"@opentelemetry/instrumentation-fs"
+		]
+	},
+	"services": {
+		"error": {
+			"implementation": "local",
+		},
+		"payment": {
+			"implementation": "stripe",
+		},
+		"secrets": {
+			"implementation": "gcp",
+		},
+		"email": {
+			"implementation": "resend",
+			"from": "Trainly <team@trainly.doichevkostia.dev>",
+		}
+	},
+	"miscellaneous": {
+		frontendURL: "http://localhost:3000",
+	}
 }

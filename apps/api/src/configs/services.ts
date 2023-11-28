@@ -9,6 +9,8 @@ import { GcpSecretManager } from "~/services/secrets/gcp-secret-manager.js";
 import { LocalSecretManager } from "~/services/secrets/local-secret-manager.js";
 import { ServiceContainer } from "~/services/service-container.js";
 import { env } from "~/configs/env.js";
+import { ResendEmailService } from "~/services/email/resend-email-service.js";
+import { MockEmailService } from "~/services/email/mock-email-service.js";
 
 const errorService = match(config.services.error)
 	.with({ implementation: "sentry" }, () => {
@@ -43,10 +45,20 @@ const secretsManager = match(config.services.secrets)
 	})
 	.exhaustive();
 
+const emailService = match(config.services.email)
+	.with({ implementation: "resend" }, () => {
+		return new ResendEmailService(secrets.RESEND_API_KEY, config.services.email.from);
+	})
+	.with({ implementation: "mock" }, () => {
+		return new MockEmailService();
+	})
+	.exhaustive();
+
 const services = {
 	error: errorService,
 	payment: paymentService,
 	secrets: secretsManager,
+	email: emailService,
 };
 
 const serviceContainer = new ServiceContainer(services);

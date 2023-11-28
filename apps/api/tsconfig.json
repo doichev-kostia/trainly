@@ -6,6 +6,7 @@
 		"rootDir": "./src",
 		"tsBuildInfoFile": "./build/.tsbuildinfo",
 		"baseUrl": "./",
+		"esModuleInterop": true,
 		"paths": {
 			"@trainly/utils": ["../../packages/src/index.ts"],
 			"@trainly/db": ["../../packages/db"],

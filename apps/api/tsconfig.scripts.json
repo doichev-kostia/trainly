@@ -6,6 +6,7 @@
 		"noEmit": true,
 		"tsBuildInfoFile": "./build/.tsbuildinfo",
 		"baseUrl": "./",
+		"esModuleInterop": true,
 		"paths": {
 			"@trainly/utils": ["../../packages/src/index.ts"],
 			"@trainly/db": ["../../packages/db"],
@@ -13,7 +14,7 @@
 			"@trainly/db/schema/*": ["../../packages/db/build/schema/*.table.d.ts"],
 			"@trainly/config": ["../../packages/config"],
 			"@trainly/contracts": ["../../packages/contracts/build/index.d.ts"],
-			"@trainly/contracts/*": ["../../packages/contracts/build/*/index.d.ts"],
+			"@trainly/contracts/*": ["../../packages/contracts/build/*/index.d.ts"]
 		}
 	},
 	"include": ["./scripts/**/*.ts", "types"],
