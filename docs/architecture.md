@@ -3,7 +3,7 @@
 - separate API
 - Postgres DB for the API
 - BFF (Backend for Frontend)
-- Sqlite DB for the BFF
+- Supabase authentication
 
 The API has no role/user management. It is only used to store and retrieve data regarding railroads, customers and
 bookings.

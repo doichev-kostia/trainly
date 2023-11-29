@@ -62,26 +62,21 @@ Table "route" {
   "id" uuid [pk]
   "name" varchar [not null]
   "train_id" uuid [not null]
-  "start_stop_id" uuid [not null, note:"head of the linked list"]
-  "end_stop_id" uuid [not null, note: "tail of the linked list"]
   "pricing" jsonb [not null, note: "Key value pair of [seat_class]: Stripe Price id"]
 }
 
 Ref: "route"."train_id" > "train"."id" [delete: restrict]
-Ref: "route"."start_stop_id" - "stop"."id" [delete: restrict]
-Ref: "route"."end_stop_id" - "stop"."id" [delete: restrict]
 
 Table "stop" {
   "id" uuid [pk]
   "duration_from_previous" int [not null, note:"seconds"]
   "route_id" uuid [not null]
   "platform_id" uuid [not null, note:"based on the station we can show the name of the stop"]
-  "next_stop_id" uuid [note: "pointer to the next node like in the linked list to avoid the order management"]
+  "order" int [not null]
 }
 
 Ref: "stop"."route_id" > "route"."id" [delete: cascade]
 Ref: "stop"."platform_id" > "platform"."id" [delete: restrict]
-Ref: "stop"."next_stop_id" - "stop"."id" [delete: restrict]
 
 Table "journey" {
   "id" uuid [pk]
@@ -109,8 +104,9 @@ Table "seat" {
   "id" uuid [pk]
   "number" int [not null]
   "class" "seat_class" [not null]
-  "journey_id" uuid [not null]
   "status" "seat_status" [not null, default:"available"]
+  "reserved_at" timestamp
+  "journey_id" uuid [not null]
 }
 
 Ref: "seat"."journey_id" > "journey"."id" [delete: cascade]
@@ -124,9 +120,10 @@ Table "customer" {
 
 Table "booking" {
   "id" uuid [pk]
-  "customer_id" uuid
   "created_at" timestamp
+  "email" varchar [not null]
   "status" "booking_status" [not null]
+  "customer_id" uuid
 }
 
 Ref: "booking"."customer_id" > "customer"."id" [delete: set null]
