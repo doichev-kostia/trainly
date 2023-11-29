@@ -1,4 +1,4 @@
-import { type Instance } from "~/utils/types.js";
+import { type ZodInstance } from "~/utils/types.js";
 import {
 	JourneyPricingResponseSchema,
 	JourneyResponseSchema,
@@ -8,8 +8,11 @@ import { ExpansionQuerySchema, IdParamsSchema, ListResponseSchema } from "@train
 import { listAvailableJourneys } from "./handlers/list-available-journeys.js";
 import { retrieveJourney } from "~/routes/v1/journeys/handlers/retrieve-journey.js";
 import { retrieveJourneyPricing } from "./handlers/retrieve-journey-pricing.js";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
-async function journeyRoutes(fastify: Instance) {
+async function journeyRoutes(fastify: ZodInstance) {
+	fastify.setValidatorCompiler(validatorCompiler);
+	fastify.setSerializerCompiler(serializerCompiler);
 	fastify.addHook("onRequest", fastify.verifyAuthToken);
 
 	fastify.route({

@@ -1,6 +1,6 @@
 import { type IdParamsSchema } from "@trainly/contracts";
 import { type AddressResponseSchema } from "@trainly/contracts/addresses";
-import { type Handler } from "~/utils/types.js";
+import { type ZodHandler } from "~/utils/types.js";
 import { AddressRepository } from "~/routes/v1/addresses/address.repository.js";
 
 type Schema = {
@@ -10,12 +10,12 @@ type Schema = {
 	};
 };
 
-export const retrieveAddress: Handler<Schema> = async function retrieveAddress(request) {
+export const retrieveAddress: ZodHandler<Schema> = async function retrieveAddress(request) {
 	const address = await AddressRepository.getInstance().retrieveAddress(request.params.id);
 
 	if (!address) {
 		throw this.httpErrors.notFound("Address not found");
 	}
 
-	return address;
+	return address as any;
 };

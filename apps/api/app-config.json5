@@ -1,0 +1,35 @@
+{
+	"secrets": {
+		"manager": "gcp",
+		"name": "api",
+	},
+	"fastify": {},
+	"logger": {
+		"prettyPrint": false,
+	},
+	"swagger": {
+		"enabled": false,
+	},
+	"telemetry": {
+		"enabled": false
+	},
+	"services": {
+		"error": {
+			"implementation": "sentry",
+		},
+		"payment": {
+			"implementation": "stripe",
+		},
+		"secrets": {
+			"implementation": "gcp",
+		},
+		"email": {
+			"implementation": "resend",
+			"from": "Trainly <team@trainly.doichevkostia.dev>"
+		}
+	},
+	"miscellaneous": {
+		frontendURL: "https://trainly.doichevkostia.dev",
+		host: "0.0.0.0" // be mindful of Docker
+	}
+}

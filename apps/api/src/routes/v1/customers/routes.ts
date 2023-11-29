@@ -5,15 +5,18 @@ import {
 	UpdateCustomerBodySchema,
 } from "@trainly/contracts/customers";
 import { ExpansionQuerySchema, IdParamsSchema, ListResponseSchema } from "@trainly/contracts";
-import { type Instance } from "~/utils/types.js";
+import { type ZodInstance } from "~/utils/types.js";
 
 import { createCustomer } from "./handlers/createCustomer.js";
 import { listCustomers } from "./handlers/listCustomers.js";
 import { retrieveCustomer } from "./handlers/retrieveCustomer.js";
 import { updateCustomer } from "./handlers/updateCustomer.js";
 import { deleteCustomer } from "./handlers/deleteCustomer.js";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
-async function customerRoutes(fastify: Instance): Promise<void> {
+async function customerRoutes(fastify: ZodInstance): Promise<void> {
+	fastify.setValidatorCompiler(validatorCompiler);
+	fastify.setSerializerCompiler(serializerCompiler);
 	fastify.addHook("onRequest", fastify.verifyAuthToken);
 
 	fastify.route({

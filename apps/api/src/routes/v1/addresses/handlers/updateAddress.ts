@@ -1,9 +1,6 @@
 import { type IdParamsSchema } from "@trainly/contracts";
-import {
-	type AddressResponseSchema,
-	type UpdateAddressBodySchema,
-} from "@trainly/contracts/addresses";
-import { type Handler } from "~/utils/types.js";
+import { type AddressResponseSchema, type UpdateAddressBodySchema } from "@trainly/contracts/addresses";
+import { type ZodHandler } from "~/utils/types.js";
 import { AddressRepository } from "~/routes/v1/addresses/address.repository.js";
 
 type Schema = {
@@ -14,15 +11,12 @@ type Schema = {
 	};
 };
 
-export const updateAddress: Handler<Schema> = async function updateAddress(request) {
-	const address = await AddressRepository.getInstance().updateAddress(
-		request.params.id,
-		request.body,
-	);
+export const updateAddress: ZodHandler<Schema> = async function updateAddress(request) {
+	const address = await AddressRepository.getInstance().updateAddress(request.params.id, request.body);
 
 	if (!address) {
 		throw this.httpErrors.notFound("Address not found");
 	}
 
-	return address;
+	return address as any;
 };

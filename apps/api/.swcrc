@@ -12,20 +12,8 @@
 		},
 		"baseUrl": ".",
 		"paths": {
-			"~/configs/*": [
-				"./src/configs/*"
-			],
-			"~/plugins/*": [
-				"./src/plugins/*"
-			],
-			"~/routes/*": [
-				"./src/routes/*"
-			],
-			"~/utils/*": [
-				"./src/utils/*"
-			],
-			"~/errors/*": [
-				"./src/errors/*"
+			"~/*": [
+				"./src/*"
 			]
 		}
 	},

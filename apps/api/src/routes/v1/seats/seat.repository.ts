@@ -1,12 +1,13 @@
 import { BaseRepository } from "#base-repository";
 import { type Seat, seats } from "@trainly/db/schema/seats";
-import { type SQL, and, db, eq, inArray, sql } from "@trainly/db";
+import { type SQL, and, eq, inArray, sql } from "@trainly/db";
 import { relations } from "~/utils/db.js";
 import { InternalError } from "~/errors/domain/InternalError.js";
 import { type Journey } from "@trainly/db/schema/journeys";
 import { type Ticket } from "@trainly/db/schema/tickets";
 import { type ListResponse } from "@trainly/contracts";
 import { type SeatStatus } from "@trainly/db/schema/enums";
+import { db } from "~/configs/db.js";
 
 type ListParams = {
 	limit?: number;
@@ -36,10 +37,7 @@ export class SeatRepository {
 		return SeatRepository.instance;
 	}
 
-	public async list(
-		journeyId: string,
-		params?: ListParams,
-	): Promise<ListResponse<RetrievedSeat>> {
+	public async list(journeyId: string, params?: ListParams): Promise<ListResponse<RetrievedSeat>> {
 		const { limit, offset, expand = [], ids } = params ?? {};
 
 		let condition: SQL | undefined = eq(seats.journeyId, journeyId);

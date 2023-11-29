@@ -1,4 +1,4 @@
-import { type Handler } from "~/utils/types.js";
+import { type ZodHandler } from "~/utils/types.js";
 import { type ExpansionQuerySchema, type IdParamsSchema } from "@trainly/contracts";
 import { BookingRepository } from "~/routes/v1/checkout/booking.repository.js";
 import { type BookingResponseSchema } from "@trainly/contracts/bookings";
@@ -11,11 +11,8 @@ type Schema = {
 	};
 };
 
-export const retrieveBooking: Handler<Schema> = async function retrieveBooking(request) {
-	const booking = await BookingRepository.getInstance().retrieve(
-		request.params.id,
-		request.query.expand,
-	);
+export const retrieveBooking: ZodHandler<Schema> = async function retrieveBooking(request) {
+	const booking = await BookingRepository.getInstance().retrieve(request.params.id, request.query.expand);
 
 	if (!booking) {
 		throw this.httpErrors.notFound("Booking not found");

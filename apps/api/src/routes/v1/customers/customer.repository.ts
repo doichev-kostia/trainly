@@ -1,17 +1,14 @@
-import { db, eq, ilike, type InferInsertModel, sql } from "@trainly/db";
+import { eq, ilike, type InferInsertModel, sql } from "@trainly/db";
 import { type Customer, customers, type CustomersTable } from "@trainly/db/schema/customers";
-import assert from "node:assert";
-import { relations, stripValues } from "~/utils/db.js";
+import { relations } from "~/utils/db.js";
 import { type ListCustomerQuery } from "@trainly/contracts/customers";
 import { type Booking } from "@trainly/db/schema/bookings";
 import { type ListResponse } from "@trainly/contracts";
 import { BaseRepository } from "#base-repository";
 import { InternalError } from "~/errors/domain/InternalError.js";
+import { db } from "~/configs/db.js";
 
-type CreateCustomerValues = Omit<
-	InferInsertModel<CustomersTable>,
-	"id" | "createdAt" | "updatedAt"
->;
+type CreateCustomerValues = Omit<InferInsertModel<CustomersTable>, "id" | "createdAt" | "updatedAt">;
 
 type RetrievedCustomer = Customer & {
 	bookings?: Booking[];
@@ -76,14 +73,11 @@ export class CustomerRepository {
 
 		return {
 			items: data,
-			count: NUmber(res.count),
+			count: Number(res.count),
 		};
 	}
 
-	public async retrieve(
-		id: string,
-		expansion?: string[],
-	): Promise<RetrievedCustomer | undefined> {
+	public async retrieve(id: string, expansion?: string[]): Promise<RetrievedCustomer | undefined> {
 		const data = await this.base.retrieve(id, expansion);
 
 		return data;

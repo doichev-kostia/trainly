@@ -1,9 +1,7 @@
-import {
-	type CreateCustomerBodySchema,
-	type CustomerResponseSchema,
-} from "@trainly/contracts/customers";
-import { type Handler } from "~/utils/types.js";
+import { type CreateCustomerBodySchema, type CustomerResponseSchema } from "@trainly/contracts/customers";
+import { type ZodHandler } from "~/utils/types.js";
 import { CustomerRepository } from "../customer.repository.js";
+import { StatusCodes } from "#constants";
 
 type Schema = {
 	body: typeof CreateCustomerBodySchema;
@@ -12,7 +10,7 @@ type Schema = {
 	};
 };
 
-export const createCustomer: Handler<Schema> = async function createCustomer(request, reply) {
+export const createCustomer: ZodHandler<Schema> = async function createCustomer(request, reply) {
 	const alreadyExists = await CustomerRepository.getInstance().checkExists(request.body.email);
 
 	if (alreadyExists) {
@@ -30,7 +28,7 @@ export const createCustomer: Handler<Schema> = async function createCustomer(req
 		throw this.httpErrors.internalServerError("Failed to create a customer");
 	}
 
-	reply.code(this.httpStatus.CREATED);
+	reply.code(StatusCodes.CREATED);
 
 	return customer;
 };

@@ -2,18 +2,13 @@ import fp from "fastify-plugin";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import { type FastifyInstance } from "fastify";
-import { createJsonSchemaTransform } from "fastify-type-provider-zod";
-
-type Options = {
-	swagger?: {
-		load?: boolean;
-	};
-} & (Record<string, unknown> & {});
+import { transformToOpenAPI } from "~/utils/validation.js";
+import process from "node:process";
+import fs from "fs";
 
 export default fp(
-	async function swaggerConfig(fastify: FastifyInstance, options: Options) {
-		const load = !!options?.swagger?.load ?? false;
-		if (!load) {
+	async function swaggerConfig(fastify: FastifyInstance, options: Record<string, any>) {
+		if (!fastify.config.swagger.enabled) {
 			fastify.log.info("Swagger is disabled.");
 			return;
 		}
@@ -69,10 +64,25 @@ export default fp(
 				],
 			},
 			exposeRoute: true,
-			transform: createJsonSchemaTransform({
-				skipList: ["/_app/status"],
+			transform: transformToOpenAPI({
+				skipList: ["/metrics", "/health"],
 			}),
 		} as swagger.SwaggerOptions);
+
+		// TODO: remove when the swagger generation script is fixed
+		fastify.addHook("onReady", () => {
+			process.nextTick(() => {
+				const schema = fastify.swagger({ yaml: true });
+				fs.promises
+					.writeFile("openapi.yaml", schema)
+					.then(() => {
+						fastify.log.info("Swagger schema saved to openapi.yaml");
+					})
+					.catch((e) => {
+						fastify.log.error(e);
+					});
+			});
+		});
 
 		fastify.register(swaggerUI, {
 			routePrefix: docsPrefix,
@@ -82,6 +92,5 @@ export default fp(
 	},
 	{
 		name: "swagger-config",
-		dependencies: ["application-configuration"],
 	},
 );

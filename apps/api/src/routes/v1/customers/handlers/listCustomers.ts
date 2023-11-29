@@ -1,9 +1,6 @@
-import { type Handler } from "~/utils/types.js";
+import { type ZodHandler } from "~/utils/types.js";
 import { type ListResponseSchemaType } from "@trainly/contracts";
-import {
-	type CustomerResponseSchema,
-	type ListCustomerQuerySchema,
-} from "@trainly/contracts/customers";
+import { type CustomerResponseSchema, type ListCustomerQuerySchema } from "@trainly/contracts/customers";
 import { CustomerRepository } from "../customer.repository.js";
 
 type Schema = {
@@ -13,7 +10,7 @@ type Schema = {
 	};
 };
 
-export const listCustomers: Handler<Schema> = async function listCustomers(request, reply) {
+export const listCustomers: ZodHandler<Schema> = async function listCustomers(request, reply) {
 	const data = await CustomerRepository.getInstance().list(request.query);
 
 	return data;

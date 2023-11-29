@@ -1,10 +1,10 @@
 import { BaseRepository } from "#base-repository";
 
 import { bookings } from "@trainly/db/schema/bookings";
-import { db, eq } from "@trainly/db";
 import { passengers } from "@trainly/db/schema/passengers";
 import { bookingStatus } from "@trainly/db/schema/enums";
 import { tickets } from "@trainly/db/schema/tickets";
+import { db } from "~/configs/db.js";
 
 type Seat = {
 	id: string;
@@ -68,9 +68,7 @@ export class BookingRepository {
 
 			const bookingTickets = await trx.insert(tickets).values(
 				seats.map((seat) => {
-					const passengerId = psgrMap.get(
-						seat.passenger.firstName + seat.passenger.lastName,
-					)!;
+					const passengerId = psgrMap.get(seat.passenger.firstName + seat.passenger.lastName)!;
 
 					return {
 						bookingId: booking.id,

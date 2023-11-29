@@ -1,4 +1,4 @@
-import { type Instance } from "~/utils/types.js";
+import { type ZodInstance } from "~/utils/types.js";
 import {
 	CreateStationBodySchema,
 	ListStationQuerySchema,
@@ -11,8 +11,11 @@ import { listStations } from "./handlers/listStations.js";
 import { retrieveStation } from "./handlers/retrieveStation.js";
 import { updateStation } from "./handlers/updateStation.js";
 import { deleteStation } from "./handlers/deleteStation.js";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
-async function stationRoutes(fastify: Instance): Promise<void> {
+async function stationRoutes(fastify: ZodInstance): Promise<void> {
+	fastify.setValidatorCompiler(validatorCompiler);
+	fastify.setSerializerCompiler(serializerCompiler);
 	fastify.addHook("onRequest", fastify.verifyAuthToken);
 
 	fastify.route({

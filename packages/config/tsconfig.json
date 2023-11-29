@@ -14,9 +14,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
-    "noUncheckedIndexedAccess": false
   }
 }

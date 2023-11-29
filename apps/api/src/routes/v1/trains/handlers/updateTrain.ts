@@ -1,6 +1,6 @@
 import { type IdParamsSchema } from "@trainly/contracts";
 import { type TrainResponseSchema, type UpdateTrainBodySchema } from "@trainly/contracts/trains";
-import { type Handler } from "~/utils/types.js";
+import { type ZodHandler } from "~/utils/types.js";
 import { TrainRepository } from "../train.repository.js";
 
 type Schema = {
@@ -11,7 +11,7 @@ type Schema = {
 	};
 };
 
-export const updateTrain: Handler<Schema> = async function updateTrain(request) {
+export const updateTrain: ZodHandler<Schema> = async function updateTrain(request) {
 	const train = await TrainRepository.getInstance().update(request.params.id, request.body);
 
 	if (!train) {

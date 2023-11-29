@@ -1,5 +1,5 @@
 import { type StationResponseSchema } from "@trainly/contracts/stations";
-import { type Handler } from "~/utils/types.js";
+import { type ZodHandler } from "~/utils/types.js";
 import { StationRepository } from "~/routes/v1/stations/station.repository.js";
 import { type ExpansionQuerySchema, type IdParamsSchema } from "@trainly/contracts";
 
@@ -11,11 +11,8 @@ type Schema = {
 	};
 };
 
-export const retrieveStation: Handler<Schema> = async function retrieveStation(request, reply) {
-	const station = await StationRepository.getInstance().retrieve(
-		request.params.id,
-		request.query.expand,
-	);
+export const retrieveStation: ZodHandler<Schema> = async function retrieveStation(request, reply) {
+	const station = await StationRepository.getInstance().retrieve(request.params.id, request.query.expand);
 
 	if (!station) {
 		throw this.httpErrors.notFound("Station not found");

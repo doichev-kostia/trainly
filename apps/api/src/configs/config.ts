@@ -1,41 +1,17 @@
-import fp from "fastify-plugin";
-import { type Env } from "./env.schema.js";
-import { StatusCodes } from "#constants";
-import { env } from "~/configs/env.js";
-import * as S from "@effect/schema/Schema";
-import * as O from "effect/Option";
+import process from "node:process";
 
-type Config = Record<string, unknown>;
+import * as E from "effect/Either";
+import { TreeFormatter } from "@effect/schema";
 
-declare module "fastify" {
-	interface FastifyInstance {
-		secrets: Env;
-		config: Config;
-		httpStatus: typeof StatusCodes;
-	}
+import { env } from "./env.js";
+import { loadConfig } from "./loaders.js";
+
+const record = loadConfig(env.APP_CONFIG);
+if (E.isLeft(record)) {
+	console.error("Invalid config ❌");
+	console.error(TreeFormatter.formatErrors(record.left.errors));
+	process.exit(1);
 }
-const externalConfigParser = S.parseOption(S.object);
 
-type Options = {
-	config?: unknown;
-} & (Record<string, unknown> & {});
-
-export const configLoader = fp(
-	async function configLoader(fastify, options?: Options) {
-		let config: Config = {};
-
-		const externalConfig = externalConfigParser(options?.config);
-
-		if (O.isSome(externalConfig)) {
-			config = {
-				...config,
-				...externalConfig.value,
-			};
-		}
-
-		fastify.decorate("config", config);
-		fastify.decorate("secrets", env);
-		fastify.decorate("httpStatus", StatusCodes);
-	},
-	{ name: "application-configuration" },
-);
+console.log("Config loaded ✅");
+export const config = record.right;

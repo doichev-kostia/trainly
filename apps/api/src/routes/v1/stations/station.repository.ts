@@ -1,4 +1,4 @@
-import { db, eq, ilike, type InferInsertModel, sql } from "@trainly/db";
+import { eq, ilike, type InferInsertModel, sql } from "@trainly/db";
 import { type Address } from "@trainly/db/schema/addresses";
 import { type Station, stations, type StationsTable } from "@trainly/db/schema/stations";
 import assert from "node:assert";
@@ -6,6 +6,7 @@ import { type Platform } from "@trainly/db/schema/platforms";
 import { type ListResponse } from "@trainly/contracts";
 import { type ListStationQuery } from "@trainly/contracts/stations";
 import { relations, stripValues } from "~/utils/db.js";
+import { db } from "~/configs/db.js";
 
 type CreateStationValues = Omit<InferInsertModel<StationsTable>, "id" | "createdAt" | "updatedAt">;
 
@@ -78,10 +79,7 @@ export class StationRepository {
 		};
 	}
 
-	public async retrieve(
-		id: string,
-		expansion: string[] = [],
-	): Promise<RetrievedStation | undefined> {
+	public async retrieve(id: string, expansion: string[] = []): Promise<RetrievedStation | undefined> {
 		const data = await db.query.stations.findFirst({
 			with: relations(expansion),
 			where: eq(stations.id, id),
@@ -106,7 +104,7 @@ export class StationRepository {
 		const result = await db.delete(stations).where(eq(stations.id, id));
 
 		return {
-			affectedRows: result.length,
+			affectedRows: result.rowCount ?? 0,
 		};
 	}
 }

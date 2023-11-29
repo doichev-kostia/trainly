@@ -6,6 +6,7 @@
 		"rootDir": "./src",
 		"tsBuildInfoFile": "./build/.tsbuildinfo",
 		"baseUrl": "./",
+		"esModuleInterop": true,
 		"paths": {
 			"@trainly/utils": ["../../packages/src/index.ts"],
 			"@trainly/db": ["../../packages/db"],
@@ -16,14 +17,12 @@
 			"@trainly/contracts/*": ["../../packages/contracts/build/*/index.d.ts"],
 			"#constants": ["./src/constants.ts"],
 			"#base-repository": ["./src/base-repository.ts"],
-			"~/configs/*": ["./src/configs/*"],
-			"~/plugins/*": ["./src/plugins/*"],
-			"~/routes/*": ["./src/routes/*"],
-			"~/utils/*": ["./src/utils/*"],
-			"~/errors/*": ["./src/errors/*"]
+			"~/*": [
+				"./src/*"
+			]
 		}
 	},
-	"include": ["./src/**/*"],
+	"include": ["./src/**/*", "types"],
 	"references": [
 		{
 			"path": "../../packages/config"

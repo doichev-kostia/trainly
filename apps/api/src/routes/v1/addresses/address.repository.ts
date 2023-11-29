@@ -1,12 +1,10 @@
 import { type Address, addresses, type AddressesTable } from "@trainly/db/schema/addresses";
-import { db, eq, type InferInsertModel } from "@trainly/db";
+import { eq, type InferInsertModel } from "@trainly/db";
 import assert from "node:assert";
 import { stripValues } from "~/utils/db.js";
+import { db } from "~/configs/db.js";
 
-type CreateAddressValues = Omit<
-	InferInsertModel<AddressesTable>,
-	"id" | "createdAt" | "updatedAt" | "stationId"
->;
+type CreateAddressValues = Omit<InferInsertModel<AddressesTable>, "id" | "createdAt" | "updatedAt" | "stationId">;
 
 export class AddressRepository {
 	private static instance: AddressRepository | undefined;
@@ -45,11 +43,7 @@ export class AddressRepository {
 
 		data.updatedAt = new Date();
 
-		const [result] = await db
-			.update(addresses)
-			.set(data)
-			.where(eq(addresses.id, id))
-			.returning();
+		const [result] = await db.update(addresses).set(data).where(eq(addresses.id, id)).returning();
 
 		assert.ok(result, "Failed to update address");
 
@@ -60,7 +54,7 @@ export class AddressRepository {
 		const result = await db.delete(addresses).where(eq(addresses.id, id));
 
 		return {
-			affectedRows: result.length,
+			affectedRows: result.rowCount ?? 0,
 		};
 	}
 }

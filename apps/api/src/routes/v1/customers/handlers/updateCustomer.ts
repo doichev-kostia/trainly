@@ -1,9 +1,6 @@
 import { type IdParamsSchema } from "@trainly/contracts";
-import {
-	type CustomerResponseSchema,
-	type UpdateCustomerBodySchema,
-} from "@trainly/contracts/customers";
-import { type Handler } from "~/utils/types.js";
+import { type CustomerResponseSchema, type UpdateCustomerBodySchema } from "@trainly/contracts/customers";
+import { type ZodHandler } from "~/utils/types.js";
 import { CustomerRepository } from "~/routes/v1/customers/customer.repository.js";
 
 type Schema = {
@@ -14,7 +11,7 @@ type Schema = {
 	};
 };
 
-export const updateCustomer: Handler<Schema> = async function updateCustomer(request) {
+export const updateCustomer: ZodHandler<Schema> = async function updateCustomer(request) {
 	const customer = await CustomerRepository.getInstance().update(request.params.id, request.body);
 
 	if (!customer) {

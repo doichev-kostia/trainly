@@ -1,10 +1,10 @@
-import { db, type InferInsertModel } from "@trainly/db";
+import { type InferInsertModel } from "@trainly/db";
 import { type Train, trains, type TrainsTable } from "@trainly/db/schema/trains";
 import { type ListResponse } from "@trainly/contracts";
 import { type ListOptions } from "~/utils/db.js";
 import { BaseRepository } from "#base-repository";
 import { InternalError } from "~/errors/domain/InternalError.js";
-
+import { db } from "~/configs/db.js";
 type CreateTrainValues = Omit<InferInsertModel<TrainsTable>, "id" | "createdAt" | "updatedAt">;
 
 export class TrainRepository {

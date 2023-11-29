@@ -1,0 +1,27 @@
+import { type ErrorService } from "~/services/error/types.js";
+import { type PaymentService } from "~/services/payment/types.js";
+import { type SecretManager } from "~/services/secrets/types.js";
+import { type EmailService } from "~/services/email/types.js";
+
+export type Services = {
+	error: ErrorService;
+	payment: PaymentService;
+	secrets: SecretManager;
+	email: EmailService;
+};
+
+export class ServiceContainer {
+	#services: Services;
+
+	constructor(services: Services) {
+		this.#services = services;
+	}
+
+	get<K extends keyof Services>(name: K): Services[K] {
+		return this.#services[name];
+	}
+
+	set<K extends keyof Services>(name: K, service: Services[K]): void {
+		this.#services[name] = service;
+	}
+}

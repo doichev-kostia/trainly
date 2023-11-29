@@ -1,13 +1,17 @@
-import { type Handler } from "~/utils/types.js";
+import { type ZodHandler } from "~/utils/types.js";
 import { type CreateBookingBodySchema } from "@trainly/contracts/bookings";
 import { BookingRepository } from "~/routes/v1/checkout/booking.repository.js";
-import { db, eq } from "@trainly/db";
+import { eq } from "@trainly/db";
 import { routes } from "@trainly/db/schema/routes";
 import { journeys } from "@trainly/db/schema/journeys";
 import { seats } from "@trainly/db/schema/seats";
 import { tickets } from "@trainly/db/schema/tickets";
 import { type SeatClass, seatClass } from "@trainly/db/schema/enums";
 import { type UrlSchema } from "@trainly/contracts";
+import { db } from "~/configs/db.js";
+import { ServiceContainer } from "~/configs/services.js";
+import { type CheckoutSessionItem } from "~/services/payment/types.js";
+import * as O from "effect/Option";
 
 type Schema = {
 	body: typeof CreateBookingBodySchema;
@@ -16,7 +20,7 @@ type Schema = {
 	};
 };
 
-export const checkout: Handler<Schema> = async function checkout(request, reply) {
+export const checkout: ZodHandler<Schema> = async function checkout(request, reply) {
 	const booking = await BookingRepository.getInstance().createBooking(
 		request.body.seats,
 		request.body.email,
@@ -65,21 +69,7 @@ export const checkout: Handler<Schema> = async function checkout(request, reply)
 		callbackUrl = url.toString();
 	}
 
-	let successCallbackUrl: string | undefined;
-	if (callbackUrl) {
-		const url = new URL(callbackUrl);
-		url.searchParams.set("status", "success");
-		successCallbackUrl = url.toString();
-	}
-
-	let cancelCallbackUrl: string | undefined;
-	if (callbackUrl) {
-		const url = new URL(callbackUrl);
-		url.searchParams.set("status", "cancel");
-		cancelCallbackUrl = url.toString();
-	}
-
-	const items = [];
+	const items: CheckoutSessionItem[] = [];
 	if (premium > 0) {
 		items.push({
 			price: pricing[seatClass.premium],
@@ -94,20 +84,18 @@ export const checkout: Handler<Schema> = async function checkout(request, reply)
 		throw this.httpErrors.badRequest("No seats selected");
 	}
 
-	const session = await this.stripe.checkout.sessions.create({
-		mode: "payment",
-		customer_email: request.body.email,
-		cancel_url: cancelCallbackUrl,
-		success_url: successCallbackUrl,
+	const session = await ServiceContainer.get("payment").createCheckoutSession({
+		email: request.body.email,
+		callbackURL: callbackUrl,
+		items,
 		metadata: {
 			bookingId: booking,
 		},
-		line_items: items,
 	});
 
-	if (session.url === null) {
-		throw new Error("Session URL is null");
+	if (O.isNone(session)) {
+		throw this.httpErrors.internalServerError("Failed to create checkout session");
 	}
 
-	return { url: session.url };
+	return session.value;
 };

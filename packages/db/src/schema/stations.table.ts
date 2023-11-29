@@ -7,7 +7,7 @@ export const stations = pgTable("stations", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
-	name: varchar("name").notNull(),
+	name: varchar("name").notNull().unique(),
 });
 
 export type StationsTable = typeof stations;

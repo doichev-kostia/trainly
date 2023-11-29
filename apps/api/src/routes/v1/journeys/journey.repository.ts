@@ -4,11 +4,12 @@ import { type JourneyStop } from "@trainly/db/schema/journey-stops";
 import { type Seat, seats } from "@trainly/db/schema/seats";
 import { type ListResponse } from "@trainly/contracts";
 import { BaseRepository } from "#base-repository";
-import { and, db, eq, gt, gte, inArray, sql } from "@trainly/db";
+import { and, eq, gt, gte, inArray, sql } from "@trainly/db";
 import { stops } from "@trainly/db/schema/stops";
 import { stations } from "@trainly/db/schema/stations";
 import { platforms } from "@trainly/db/schema/platforms";
 import { relations } from "~/utils/db.js";
+import { db } from "~/configs/db.js";
 
 type RetrievedJourney = Journey & {
 	route?: Route;
