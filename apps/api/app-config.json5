@@ -15,7 +15,7 @@
 	},
 	"services": {
 		"error": {
-			"implementation": "local",
+			"implementation": "sentry",
 		},
 		"payment": {
 			"implementation": "stripe",
