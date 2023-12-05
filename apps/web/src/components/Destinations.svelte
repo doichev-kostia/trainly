@@ -11,7 +11,7 @@
 </script>
 
 <section>
-	<div class="container py-8">
+	<div class="container max-w-7xl py-8">
 		<Typography component="h2" class="mb-6 text-2xl">Destinations</Typography>
 
 		<ul class="flex flex-wrap justify-center gap-6">
