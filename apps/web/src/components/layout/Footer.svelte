@@ -4,7 +4,7 @@
 
 <footer class="bg-foreground py-8 text-white">
 	<div class="container">
-		<div class="mb-5 flex gap-x-4 md:gap-x-16">
+		<div class="mb-5 flex justify-center gap-x-4 md:gap-x-16">
 			<div>
 				<Typography component="h5" class="mb-3">Navigation</Typography>
 				<ul class="flex flex-col gap-2">
