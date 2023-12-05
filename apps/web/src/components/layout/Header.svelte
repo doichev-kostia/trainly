@@ -4,20 +4,16 @@
 	import Typography from "~/components/Typography.svelte";
 </script>
 
-<header class="py-2 bg-background/95 backdrop-blur border-b border-solid border-border">
-	<div class="flex justify-between gap-x-4 container">
+<header class="bg-background/95 border-border border-b border-solid py-2 backdrop-blur">
+	<div class="container flex justify-between gap-x-4">
 		<div>
-			<a href="/" class="flex gap-x-2 items-center text-primary">
+			<a href="/" class="text-primary flex items-center gap-x-2">
 				<Logo />
-				<Typography component="h1" class="text-lg text-primary font-bold"
-					>trainly</Typography
-				>
+				<Typography component="h3" class="text-primary text-lg font-bold">trainly</Typography>
 			</a>
 		</div>
 		<div>
-			<button
-				class="rounded-full border border-solid p-1 flex items-center justify-center text-base select-none"
-			>
+			<button class="flex select-none items-center justify-center rounded-full border border-solid p-1 text-base">
 				<AccountIcon />
 			</button>
 		</div>

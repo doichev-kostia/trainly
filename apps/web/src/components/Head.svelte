@@ -18,7 +18,7 @@
 	};
 
 	const description =
-		"Discover the easiest way to book train journeys with Trainly! Our user-friendly app simplifies train ticket bookings, offering instant access to schedules, seat availability, and exclusive deals. Whether you're planning a daily commute or a scenic railway adventure, Trainly connects you to your destination with comfort and convenience.";
+		"Trainly is a website for selling train tickets. Discover the easiest way to book train journeys with Trainly! Our user-friendly app simplifies train ticket bookings, offering instant access to schedules, seat availability, and exclusive deals. Whether you're planning a daily commute or a scenic railway adventure, Trainly connects you to your destination with comfort and convenience.";
 
 	const og = {
 		title,

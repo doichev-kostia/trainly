@@ -3,8 +3,8 @@
 	import Button from "~/components/Button.svelte";
 	import Typography from "~/components/Typography.svelte";
 	import Advantages from "~/routes/Advantages.svelte";
-	import { goto } from "$app/navigation";
 	import { browser } from "$app/environment";
+	import TrustedSeller from "~/routes/TrustedSeller.svelte";
 
 	export let data: PageData;
 
@@ -118,7 +118,7 @@
 				</div>
 				<div class="flex-two-third hidden md:block">
 					<Typography component="h2" class="text-accent pl-2 text-3xl ">
-						Explore the world effortlessly
+						Explore the world effortlessly. Find the best deals on on Trainly!
 					</Typography>
 				</div>
 			</div>
@@ -126,6 +126,7 @@
 	</div>
 </section>
 <Advantages />
+<TrustedSeller />
 
 <style>
 	.hero {
