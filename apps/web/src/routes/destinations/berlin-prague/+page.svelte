@@ -1,41 +1,14 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
 	import Button from "~/components/Button.svelte";
 	import Typography from "~/components/Typography.svelte";
-	import Advantages from "~/routes/Advantages.svelte";
-	import { browser } from "$app/environment";
-	import TrustedSeller from "~/routes/TrustedSeller.svelte";
-	import Destinations from "~/components/Destinations.svelte";
+	import LeadingPlatform from "~/components/LeadingPlatform.svelte";
 	import { destinations } from "~/data";
+	import Destinations from "~/components/Destinations.svelte";
 
-	export let data: PageData;
+	let from = "Berlin";
+	let to = "Prague";
 
-	let options = data.stations;
-
-	let departureOptions = options;
-	let arrivalOptions = options;
-
-	let from = data.from ?? "";
-	let to = data.to ?? "";
-	let date = data.date ?? "";
-
-	$: {
-		arrivalOptions = options.filter((option) => option.name !== from);
-		departureOptions = options.filter((option) => option.name !== to);
-	}
-
-	$: {
-		if (browser) {
-			const searchParams = new URLSearchParams(window.location.search);
-
-			searchParams.set("from", from);
-			searchParams.set("to", to);
-			searchParams.set("date", date);
-
-			const search = searchParams.toString();
-			history.replaceState(null, "", search ? `?${search}` : "/");
-		}
-	}
+	const dest = destinations.filter((d) => !d.name.includes(from));
 </script>
 
 <section>
@@ -60,10 +33,7 @@
 											id="from"
 											required
 										>
-											<option value="">Select station</option>
-											{#each departureOptions as option (option.id)}
-												<option value={option.name}>{option.name}</option>
-											{/each}
+											<option>{from}</option>
 										</select>
 									</div>
 									<div>
@@ -77,10 +47,7 @@
 											id="to"
 											required
 										>
-											<option value="">Select station</option>
-											{#each arrivalOptions as option (option.id)}
-												<option value={option.name}>{option.name}</option>
-											{/each}
+											<option>{to}</option>
 										</select>
 									</div>
 								</div>
@@ -102,7 +69,6 @@
 											</svg>
 										</div>
 										<input
-											bind:value={date}
 											name="date"
 											required
 											type="date"
@@ -120,16 +86,16 @@
 				</div>
 				<div class="flex-two-third hidden md:block">
 					<Typography component="h2" class="text-accent pl-2 text-3xl ">
-						Explore the world effortlessly. Find the best deals on on Trainly!
+						{from} to {to}. <br />
+						<span class="text-accent">From €9.99</span>
 					</Typography>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
-<Advantages />
-<TrustedSeller />
-<Destinations {destinations} />
+<LeadingPlatform />
+<Destinations destinations={dest} />
 
 <style>
 	.hero {
@@ -140,9 +106,9 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-image: url("/hero-bg.webp");
+			background-image: url("/prague.webp");
 			background-size: cover;
-			background-position: center;
+			background-position-y: 47%;
 			filter: brightness(0.5);
 		}
 	}

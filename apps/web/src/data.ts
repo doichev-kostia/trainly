@@ -1,67 +1,22 @@
-export type Route = {
-	id: string;
-	startDate: Date;
-	endDate: Date;
-	origin: string;
-	destination: string;
-};
-
-export const routes: Route[] = [
-	{
-		id: "1a2b3c4d-5e6f-7g8h-9i0j",
-		startDate: new Date("2023-10-01T09:00:00"),
-		endDate: new Date("2023-10-01T11:00:00"),
-		origin: "New York",
-		destination: "Boston",
-	},
-	{
-		id: "2b3c4d5e-6f7g-8h9i-0j1k",
-		startDate: new Date("2023-10-02T12:00:00"),
-		endDate: new Date("2023-10-02T14:00:00"),
-		origin: "Chicago",
-		destination: "Detroit",
-	},
-	{
-		id: "3c4d5e6f-7g8h-9i0j-1k2l",
-		startDate: new Date("2023-10-03T15:00:00"),
-		endDate: new Date("2023-10-03T17:00:00"),
-		origin: "San Francisco",
-		destination: "Los Angeles",
-	},
-	{
-		id: "4d5e6f7g-8h9i-0j1k-2l3m",
-		startDate: new Date("2023-10-04T18:00:00"),
-		endDate: new Date("2023-10-04T20:00:00"),
-		origin: "Seattle",
-		destination: "Portland",
-	},
-	{
-		id: "5e6f7g8h-9i0j-1k2l-3m4n",
-		startDate: new Date("2023-10-05T21:00:00"),
-		endDate: new Date("2023-10-05T23:00:00"),
-		origin: "Miami",
-		destination: "Orlando",
-	},
-];
-
-export type Ticket = {
-	id: string;
-	price: number; // in cents
+type Destination = {
 	name: string;
-	description: string;
+	href: string;
+	img: string;
 };
-
-export const tickets: Ticket[] = [
+export const destinations: Destination[] = [
 	{
-		id: "1a2b3c4d-5e6f-7g8h-9i0j",
-		price: 1000,
-		name: "Standard",
-		description: "Standard ticket",
+		name: "Amsterdam - London",
+		href: "/destinations/amsterdam-london",
+		img: "/london.webp",
 	},
 	{
-		id: "2b3c4d5e-6f7g-8h9i-0j1k",
-		price: 500,
-		name: "Kids",
-		description: "Kids ticket",
+		name: "Brussels - Paris",
+		href: "/destinations/brussels-paris",
+		img: "/paris.webp",
+	},
+	{
+		name: "Berlin - Prague",
+		href: "/destinations/berlin-prague",
+		img: "/prague.webp",
 	},
 ];
