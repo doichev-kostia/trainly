@@ -119,8 +119,8 @@
 					</div>
 				</div>
 				<div class="flex-two-third hidden md:block">
-					<Typography component="h2" class="text-accent pl-2 text-3xl ">
-						Explore the world effortlessly. Find the best deals on on Trainly!
+					<Typography component="h1" class="text-accent pl-2 text-3xl ">
+						Explore the world effortlessly. Find the best ticket deals on on Trainly!
 					</Typography>
 				</div>
 			</div>

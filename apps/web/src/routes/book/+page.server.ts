@@ -65,6 +65,8 @@ export const load: PageServerLoad = async (event) => {
 		from,
 		to,
 		date,
-		title: "Journeys",
+		meta: {
+			title: "Journeys",
+		},
 	};
 };

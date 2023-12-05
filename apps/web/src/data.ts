@@ -1,3 +1,11 @@
+export type Route = {
+	id: string;
+	startDate: Date;
+	endDate: Date;
+	origin: string;
+	destination: string;
+};
+
 type Destination = {
 	name: string;
 	href: string;

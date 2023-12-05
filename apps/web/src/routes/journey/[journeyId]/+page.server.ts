@@ -18,7 +18,9 @@ export const load: PageServerLoad = async (
 	carriage: number;
 	hasNext: boolean;
 	hasPrevious: boolean;
-	title: string;
+	meta: {
+		title: string;
+	};
 }> => {
 	const from = event.url.searchParams.get("from");
 	const to = event.url.searchParams.get("to");
@@ -41,13 +43,7 @@ export const load: PageServerLoad = async (
 	}
 
 	const journey = await api.journeys.retrieve(event.params.journeyId, {
-		expand: [
-			"route",
-			"route.stops",
-			"route.stops.platform",
-			"route.stops.platform.station",
-			"route.train",
-		],
+		expand: ["route", "route.stops", "route.stops.platform", "route.stops.platform.station", "route.train"],
 	});
 
 	// seconds
@@ -135,6 +131,8 @@ export const load: PageServerLoad = async (
 		carriage, // number
 		hasNext,
 		hasPrevious,
-		title: `${originStation} to ${destinationStation} | Journey`,
+		meta: {
+			title: `${originStation} to ${destinationStation} | Journey`,
+		},
 	};
 };

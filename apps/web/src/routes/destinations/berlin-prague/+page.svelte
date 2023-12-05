@@ -85,7 +85,7 @@
 					</div>
 				</div>
 				<div class="flex-two-third hidden md:block">
-					<Typography component="h2" class="text-accent pl-2 text-3xl ">
+					<Typography component="h1" class="text-accent pl-2 text-3xl ">
 						{from} to {to}. <br />
 						<span class="text-accent">From €9.99</span>
 					</Typography>

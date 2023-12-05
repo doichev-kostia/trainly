@@ -11,7 +11,9 @@ export const load: PageServerLoad = async (
 	journey: JourneyResponse;
 	departureStation: StationResponse;
 	arrivalStation: StationResponse;
-	title: string;
+	meta: {
+		title: string;
+	};
 }> => {
 	const bookingId = event.params.bookingId;
 
@@ -24,25 +26,20 @@ export const load: PageServerLoad = async (
 	const journeyId = booking.tickets?.[0]?.seat?.journeyId;
 
 	const journey = await api.journeys.retrieve(journeyId as string, {
-		expand: [
-			"route",
-			"route.stops",
-			"route.train",
-			"route.stops.platform",
-			"route.stops.platform.station",
-		],
+		expand: ["route", "route.stops", "route.train", "route.stops.platform", "route.stops.platform.station"],
 	});
 
 	// TODO: which stop has I booked the ticket for?
 	const departureStation = journey.route?.stops?.[0]?.platform?.station as any;
-	const arrivalStation = journey.route?.stops?.[journey.route?.stops?.length - 1]?.platform
-		?.station as any;
+	const arrivalStation = journey.route?.stops?.[journey.route?.stops?.length - 1]?.platform?.station as any;
 
 	return {
 		booking,
 		journey,
 		departureStation,
 		arrivalStation,
-		title: "Booking",
+		meta: {
+			title: "Booking",
+		},
 	};
 };

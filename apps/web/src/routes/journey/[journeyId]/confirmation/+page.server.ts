@@ -12,7 +12,9 @@ export const load: PageServerLoad = async (
 ): Promise<{
 	seats: Seat[];
 	totalPrice: number;
-	title: string;
+	meta: {
+		title: string;
+	};
 }> => {
 	const journeyId = event.params.journeyId;
 	const seatIds = event.url.searchParams.getAll("seat");
@@ -50,7 +52,9 @@ export const load: PageServerLoad = async (
 	return {
 		seats,
 		totalPrice,
-		title: "Confirmation | Journey",
+		meta: {
+			title: "Confirmation | Journey",
+		},
 	};
 };
 

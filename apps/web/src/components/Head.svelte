@@ -4,34 +4,32 @@
 
 	const defaultTitle = "Trainly";
 	const url = "https://trainly.doichevkostia.dev";
-	let canonicalURL = new URL(url);
 
+	let canonicalURL = new URL(url);
 	onMount(() => {
 		canonicalURL = new URL(window.location.pathname, url);
 	});
-
 	export let title: string = defaultTitle;
+	export let description: string;
 	const locale = "en_GB";
+
 	const image = {
 		src: new URL("/logo.png", $page.url).toString(),
 		alt: "Trainly Logo",
 	};
 
-	const description =
-		"Trainly is a website for selling train tickets. Discover the easiest way to book train journeys with Trainly! Our user-friendly app simplifies train ticket bookings, offering instant access to schedules, seat availability, and exclusive deals. Whether you're planning a daily commute or a scenic railway adventure, Trainly connects you to your destination with comfort and convenience.";
-
-	const og = {
+	$: og = {
 		title,
-		description,
+		description: description,
 		type: "website",
 		image,
 		url,
 		locale,
 	};
 
-	const twitter = {
+	$: twitter = {
 		title,
-		description,
+		description: description,
 		card: "summary_large_image",
 		image,
 		locale,
