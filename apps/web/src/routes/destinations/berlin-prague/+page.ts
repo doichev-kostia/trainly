@@ -5,7 +5,7 @@ export const load: PageLoad = () => {
 		meta: {
 			title: "Berlin - Prague",
 			description:
-				"Experience the charm of Berlin to Prague train travel. Buy cheap tickets to experience the trip from Berlin to Prague by train.",
+				"Experience the charm of Berlin to Prague train travel. Buy cheap tickets from Berlin to Prague by train.",
 		},
 	};
 };
