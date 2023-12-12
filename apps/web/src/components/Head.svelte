@@ -10,6 +10,7 @@
 		canonicalURL = new URL(window.location.pathname, url);
 	});
 	export let title: string = defaultTitle;
+	export let keywords: string[];
 	export let description: string;
 	const locale = "en_GB";
 
@@ -47,6 +48,7 @@
 	<link rel="canonical" href={canonicalURL.toString()} />
 	<meta name="generator" content="SvelteKit" />
 	<meta name="description" content={description} />
+	<meta name="keywords" content={keywords.join(", ")} />
 
 	<meta property="og:title" content={og.title} />
 	<meta property="og:description" content={og.description} />

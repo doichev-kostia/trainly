@@ -6,6 +6,7 @@ export const load: PageLoad = () => {
 			title: "Amsterdam - London",
 			description:
 				"Experience the charm of Amsterdam to London train travel. Buy cheap tickets from Amsterdam to London by train.",
+			keywords: ["Amsterdam", "London", "train", "travel", "tickets"],
 		},
 	};
 };

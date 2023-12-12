@@ -12,10 +12,11 @@
 
 	$: title = $page?.data?.meta?.title ? `${$page.data?.meta.title} | ${defaultTitle}` : defaultTitle;
 	$: description = $page?.data?.meta?.description || defaultDescription;
+	$: keywords = $page?.data?.meta?.keywords || ["Train tickets", "Trainly"];
 </script>
 
 <div class="relative flex min-h-screen flex-col">
-	<Head {title} {description} />
+	<Head {title} {description} {keywords} />
 	<Header />
 	<main>
 		<slot />

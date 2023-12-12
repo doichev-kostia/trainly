@@ -6,6 +6,7 @@ export const load: PageLoad = () => {
 			title: "Berlin - Prague",
 			description:
 				"Experience the charm of Berlin to Prague train travel. Buy cheap tickets from Berlin to Prague by train.",
+			keywords: ["Berlin", "Prague", "train", "travel", "tickets"],
 		},
 	};
 };

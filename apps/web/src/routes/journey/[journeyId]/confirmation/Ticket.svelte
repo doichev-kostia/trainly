@@ -20,6 +20,8 @@
 		firstName: getPassengerName("firstName"),
 		lastName: getPassengerName("lastName"),
 	};
+	// eslint-disable-next-line
+	const pattern = `[A-Za-z \'\\-]{1,32}`;
 </script>
 
 <div class="bg-card text-card-foreground rounded-lg border px-3 py-2 shadow-md">
@@ -49,7 +51,9 @@
 			id={names.firstName}
 			required
 			min="1"
+			{pattern}
 			autocomplete="given-name"
+			title="First name should only contain letters, spaces, hyphens, and apostrophes."
 			class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
 		/>
 	</div>
@@ -62,7 +66,9 @@
 			id={names.lastName}
 			required
 			min="1"
+			{pattern}
 			autocomplete="family-name"
+			title="Last name should only contain letters, spaces, hyphens, and apostrophes."
 			class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
 		/>
 	</div>
