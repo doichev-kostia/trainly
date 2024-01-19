@@ -35,16 +35,20 @@ function update(data, keys, value) {
  * @example ["name", "John Doe"] => { name: "John Doe" }; ["contact[phone]", "1234567890"] => { contact: { phone: "1234567890" } }
  * @param data
  */
-
+/* eslint-disable */
 export function transformFormDataToObject(formData: FormData): unknown {
 	return Array.from(formData.entries()).reduce((data, [field, value]) => {
+		// @ts-ignore
 		let [_, prefix, keys] = field.match(/^([^\[]+)((?:\[[^\]]*\])*)/);
 
 		if (keys) {
 			keys = Array.from(keys.matchAll(/\[([^\]]*)\]/g), (m) => m[1]);
+			// @ts-ignore
 			value = update(data[prefix], keys, value);
 		}
+		// @ts-ignore
 		data[prefix] = value;
 		return data;
 	}, {});
 }
+/* eslint-enable */

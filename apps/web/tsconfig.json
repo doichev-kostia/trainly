@@ -10,24 +10,12 @@
 		"sourceMap": true,
 		"strict": true,
 		"paths": {
-			"~": [
-				"./src"
-			],
-			"~/*": [
-				"./src/*"
-			],
-			"@trainly/contracts": [
-				"../../packages/contracts/build/index.d.ts"
-			],
-			"@trainly/contracts/*": [
-				"../../packages/contracts/build/*/index.d.ts"
-			],
-			"$lib": [
-				"./src/lib"
-			],
-			"$lib/*": [
-				"./src/lib/*"
-			]
+			"~": ["./src"],
+			"~/*": ["./src/*"],
+			"@trainly/contracts": ["../../packages/contracts/build/index.d.ts"],
+			"@trainly/contracts/*": ["../../packages/contracts/build/*/index.d.ts"],
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"]
 		}
 	},
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

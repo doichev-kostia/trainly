@@ -10,7 +10,8 @@
 		"build": "swc src --out-dir build",
 		"build:clean": "rm -rf build && pnpm run build",
 		"watch": "swc src -d build --watch",
-		"openapi": "FASTIFY_CONFIG=fastify.dev.config.json node ./swagger.js ./build/app.js --yaml"
+		"openapi": "FASTIFY_CONFIG=fastify.dev.config.json node ./swagger.js ./build/app.js --yaml",
+		"typecheck": "tsc --noEmit"
 	},
 	"imports": {
 		"#constants": "./build/constants.js",
